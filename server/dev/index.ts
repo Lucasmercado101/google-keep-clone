@@ -4,8 +4,17 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import sequelize from "./db/index";
+import routes from "./routes";
+import session from "express-session";
+import passport from "passport";
+import passportConfig from "./passportConfig";
+import bodyParser from "body-parser";
 
-const { PORT = 5000, FRONT_WEBSITE_URL } = process.env;
+const {
+  PORT = 5000,
+  FRONT_WEBSITE_URL,
+  SESSION_SECRET = "devTesting"
+} = process.env;
 
 const server = express();
 
@@ -15,13 +24,27 @@ const server = express();
 
 // ---- MIDDLEWARE --------
 
-server.use(morgan("tiny"));
-server.use(cors({ origin: FRONT_WEBSITE_URL }));
+server.use(morgan("dev"));
+server.use(bodyParser.json());
+server.use(bodyParser.urlencoded({ extended: true }));
+server.use(cors({ origin: FRONT_WEBSITE_URL, credentials: true }));
+server.use(
+  session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+  })
+);
+server.use(passport.initialize());
+server.use(passport.session());
+passportConfig(passport);
 
 // ------------------------
 
+server.use("/", routes);
+
 sequelize
-  .sync({ force: true })
+  .sync({ force: false })
   .then(() => {
     console.log("Sequelize connected successfully");
   })

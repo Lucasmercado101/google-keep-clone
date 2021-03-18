@@ -44,7 +44,7 @@ passportConfig(passport);
 server.use("/", routes);
 
 sequelize
-  .sync({ force: false })
+  .sync({ force: true })
   .then(() => {
     console.log("Sequelize connected successfully");
   })

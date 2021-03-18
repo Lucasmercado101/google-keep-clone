@@ -1,10 +1,14 @@
-import { Table, Column, Model } from "sequelize-typescript";
-
+import { Table, Column, Model, BelongsToMany } from "sequelize-typescript";
+import Label from "./Label";
+import NoteLabel from "./NoteLabel";
 @Table
 export default class Note extends Model {
-  @Column
+  @Column({ allowNull: true })
   name: string;
 
-  @Column
+  @Column({ allowNull: true })
   content: string;
+
+  @BelongsToMany(() => Label, () => NoteLabel)
+  labels: Label[];
 }

@@ -18,7 +18,7 @@ const App = observer(() => {
   return (
     <div className="App">
       <Route path="/" exact component={Login} />
-      <Route path="/notes" exact component={Home} />
+      <Route path="/notes" component={Home} />
     </div>
   );
 });

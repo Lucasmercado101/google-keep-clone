@@ -41,7 +41,7 @@ export default function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" color="transparent">
+      <AppBar position="sticky" color="transparent">
         <Toolbar>
           <IconButton
             edge="start"

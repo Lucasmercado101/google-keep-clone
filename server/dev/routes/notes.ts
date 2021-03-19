@@ -10,6 +10,7 @@ router.get("/", (req, res) => {
   Note.findAll({
     where: { author: req.user!.userName },
     attributes: ["title", "content", "id"]
+    // TODO: get collaborators, labels, etc.
   })
     .then((resp) => res.json(resp))
     .catch((e) => res.sendStatus(500));

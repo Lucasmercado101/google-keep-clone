@@ -9,7 +9,7 @@ router.use("/", isAuthenticated);
 router.get("/", (req, res) => {
   Note.findAll({
     where: { author: req.user!.userName },
-    attributes: ["title", "content", "id"]
+    attributes: ["title", "content", "id", "pinned", "archived"]
     // TODO: get collaborators, labels, etc.
   })
     .then((resp) => res.json(resp))
@@ -24,7 +24,9 @@ router.post("/", async (req, res) => {
   const newNote = await Note.create({
     author: req.user!.userName,
     title,
-    content
+    content,
+    pinned: false,
+    archived: false
   });
   // if (labels) (await newNote).$set("labels", labels); TODO: check if labels exist
   // Add collaborators
@@ -39,8 +41,8 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, content, labels } = req.body;
-  await Note.update({ title, content }, { where: { id } });
+  const { title, content, labels, pinned, archived } = req.body;
+  await Note.update({ title, content, pinned, archived }, { where: { id } });
   //TODO: update labels, collaborators, etc
   res.sendStatus(200);
 });
@@ -56,7 +58,7 @@ router.get("/search", async (req, res) => {
       }
     },
     limit: +limit,
-    attributes: ["id", "title", "content"]
+    attributes: ["id", "title", "content", "pinned", "archived"]
   }).then((notes) => res.json(notes));
   // TODO: pagination
 });

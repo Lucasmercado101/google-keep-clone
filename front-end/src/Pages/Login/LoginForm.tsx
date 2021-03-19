@@ -1,10 +1,17 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { GlobalStateContext } from "../../StateProvider";
 import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
-import { makeStyles, TextField, Typography, Button } from "@material-ui/core";
+import {
+  makeStyles,
+  TextField,
+  Typography,
+  Button,
+  Collapse
+} from "@material-ui/core";
 import { logIn } from "../../api";
 import { useHistory } from "react-router-dom";
+import { Alert, AlertTitle } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -34,21 +41,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginForm: React.FC = observer(() => {
+  const [error, setError] = useState("");
   const history = useHistory();
   let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
 
   const onSubmit = (data: { userName: string; password: string }) => {
-    logIn(data).then((resp) => {
-      ctx.userData = resp;
-      history.replace("/notes");
-    });
+    setError("");
+    logIn(data)
+      .then((resp) => {
+        ctx.userData = resp;
+        history.replace("/notes");
+      })
+      .catch((e) => {
+        setError(`Incorrect username or password (${e.response.status})`);
+      });
   };
 
   return (
     <div className={classes.container}>
       <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
+        <Collapse in={!!error}>
+          <Alert severity="error">
+            <AlertTitle>Error</AlertTitle>
+            {error}
+          </Alert>
+        </Collapse>
         <div style={{ textAlign: "left" }}>
           <Typography variant="h4" component="h1">
             Welcome Back.

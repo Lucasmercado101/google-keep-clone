@@ -22,4 +22,9 @@ router.get("/me", (req, res) => {
   else res.sendStatus(401);
 });
 
+router.get("/logout", (req, res) => {
+  req.logOut();
+  res.sendStatus(200);
+});
+
 export default router;

@@ -88,6 +88,7 @@ function Notes() {
       setData(data);
     });
   }, []);
+  // TODO: drag and drop, add ordinals to notes
   //TODO: select notes and make it copy-able to clipboard
   return (
     <Container maxWidth="xl" style={{ display: "flex" }}>

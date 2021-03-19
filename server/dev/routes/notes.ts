@@ -30,7 +30,13 @@ router.post("/", async (req, res) => {
   });
   // if (labels) (await newNote).$set("labels", labels); TODO: check if labels exist
   // Add collaborators
-  res.sendStatus(200);
+  res.json({
+    author: newNote.author,
+    title: newNote.title,
+    content: newNote.content,
+    pinned: newNote.pinned,
+    archived: newNote.archived
+  });
 });
 
 router.delete("/:id", async (req, res) => {
@@ -42,9 +48,18 @@ router.delete("/:id", async (req, res) => {
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { title, content, labels, pinned, archived } = req.body;
-  await Note.update({ title, content, pinned, archived }, { where: { id } });
+  const [_, [updatedNote]] = await Note.update(
+    { title, content, pinned, archived },
+    { where: { id }, returning: true }
+  );
   //TODO: update labels, collaborators, etc
-  res.sendStatus(200);
+  res.json({
+    author: updatedNote.author,
+    title: updatedNote.title,
+    content: updatedNote.content,
+    pinned: updatedNote.pinned,
+    archived: updatedNote.archived
+  });
 });
 
 router.get("/search", async (req, res) => {

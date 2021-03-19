@@ -7,15 +7,20 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import ThemeProvider from "./ThemeProvider";
 import GlobalStateProvider from "./StateProvider";
+import { QueryClientProvider, QueryClient } from "react-query";
+
+const client = new QueryClient();
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
       <GlobalStateProvider>
-        <ThemeProvider>
-          <App />
-          <CssBaseline />
-        </ThemeProvider>
+        <QueryClientProvider client={client}>
+          <ThemeProvider>
+            <App />
+            <CssBaseline />
+          </ThemeProvider>
+        </QueryClientProvider>
       </GlobalStateProvider>
     </Router>
   </React.StrictMode>,

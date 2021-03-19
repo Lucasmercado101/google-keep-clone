@@ -6,6 +6,7 @@ import NavBar from "../../Components/NavBar/NavBar";
 import { makeStyles } from "@material-ui/core";
 import Notes from "../Notes/Notes";
 import NewNoteBar from "../../Components/NewNoteBar/NewNoteBar";
+import EditNote from "../../Components/EditNote/EditNote";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {

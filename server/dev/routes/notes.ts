@@ -29,4 +29,10 @@ router.post("/", async (req, res) => {
   res.sendStatus(200);
 });
 
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  await Note.destroy({ where: { id } });
+  res.sendStatus(200);
+});
+
 export default router;

@@ -39,3 +39,4 @@ export default class Note extends Model<
   @BelongsToMany(() => Label, () => NoteLabel)
   labels: Array<Label & { NoteLabel: NoteLabel }>;
 }
+//TODO: Add Types as an enum? and infer from what it is and has?

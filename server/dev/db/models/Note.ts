@@ -17,6 +17,8 @@ interface NoteAttributes {
   title: string;
   content: string;
   author: string;
+  pinned: boolean;
+  archived: boolean;
 }
 
 interface NoteCreationAttributes extends Optional<NoteAttributes, "id"> {}
@@ -31,6 +33,12 @@ export default class Note extends Model<
 
   @Column({ allowNull: true, type: DataTypes.STRING(750) })
   content: string;
+
+  @Column({ allowNull: true })
+  pinned: boolean;
+
+  @Column({ allowNull: true })
+  archived: boolean;
 
   @ForeignKey(() => User)
   @Column

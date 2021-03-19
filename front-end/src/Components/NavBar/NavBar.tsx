@@ -1,12 +1,14 @@
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, Typography, IconButton } from "@material-ui/core";
+import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
+import Logo from "./Logo";
+import SearchBar from "./SearchBar";
+
 import {
   ViewAgendaOutlined as ListIcon,
   SettingsOutlined as SettingsIcon,
   RefreshOutlined as RefreshIcon,
-  AccountCircle as UserIcon,
-  Note as NoteIcon
+  AccountCircle as UserIcon
 } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -20,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1
   },
   iconButtons: {
-    marginRight: 15
+    margin: "0 30px"
   },
   right: {
     marginLeft: "auto",
@@ -33,6 +35,9 @@ const useStyles = makeStyles((theme) => ({
   logoIcon: {
     transform: "rotate(-90deg)",
     marginRight: theme.spacing(1)
+  },
+  toolbar: {
+    color: theme.palette.text.secondary
   }
 }));
 
@@ -42,7 +47,7 @@ export default function ButtonAppBar() {
   return (
     <div className={classes.root}>
       <AppBar position="sticky" color="transparent">
-        <Toolbar>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
             className={classes.menuButton}
@@ -51,16 +56,8 @@ export default function ButtonAppBar() {
           >
             <MenuIcon />
           </IconButton>
-          <div className={classes.logo}>
-            <NoteIcon
-              fontSize="large"
-              className={classes.logoIcon}
-              color="inherit"
-            />
-            <Typography component="span" variant="h5">
-              Meep
-            </Typography>
-          </div>
+          <Logo />
+          <SearchBar />
           <div className={classes.right}>
             <div className={classes.iconButtons}>
               <IconButton color="inherit">

@@ -22,11 +22,17 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1
   },
   iconButtons: {
-    margin: "0 30px"
+    margin: 0,
+    [theme.breakpoints.up("md")]: {
+      margin: "0 30px"
+    }
   },
   right: {
-    marginLeft: "auto",
-    display: "flex"
+    display: "flex",
+    marginLeft: 0,
+    [theme.breakpoints.up("md")]: {
+      marginLeft: "auto"
+    }
   },
   logo: {
     display: "flex",
@@ -70,7 +76,7 @@ export default function ButtonAppBar() {
                 <SettingsIcon />
               </IconButton>
             </div>
-            <IconButton color="inherit">
+            <IconButton edge="end" color="inherit">
               <UserIcon />
             </IconButton>
           </div>

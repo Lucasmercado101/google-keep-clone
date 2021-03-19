@@ -11,14 +11,8 @@ router.get("/", (req, res) => {
     where: { author: req.user!.userName },
     attributes: ["title", "content", "id"]
   })
-    .then((resp) => {
-      console.log(resp);
-      res.json(resp);
-    })
-    .catch((e) => {
-      console.log(e);
-      res.sendStatus(500);
-    });
+    .then((resp) => res.json(resp))
+    .catch((e) => res.sendStatus(500));
 });
 
 router.post("/", async (req, res) => {
@@ -26,8 +20,12 @@ router.post("/", async (req, res) => {
 
   if (!content) return res.sendStatus(400);
 
-  const newNote = Note.create({ author: req.user!.userName, title, content });
-  if (labels) (await newNote).$set("labels", labels);
+  const newNote = await Note.create({
+    author: req.user!.userName,
+    title,
+    content
+  });
+  // if (labels) (await newNote).$set("labels", labels); TODO: check if labels exist
   res.sendStatus(200);
 });
 

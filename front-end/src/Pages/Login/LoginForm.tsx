@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { makeStyles, TextField, Typography, Button } from "@material-ui/core";
 import { logIn } from "../../api";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -33,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginForm: React.FC = observer(() => {
+  const history = useHistory();
   let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
@@ -40,6 +42,7 @@ const LoginForm: React.FC = observer(() => {
   const onSubmit = (data: { userName: string; password: string }) => {
     logIn(data).then((resp) => {
       ctx.userData = resp;
+      history.replace("/notes");
     });
   };
 

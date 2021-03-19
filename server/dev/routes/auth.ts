@@ -5,7 +5,7 @@ import User from "../db/models/User";
 import bcrypt from "bcryptjs";
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json({ userName: req.body.userName });
+  res.json({ userName: req.user!.userName });
 });
 
 router.post("/register", async (req, res) => {
@@ -18,8 +18,9 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/me", (req, res) => {
+  console.log(req.user);
   if (req.isAuthenticated()) {
-    return res.json({ userName: req.body.userName });
+    return res.json({ userName: req.user!.userName });
   } else res.sendStatus(401);
 });
 

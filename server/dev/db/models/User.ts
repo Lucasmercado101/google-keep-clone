@@ -1,4 +1,12 @@
-import { Table, Column, Model, PrimaryKey, Unique } from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  PrimaryKey,
+  Unique,
+  HasMany
+} from "sequelize-typescript";
+import Note from "./Note";
 
 @Table
 export default class User extends Model {
@@ -9,4 +17,7 @@ export default class User extends Model {
 
   @Column
   password: string;
+
+  @HasMany(() => Note)
+  notes: Note[];
 }

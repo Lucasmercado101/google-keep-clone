@@ -20,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(2)
+  },
+  subtitle: {
+    color: theme.palette.text.secondary
   }
 }));
 
@@ -36,7 +39,11 @@ function LoginForm() {
           <Typography variant="h4" component="h1">
             Welcome Back.
           </Typography>
-          <Typography variant="subtitle1" component="h2">
+          <Typography
+            variant="subtitle1"
+            className={classes.subtitle}
+            component="h2"
+          >
             Glad to have you back.
           </Typography>
         </div>

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import axios from "axios";
+import { Route } from "react-router-dom";
+import Login from "./Pages/Login/Login";
 
 function App() {
   const [state, setState] = useState({ userName: "", password: "" });
@@ -17,7 +18,8 @@ function App() {
   };
   return (
     <div className="App">
-      <header className="App-header">
+      <Route path="/login" exact component={Login} />
+      {/* <header className="App-header">
         <form onSubmit={handleSubmit}>
           <input
             value={state.userName}
@@ -53,8 +55,8 @@ function App() {
           rel="noopener noreferrer"
         >
           Learn React
-        </a> */}
-      </header>
+        </a>
+      </header> */}
     </div>
   );
 }

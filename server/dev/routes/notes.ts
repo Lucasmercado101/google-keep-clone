@@ -21,4 +21,14 @@ router.get("/", (req, res) => {
     });
 });
 
+router.post("/", async (req, res) => {
+  const { title, content, labels } = req.body;
+
+  if (!content) return res.sendStatus(400);
+
+  const newNote = Note.create({ author: req.user!.userName, title, content });
+  if (labels) (await newNote).$set("labels", labels);
+  res.sendStatus(200);
+});
+
 export default router;

@@ -11,9 +11,9 @@ import NoteLabel from "./NoteLabel";
 import User from "./User";
 
 interface NoteAttributes {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  id?: number;
+  createdAt?: Date;
+  updatedAt?: Date;
   title: string;
   content: string;
   author: string;

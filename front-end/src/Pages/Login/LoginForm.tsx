@@ -6,7 +6,9 @@ const useStyles = makeStyles((theme) => ({
     background: theme.palette.background.paper,
     height: "100%",
     flexGrow: 1,
-    display: "flex"
+    display: "flex",
+    boxShadow: "0 0 25px rgba(0,0,0,.15)",
+    zIndex: 2
   },
   form: {
     margin: "auto 0",

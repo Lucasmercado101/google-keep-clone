@@ -18,7 +18,7 @@ function App() {
   };
   return (
     <div className="App">
-      <Route path="/login" exact component={Login} />
+      <Route path="/" exact component={Login} />
       {/* <header className="App-header">
         <form onSubmit={handleSubmit}>
           <input

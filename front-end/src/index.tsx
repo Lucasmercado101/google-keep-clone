@@ -6,14 +6,17 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 import { CssBaseline } from "@material-ui/core";
 import ThemeProvider from "./ThemeProvider";
+import GlobalStateProvider from "./StateProvider";
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <ThemeProvider>
-        <App />
-        <CssBaseline />
-      </ThemeProvider>
+      <GlobalStateProvider>
+        <ThemeProvider>
+          <App />
+          <CssBaseline />
+        </ThemeProvider>
+      </GlobalStateProvider>
     </Router>
   </React.StrictMode>,
   document.getElementById("root")

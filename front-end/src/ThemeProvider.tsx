@@ -4,7 +4,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import { blue } from "@material-ui/core/colors";
 
 const Theme: React.FC = ({ children }) => {
-  const darkMode = true;
+  const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   const theme = createMuiTheme({
     palette: {

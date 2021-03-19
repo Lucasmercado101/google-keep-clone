@@ -1,5 +1,9 @@
+import { useContext } from "react";
+import { GlobalStateContext } from "../../StateProvider";
+import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import { makeStyles, TextField, Typography, Button } from "@material-ui/core";
+import { logIn } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,11 +32,16 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function LoginForm() {
+const LoginForm: React.FC = observer(() => {
+  let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
 
-  const onSubmit = (data: { userName: string; password: string }) => {};
+  const onSubmit = (data: { userName: string; password: string }) => {
+    logIn(data).then((resp) => {
+      ctx.userData = resp;
+    });
+  };
 
   return (
     <div className={classes.container}>
@@ -63,13 +72,13 @@ function LoginForm() {
             label="Password"
             type="password"
           />
-          <Button color="primary" variant="contained">
+          <Button type="submit" color="primary" variant="contained">
             Log In
           </Button>
         </div>
       </form>
     </div>
   );
-}
+});
 
 export default LoginForm;

@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(1)
   },
   title: {
     flexGrow: 1
@@ -33,14 +33,6 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up("md")]: {
       marginLeft: "auto"
     }
-  },
-  logo: {
-    display: "flex",
-    alignItems: "center"
-  },
-  logoIcon: {
-    transform: "rotate(-90deg)",
-    marginRight: theme.spacing(1)
   },
   toolbar: {
     color: theme.palette.text.secondary

@@ -1,6 +1,15 @@
 import { makeStyles, Typography, Modal, IconButton } from "@material-ui/core";
 import { useState } from "react";
-import { CheckCircle as SelectNoteIcon } from "@material-ui/icons";
+import {
+  CheckCircle as SelectNoteIcon,
+  AddAlertOutlined as ReminderIcon,
+  PersonAddOutlined as AddCollaboratorIcon,
+  ColorLensOutlined as CanvasIcon,
+  CropOriginal as AddImageIcon,
+  ArchiveOutlined as ArchiveIcon,
+  UnarchiveOutlined as UnarchiveOutline,
+  MoreVertOutlined as MoreIcon
+} from "@material-ui/icons";
 import EditNote from "../../Components/EditNote/EditNote";
 import BottomButtons from "./BottomButtons";
 import Icon from "@mdi/react";
@@ -53,6 +62,19 @@ const useStyles = makeStyles((theme) => ({
   },
   show: {
     opacity: 1
+  },
+  actionsContainer: {
+    display: "flex",
+    justifyContent: "space-evenly",
+    margin: "10px 0 5px 0"
+  },
+  iconContainer: {
+    height: 34,
+    width: 34
+  },
+  icon: {
+    width: 18,
+    height: 18
   }
 }));
 
@@ -109,8 +131,29 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
           </div>
           <Typography>{shorten(content, 235)}</Typography>
         </div>
-        <div className={show}>
-          <BottomButtons />
+
+        <div className={clsx(classes.actionsContainer, show)}>
+          <IconButton className={classes.iconContainer} color="inherit">
+            <ReminderIcon className={classes.icon + " " + classes.icon} />
+          </IconButton>
+          <IconButton className={classes.iconContainer} color="inherit">
+            <AddCollaboratorIcon
+              className={classes.icon}
+              style={{ transform: "scaleX(-1)" }}
+            />
+          </IconButton>
+          <IconButton className={classes.iconContainer} color="inherit">
+            <CanvasIcon className={classes.icon} />
+          </IconButton>
+          <IconButton className={classes.iconContainer} color="inherit">
+            <AddImageIcon className={classes.icon} />
+          </IconButton>
+          <IconButton className={classes.iconContainer} color="inherit">
+            <ArchiveIcon className={classes.icon} />
+          </IconButton>
+          <IconButton className={classes.iconContainer} color="inherit">
+            <MoreIcon className={classes.icon} />
+          </IconButton>
         </div>
       </div>
       <Modal className={classes.modal} open={isEditingModal}>

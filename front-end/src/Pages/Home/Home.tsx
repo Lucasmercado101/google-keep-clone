@@ -6,13 +6,15 @@ import NavBar from "../../Components/NavBar/NavBar";
 import { makeStyles } from "@material-ui/core";
 import NotesGrid from "../NotesGrid/NotesGrid";
 import NewNoteBar from "../../Components/NewNoteBar/NewNoteBar";
-import EditNote from "../../Components/EditNote/EditNote";
 import { useFetchAllMyNotes } from "../../Hooks/queries";
+import Drawer from "../../Components/LeftDrawer/LeftDrawer";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
+    display: "flex",
+    flexDirection: "column"
   },
   newNoteContainer: {
     display: "grid",
@@ -22,6 +24,11 @@ const useStyles = makeStyles((theme) => ({
   newNoteWrapper: {
     width: "100%",
     maxWidth: 600
+  },
+  content: {
+    height: "auto",
+    flexGrow: 1,
+    display: "flex"
   }
 }));
 
@@ -53,24 +60,28 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
 
   return (
     <div className={classes.pageContainer}>
-      <NavBar />
       <div>
-        {/* Menu on the left here */}
-        <div className={classes.newNoteContainer}>
-          <div className={classes.newNoteWrapper}>
-            <NewNoteBar />
+        <NavBar />
+      </div>
+      <div className={classes.content}>
+        <Drawer />
+        <div style={{ flexGrow: 1 }}>
+          <div className={classes.newNoteContainer}>
+            <div className={classes.newNoteWrapper}>
+              <NewNoteBar />
+            </div>
           </div>
+          {pinnedNotes && pinnedNotes.length > 0 ? (
+            <>
+              <NotesGrid title="Pinned" notes={pinnedNotes} />
+              {otherNotes && otherNotes.length > 0 && (
+                <NotesGrid title="Others" notes={otherNotes} />
+              )}
+            </>
+          ) : (
+            <NotesGrid notes={notesData} />
+          )}
         </div>
-        {pinnedNotes ? (
-          <>
-            <NotesGrid title="Pinned" notes={pinnedNotes} />
-            {otherNotes && otherNotes.length > 0 && (
-              <NotesGrid title="Others" notes={otherNotes} />
-            )}
-          </>
-        ) : (
-          <NotesGrid notes={notesData} />
-        )}
       </div>
     </div>
   );

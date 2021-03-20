@@ -24,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-start"
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    fontSize: "1.6rem"
   },
   contentBottom: {
     flexGrow: 1

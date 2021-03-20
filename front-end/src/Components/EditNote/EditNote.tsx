@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1, 2),
     maxWidth: 600,
     minHeight: isNewNote ? 0 : 180,
+    maxHeight: 650,
     width: "100%",
     display: "flex",
     flexDirection: "column",
@@ -106,6 +107,7 @@ const EditNote: React.FC<props> = ({
         </div>
         <InputBase
           multiline
+          style={{ overflow: "auto" }}
           id="contentArea"
           name="content"
           placeholder="Take a note..."

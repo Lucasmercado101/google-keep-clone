@@ -25,10 +25,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function BottomButtons() {
+type props = {
+  style?: any;
+  extraButtons?: any[] | null;
+};
+
+const BottomButtons: React.FC<props> = ({ style, extraButtons = null }) => {
   const classes = useStyles();
   return (
-    <div className={classes.container}>
+    <div style={style} className={classes.container}>
       <IconButton className={classes.iconContainer} color="inherit">
         <ReminderIcon className={classes.icon + " " + classes.icon} />
       </IconButton>
@@ -50,8 +55,15 @@ function BottomButtons() {
       <IconButton className={classes.iconContainer} color="inherit">
         <MoreIcon className={classes.icon} />
       </IconButton>
+      {/* TODO: fix this, this is just for design test */}
+      {extraButtons &&
+        extraButtons.map((CustomIcon) => (
+          <IconButton className={classes.iconContainer} color="inherit">
+            <CustomIcon className={classes.icon} />
+          </IconButton>
+        ))}
     </div>
   );
-}
+};
 
 export default BottomButtons;

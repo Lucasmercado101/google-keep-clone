@@ -8,25 +8,26 @@ import { Note } from "../../api";
 import BottomButtons from "../Note/BottomButtons";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  container: (isNewNote) => ({
     borderRadius: 8,
     border: `thin solid ${theme.palette.text.disabled}`,
     padding: theme.spacing(1, 2),
     maxWidth: 600,
-    minHeight: 180,
+    minHeight: isNewNote ? 0 : 180,
     width: "100%",
     display: "flex",
     flexDirection: "column",
     background: theme.palette.background.default
-  },
+  }),
   titleArea: {
     display: "flex",
     alignItems: "flex-start"
   },
-  title: {
+  title: (newNote) => ({
     flexGrow: 1,
-    fontSize: "1.6rem"
-  },
+    fontSize: newNote ? "initial" : "1.6rem",
+    marginBottom: newNote ? theme.spacing(2) : theme.spacing(1)
+  }),
   contentBottom: {
     flexGrow: 1
   }
@@ -36,6 +37,7 @@ type props = {
   onClickOutside?: (data?: any) => void;
   style?: any;
   className?: any;
+  newNote?: boolean;
 } & Partial<Note>;
 
 const EditNote: React.FC<props> = ({
@@ -46,9 +48,10 @@ const EditNote: React.FC<props> = ({
   title,
   content,
   className,
+  newNote = false,
   ...otherProps
 }) => {
-  const classes = useStyles();
+  const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 

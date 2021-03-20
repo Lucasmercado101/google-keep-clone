@@ -41,7 +41,8 @@ function NewNoteBar() {
     });
   };
 
-  if (isWritingNewNote) return <EditNote onClickOutside={handleNewNote} />;
+  if (isWritingNewNote)
+    return <EditNote newNote onClickOutside={handleNewNote} />;
 
   return (
     <div className={classes.container}>

@@ -19,7 +19,7 @@ router.get("/", (req, res) => {
 router.post("/", async (req, res) => {
   const { title, content, labels } = req.body;
 
-  if (!content || !title) return res.sendStatus(400);
+  if (!content && !title) return res.sendStatus(400);
 
   const newNote = await Note.create({
     author: req.user!.userName,

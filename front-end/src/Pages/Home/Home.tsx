@@ -4,7 +4,7 @@ import { GlobalStateContext } from "../../StateProvider";
 import { isLoggedIn } from "../../api";
 import NavBar from "../../Components/NavBar/NavBar";
 import { makeStyles } from "@material-ui/core";
-import NotesGrid from "../NotesGrid/NotesGrid";
+import NotesGrid from "../../Components/NotesGrid/NotesGrid";
 import NewNoteBar from "../../Components/NewNoteBar/NewNoteBar";
 import { useFetchAllMyNotes } from "../../Hooks/queries";
 import Drawer from "../../Components/LeftDrawer/LeftDrawer";

@@ -1,4 +1,4 @@
-import Note from "../../Components/Note/Note";
+import Note from "../Note/Note";
 import Masonry from "react-masonry-css";
 import { makeStyles, Typography } from "@material-ui/core";
 import Container from "@material-ui/core/Container";

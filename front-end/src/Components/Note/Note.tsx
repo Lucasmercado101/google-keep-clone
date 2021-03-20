@@ -1,4 +1,7 @@
-import { makeStyles, Typography } from "@material-ui/core";
+import { makeStyles, Typography, Modal } from "@material-ui/core";
+import { useState } from "react";
+import EditNote from "../../Components/EditNote/EditNote";
+import { usePutNote } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -28,7 +31,9 @@ type props = {
 };
 
 const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
+  const putNote = usePutNote();
   const classes = useStyles();
+  const [isEditingModal, setIsEditingModal] = useState(false);
 
   if (title) {
     // maximum 50 char title
@@ -42,12 +47,37 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
   }
 
   return (
-    <div className={classes.container}>
-      <Typography className={classes.title} variant="subtitle1" component="h4">
-        {title}
-      </Typography>
-      <Typography className={classes.content}>{content}</Typography>
-    </div>
+    <>
+      <div
+        onClick={() => setIsEditingModal(true)}
+        className={classes.container}
+      >
+        <Typography
+          className={classes.title}
+          variant="subtitle1"
+          component="h4"
+        >
+          {title}
+        </Typography>
+        <Typography className={classes.content}>{content}</Typography>
+      </div>
+      <Modal
+        style={{ width: "100%", height: "100%", display: "flex" }}
+        open={isEditingModal}
+        onClose={() => setIsEditingModal(false)}
+      >
+        <EditNote
+          style={{ margin: "auto", maxHeight: "100vh", overflow: "auto" }}
+          archived={archived}
+          content={content}
+          pinned={pinned}
+          title={title}
+          onClickOutside={(data) => {
+            putNote(id, data);
+          }}
+        />
+      </Modal>
+    </>
   );
 };
 

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import Icon from "@mdi/react";
 import { mdiPinOutline } from "@mdi/js";
 import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
+import { Note } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -11,8 +12,10 @@ const useStyles = makeStyles((theme) => ({
     border: `thin solid ${theme.palette.text.disabled}`,
     padding: theme.spacing(1, 2),
     maxWidth: 600,
+    width: "100%",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    background: theme.palette.background.default
   },
   titleArea: {
     display: "flex",
@@ -25,11 +28,20 @@ const useStyles = makeStyles((theme) => ({
 
 type props = {
   onClickOutside?: (data?: any) => void;
-};
+  style?: any;
+} & Partial<Note>;
 
-const EditNote: React.FC<props> = ({ onClickOutside = () => {} }) => {
+const EditNote: React.FC<props> = ({
+  onClickOutside = () => {},
+  archived,
+  pinned,
+  id,
+  title,
+  content,
+  style
+}) => {
   const classes = useStyles();
-  const { register, getValues } = useForm();
+  const { register, getValues, setValue } = useForm();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -37,6 +49,8 @@ const EditNote: React.FC<props> = ({ onClickOutside = () => {} }) => {
 
   useEffect(() => {
     focusInputRef?.current?.focus();
+    setValue("title", title);
+    setValue("content", content);
   }, []);
   //TODO: Convert first input base to a div with content editable
   // and placeholder with
@@ -51,7 +65,7 @@ const EditNote: React.FC<props> = ({ onClickOutside = () => {} }) => {
     }
     */
   return (
-    <div ref={wrapperRef} className={classes.container}>
+    <div ref={wrapperRef} style={style} className={classes.container}>
       <div className={classes.titleArea}>
         <InputBase
           className={classes.title}

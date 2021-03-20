@@ -64,22 +64,16 @@ type props = {
   id: number;
 };
 
+function shorten(str: string | undefined | null, len: number) {
+  if (!str) return;
+  return str.length > len ? `${str.substr(0, len - 3).trim()}...` : str;
+}
+
 const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
   const putNote = usePutNote();
   const [isHovering, setIsHovering] = useState(false);
   const classes = useStyles();
   const [isEditingModal, setIsEditingModal] = useState(false);
-
-  if (title) {
-    // maximum 50 char title
-    title = title.length > 50 ? `${title.substr(0, 47).trim()}...` : title;
-  }
-
-  if (content) {
-    // maximum 235 content
-    content =
-      content.length > 235 ? `${content.substr(0, 232).trim()}...` : content;
-  }
 
   const show = clsx(classes.hidden, isHovering && classes.show);
 
@@ -99,7 +93,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               variant="subtitle1"
               component="h4"
             >
-              {title}
+              {shorten(title, 50)}
             </Typography>
             <IconButton
               onClick={(e) => {
@@ -113,17 +107,13 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               <Icon path={pinned ? UnpinIcon : PinIcon} size={1} />
             </IconButton>
           </div>
-          <Typography>{content}</Typography>
+          <Typography>{shorten(content, 235)}</Typography>
         </div>
         <div className={show}>
           <BottomButtons />
         </div>
       </div>
-      <Modal
-        className={classes.modal}
-        open={isEditingModal}
-        onClose={() => setIsEditingModal(false)}
-      >
+      <Modal className={classes.modal} open={isEditingModal}>
         <EditNote
           className={classes.modalContent}
           archived={archived}
@@ -132,6 +122,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
           title={title}
           onClickOutside={(data) => {
             putNote(id, data);
+            setIsEditingModal(false);
           }}
         />
       </Modal>

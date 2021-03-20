@@ -5,7 +5,7 @@ import Icon from "@mdi/react";
 import { mdiPinOutline } from "@mdi/js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
-import BottomButtons from "../Note/BottomButtons";
+// import BottomButtons from "../Note/BottomButtons";
 import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -105,6 +105,7 @@ const EditNote: React.FC<props> = ({
             <Icon path={mdiPinOutline} size={1} />
           </IconButton>
         </div>
+
         <InputBase
           multiline
           style={{ overflow: "auto" }}
@@ -114,14 +115,14 @@ const EditNote: React.FC<props> = ({
           inputProps={{ ref: register }}
         />
         <label htmlFor="contentArea" className={classes.contentBottom}></label>
-        <div className={classes.bottomArea}>
+        {/* <div className={classes.bottomArea}>
           <div className={classes.actions}>
             <BottomButtons
               extraButtons={[UndoIcon, RedoIcon]}
               style={{ justifyContent: "space-between" }}
             />
           </div>
-        </div>
+        </div> */}
       </div>
     </ClickAwayListener>
   );

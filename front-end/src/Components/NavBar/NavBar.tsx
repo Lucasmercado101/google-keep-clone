@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { AppBar, Toolbar, IconButton } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
@@ -10,6 +11,8 @@ import {
   RefreshOutlined as RefreshIcon,
   AccountCircle as UserIcon
 } from "@material-ui/icons";
+import { observer } from "mobx-react-lite";
+import { GlobalStateContext } from "../../StateProvider";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -39,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function ButtonAppBar() {
+const NavBar: React.FC = observer(() => {
+  const ctx = useContext(GlobalStateContext);
   const classes = useStyles();
 
   return (
@@ -50,7 +54,7 @@ export default function ButtonAppBar() {
             edge="start"
             className={classes.menuButton}
             color="inherit"
-            aria-label="menu"
+            onClick={() => (ctx.isMenuExpanded = !ctx.isMenuExpanded)}
           >
             <MenuIcon />
           </IconButton>
@@ -76,4 +80,6 @@ export default function ButtonAppBar() {
       </AppBar>
     </div>
   );
-}
+});
+
+export default NavBar;

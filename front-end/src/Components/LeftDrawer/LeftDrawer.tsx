@@ -1,11 +1,6 @@
-import { useState } from "react";
-import {
-  Drawer,
-  List,
-  ListItemIcon,
-  ListItemText,
-  makeStyles
-} from "@material-ui/core";
+import { useState, useContext } from "react";
+import { List, makeStyles } from "@material-ui/core";
+import { GlobalStateContext } from "../../StateProvider";
 import {
   LabelOutlined as LabelsIcon,
   NotificationsNoneOutlined as RemindersIcon,
@@ -17,6 +12,7 @@ import Icon from "@mdi/react";
 import { mdiLightbulbOutline as LightBulbIcon } from "@mdi/js";
 import clsx from "clsx";
 import ListItem from "./Item";
+import { observer } from "mobx-react-lite";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -42,24 +38,25 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column"
   },
-  wrapper: {
-    minWidth: theme.spacing(10),
-    maxWidth: theme.spacing(10),
+  wrapper: (isMenuExpandedToggle) => ({
+    minWidth: isMenuExpandedToggle ? theme.spacing(35) : theme.spacing(10),
+    maxWidth: isMenuExpandedToggle ? theme.spacing(35) : theme.spacing(10),
     overflow: "visible"
-  }
+  })
 }));
 
-function LeftDrawer() {
+const LeftDrawer: React.FC = observer(() => {
+  const ctx = useContext(GlobalStateContext);
   const [open, setOpen] = useState(false);
-  const classes = useStyles();
-  // 48 height max and min
+  const classes = useStyles(ctx.isMenuExpanded);
+
   return (
     <div
       className={clsx(
         classes.wrapper,
         classes.drawer,
         classes.drawerClosed,
-        open && classes.drawerOpen
+        (open || ctx.isMenuExpanded) && classes.drawerOpen
       )}
     >
       <div
@@ -68,7 +65,7 @@ function LeftDrawer() {
         className={clsx(
           classes.drawer,
           classes.drawerClosed,
-          open && classes.drawerOpen
+          (open || ctx.isMenuExpanded) && classes.drawerOpen
         )}
       >
         <List className={classes.list}>
@@ -76,7 +73,7 @@ function LeftDrawer() {
             isSelected
             icon={<Icon path={LightBulbIcon} size={1} />}
             primary="Notes"
-            isListOpen={open}
+            isListOpen={open || ctx.isMenuExpanded}
           />
           <ListItem
             icon={<RemindersIcon />}
@@ -98,6 +95,6 @@ function LeftDrawer() {
       </div>
     </div>
   );
-}
+});
 
 export default LeftDrawer;

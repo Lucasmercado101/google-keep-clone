@@ -1,6 +1,11 @@
 import { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { AppBar, Toolbar, IconButton } from "@material-ui/core";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  CircularProgress
+} from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
@@ -13,6 +18,7 @@ import {
 } from "@material-ui/icons";
 import { observer } from "mobx-react-lite";
 import { GlobalStateContext } from "../../StateProvider";
+import { useIsFetching, useQueryClient } from "react-query";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +49,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const NavBar: React.FC = observer(() => {
+  const queryClient = useQueryClient();
+  const isFetchingNotes = useIsFetching("notes");
   const ctx = useContext(GlobalStateContext);
   const classes = useStyles();
 
@@ -62,8 +70,15 @@ const NavBar: React.FC = observer(() => {
           <SearchBar />
           <div className={classes.right}>
             <div className={classes.iconButtons}>
-              <IconButton color="inherit">
-                <RefreshIcon />
+              <IconButton
+                onClick={() => queryClient.invalidateQueries("notes")}
+                color="inherit"
+              >
+                {isFetchingNotes ? (
+                  <CircularProgress size={19} color="inherit" />
+                ) : (
+                  <RefreshIcon />
+                )}
               </IconButton>
               <IconButton color="inherit">
                 <ListIcon />

@@ -2,11 +2,11 @@ import { makeStyles, Typography, Modal, IconButton } from "@material-ui/core";
 import { useState } from "react";
 import { CheckCircle as SelectNoteIcon } from "@material-ui/icons";
 import EditNote from "../../Components/EditNote/EditNote";
-import { usePutNote } from "../../Hooks/queries";
 import BottomButtons from "./BottomButtons";
 import Icon from "@mdi/react";
-import { mdiPinOutline } from "@mdi/js";
+import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import clsx from "clsx";
+import { usePutNote } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -86,7 +86,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
   return (
     <>
       <div
-        onMouseEnter={() => setIsHovering(true)}
+        onMouseOverCapture={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         onClick={() => setIsEditingModal(true)}
         className={classes.container}
@@ -102,11 +102,15 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               {title}
             </Typography>
             <IconButton
+              onClick={(e) => {
+                e.stopPropagation();
+                putNote(id, { pinned: !pinned });
+              }}
               className={show}
               style={{ marginRight: -5 }}
               size="small"
             >
-              <Icon path={mdiPinOutline} size={1} />
+              <Icon path={pinned ? UnpinIcon : PinIcon} size={1} />
             </IconButton>
           </div>
           <Typography>{content}</Typography>

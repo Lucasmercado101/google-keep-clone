@@ -9,7 +9,7 @@ import { useFetchAllMyNotes } from "../../Hooks/queries";
 const useStyles = makeStyles((theme) => ({
   notesGrid: {
     display: "flex",
-    width: "100%",
+    width: "80%",
     alignItems: "flex-start",
     margin: "auto"
   },
@@ -21,13 +21,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundClip: "padding-box",
     "& > div": {
       marginBottom: theme.spacing(1) // space between items
-    },
-    // to center
-    "&:first-child": {
-      marginLeft: "auto"
-    },
-    "&:last-child": {
-      marginRight: "auto"
     }
   }
 }));

@@ -4,9 +4,10 @@ import { GlobalStateContext } from "../../StateProvider";
 import { isLoggedIn } from "../../api";
 import NavBar from "../../Components/NavBar/NavBar";
 import { makeStyles } from "@material-ui/core";
-import Notes from "../Notes/Notes";
+import NotesGrid from "../NotesGrid/NotesGrid";
 import NewNoteBar from "../../Components/NewNoteBar/NewNoteBar";
 import EditNote from "../../Components/EditNote/EditNote";
+import { useFetchAllMyNotes } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -25,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home: React.FC<RouteChildrenProps> = ({ history }) => {
+  const { data: notesData } = useFetchAllMyNotes();
   const [isLoading, setIsLoading] = useState(true);
   let ctx = useContext(GlobalStateContext);
   //TODO: notifications on the notes
@@ -42,6 +44,13 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
 
   if (isLoading) return null;
 
+  const pinnedNotes = notesData?.filter(
+    (note) => note.pinned && !note.archived
+  );
+  const otherNotes = notesData?.filter(
+    (note) => !note.pinned && !note.archived
+  );
+
   return (
     <div className={classes.pageContainer}>
       <NavBar />
@@ -52,7 +61,16 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
             <NewNoteBar />
           </div>
         </div>
-        <Notes />
+        {pinnedNotes ? (
+          <>
+            <NotesGrid title="Pinned" notes={pinnedNotes} />
+            {otherNotes && otherNotes.length > 0 && (
+              <NotesGrid title="Others" notes={otherNotes} />
+            )}
+          </>
+        ) : (
+          <NotesGrid notes={notesData} />
+        )}
       </div>
     </div>
   );

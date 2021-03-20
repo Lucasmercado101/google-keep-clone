@@ -91,7 +91,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
         onClick={() => setIsEditingModal(true)}
         className={classes.container}
       >
-        <SelectNoteIcon className={classes.selectNoteIcon + " " + show} />
+        {/* <SelectNoteIcon className={classes.selectNoteIcon + " " + show} /> */}
         <div className={classes.textWrapper}>
           <div className={classes.titleWrapper}>
             <Typography

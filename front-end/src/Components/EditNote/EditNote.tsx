@@ -29,6 +29,7 @@ const useStyles = makeStyles((theme) => ({
 type props = {
   onClickOutside?: (data?: any) => void;
   style?: any;
+  className?: any;
 } & Partial<Note>;
 
 const EditNote: React.FC<props> = ({
@@ -38,7 +39,8 @@ const EditNote: React.FC<props> = ({
   id,
   title,
   content,
-  style
+  className,
+  ...otherProps
 }) => {
   const classes = useStyles();
   const { register, getValues, setValue } = useForm();
@@ -52,6 +54,8 @@ const EditNote: React.FC<props> = ({
     setValue("title", title);
     setValue("content", content);
   }, []);
+  // TODO: Undo redo by pushing to an array every
+  // x seconds and then just using pop and stuff for undo redo
   //TODO: Convert first input base to a div with content editable
   // and placeholder with
   /*
@@ -65,7 +69,11 @@ const EditNote: React.FC<props> = ({
     }
     */
   return (
-    <div ref={wrapperRef} style={style} className={classes.container}>
+    <div
+      ref={wrapperRef}
+      {...otherProps}
+      className={`${className} ${classes.container}`}
+    >
       <div className={classes.titleArea}>
         <InputBase
           className={classes.title}

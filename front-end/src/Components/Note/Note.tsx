@@ -18,7 +18,16 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 500,
     marginBottom: 5
   },
-  content: {}
+  modal: {
+    width: "100%",
+    height: "100%",
+    display: "flex"
+  },
+  modalContent: {
+    margin: "auto",
+    maxHeight: "100vh",
+    overflow: "auto"
+  }
 }));
 // about 50 chars max title
 
@@ -59,15 +68,15 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
         >
           {title}
         </Typography>
-        <Typography className={classes.content}>{content}</Typography>
+        <Typography>{content}</Typography>
       </div>
       <Modal
-        style={{ width: "100%", height: "100%", display: "flex" }}
+        className={classes.modal}
         open={isEditingModal}
         onClose={() => setIsEditingModal(false)}
       >
         <EditNote
-          style={{ margin: "auto", maxHeight: "100vh", overflow: "auto" }}
+          className={classes.modalContent}
           archived={archived}
           content={content}
           pinned={pinned}

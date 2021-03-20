@@ -3,7 +3,7 @@ import { InputBase, makeStyles, IconButton } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import Icon from "@mdi/react";
 import { mdiPinOutline } from "@mdi/js";
-import useOutsideAlerter from "../../Hooks/useOutsideAlerter";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
@@ -44,10 +44,7 @@ const EditNote: React.FC<props> = ({
 }) => {
   const classes = useStyles();
   const { register, getValues, setValue } = useForm();
-  const wrapperRef = useRef<HTMLDivElement | null>(null);
   const focusInputRef = useRef<HTMLInputElement | null>(null);
-
-  useOutsideAlerter(wrapperRef, () => onClickOutside(getValues()));
 
   useEffect(() => {
     focusInputRef?.current?.focus();
@@ -69,38 +66,36 @@ const EditNote: React.FC<props> = ({
     }
     */
   return (
-    <div
-      ref={wrapperRef}
-      {...otherProps}
-      className={`${className} ${classes.container}`}
-    >
-      <div className={classes.titleArea}>
+    <ClickAwayListener onClickAway={() => onClickOutside(getValues())}>
+      <div {...otherProps} className={`${className} ${classes.container}`}>
+        <div className={classes.titleArea}>
+          <InputBase
+            className={classes.title}
+            multiline
+            name="title"
+            placeholder="Title"
+            inputProps={{
+              ref: (e: HTMLInputElement | null) => {
+                register(e);
+                focusInputRef.current = e;
+              }
+            }}
+          />
+          <IconButton
+            style={{ float: "right", display: "inline-block" }}
+            size="small"
+          >
+            <Icon path={mdiPinOutline} size={1} />
+          </IconButton>
+        </div>
         <InputBase
-          className={classes.title}
           multiline
-          name="title"
-          placeholder="Title"
-          inputProps={{
-            ref: (e: HTMLInputElement | null) => {
-              register(e);
-              focusInputRef.current = e;
-            }
-          }}
+          name="content"
+          placeholder="Take a note..."
+          inputProps={{ ref: register }}
         />
-        <IconButton
-          style={{ float: "right", display: "inline-block" }}
-          size="small"
-        >
-          <Icon path={mdiPinOutline} size={1} />
-        </IconButton>
       </div>
-      <InputBase
-        multiline
-        name="content"
-        placeholder="Take a note..."
-        inputProps={{ ref: register }}
-      />
-    </div>
+    </ClickAwayListener>
   );
 };
 

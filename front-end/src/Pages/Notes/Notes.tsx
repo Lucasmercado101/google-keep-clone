@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
 import Note from "../../Components/Note/Note";
-import axios from "axios";
 import Masonry from "react-masonry-css";
 import { makeStyles } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
@@ -9,14 +7,15 @@ import { useFetchAllMyNotes } from "../../Hooks/queries";
 const useStyles = makeStyles((theme) => ({
   notesGrid: {
     display: "flex",
-    width: "80%",
+    width: "90%",
     alignItems: "flex-start",
     margin: "auto"
   },
   notesGridItem: {
     maxWidth: 240,
-    width: "100%",
+    width: 240,
     height: "100%",
+    marginLeft: theme.spacing(1),
     paddingLeft: theme.spacing(1) /* gutter size offset */,
     backgroundClip: "padding-box",
     "& > div": {
@@ -27,12 +26,12 @@ const useStyles = makeStyles((theme) => ({
 
 const breakpointColumnsObj = {
   default: 7,
-  1900: 6,
-  1500: 5,
-  1300: 4,
-  1050: 3,
-  850: 2,
-  600: 1
+  2100: 6,
+  1700: 5,
+  1500: 4,
+  1250: 3,
+  1050: 2,
+  800: 1
 };
 
 function Notes() {

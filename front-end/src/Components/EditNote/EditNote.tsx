@@ -5,6 +5,7 @@ import Icon from "@mdi/react";
 import { mdiPinOutline } from "@mdi/js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
+import BottomButtons from "../Note/BottomButtons";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -12,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     border: `thin solid ${theme.palette.text.disabled}`,
     padding: theme.spacing(1, 2),
     maxWidth: 600,
+    minHeight: 180,
     width: "100%",
     display: "flex",
     flexDirection: "column",
@@ -22,6 +24,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "flex-start"
   },
   title: {
+    flexGrow: 1
+  },
+  contentBottom: {
     flexGrow: 1
   }
 }));
@@ -90,10 +95,13 @@ const EditNote: React.FC<props> = ({
         </div>
         <InputBase
           multiline
+          id="contentArea"
           name="content"
           placeholder="Take a note..."
           inputProps={{ ref: register }}
         />
+        <label htmlFor="contentArea" className={classes.contentBottom}></label>
+        <BottomButtons />
       </div>
     </ClickAwayListener>
   );

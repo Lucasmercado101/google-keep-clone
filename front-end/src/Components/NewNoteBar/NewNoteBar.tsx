@@ -8,14 +8,14 @@ import { useQueryClient } from "react-query";
 const useStyles = makeStyles((theme) => ({
   container: {
     border: `thin solid ${theme.palette.text.disabled}`,
+    boxShadow: theme.shadows[3],
     borderRadius: 8,
     width: "100%",
     display: "flex",
     padding: theme.spacing(0, 2)
   },
   input: {
-    flexGrow: 1,
-    fontWeight: 100
+    flexGrow: 1
   },
   icon: {
     color: theme.palette.text.disabled,

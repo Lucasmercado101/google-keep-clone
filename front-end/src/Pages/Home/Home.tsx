@@ -51,13 +51,6 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
 
   if (isLoading) return null;
 
-  const pinnedNotes = notesData?.filter(
-    (note) => note.pinned && !note.archived
-  );
-  const otherNotes = notesData?.filter(
-    (note) => !note.pinned && !note.archived
-  );
-
   return (
     <div className={classes.pageContainer}>
       <div>
@@ -71,15 +64,15 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
               <NewNoteBar />
             </div>
           </div>
-          {pinnedNotes && pinnedNotes.length > 0 ? (
+          {notesData && notesData.pinned.length ? (
             <>
-              <NotesGrid title="Pinned" notes={pinnedNotes} />
-              {otherNotes && otherNotes.length > 0 && (
-                <NotesGrid title="Others" notes={otherNotes} />
+              <NotesGrid title="Pinned" notes={notesData.pinned} />
+              {notesData.other && notesData.other.length > 0 && (
+                <NotesGrid title="Others" notes={notesData.other} />
               )}
             </>
           ) : (
-            <NotesGrid notes={notesData} />
+            notesData && <NotesGrid notes={notesData.other} />
           )}
         </div>
       </div>

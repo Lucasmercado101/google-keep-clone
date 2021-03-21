@@ -18,7 +18,12 @@ const useStyles = makeStyles((theme) => ({
   popover: { pointerEvents: "none" }
 }));
 
-function ColorPicker() {
+type props = {
+  id: number;
+  onSelectColor: (selectedColor: string) => void;
+};
+
+const ColorPicker: React.FC<props> = ({ id, onSelectColor }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -61,6 +66,6 @@ function ColorPicker() {
       </Popover>
     </div>
   );
-}
+};
 
 export default ColorPicker;

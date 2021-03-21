@@ -60,11 +60,11 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { title, content, labels, pinned, archived } = req.body;
-  const [_, [updatedNote]] = await Note.update(
-    { title, content, pinned, archived },
-    { where: { id }, returning: true }
-  );
+  const [_, [updatedNote]] = await Note.update(req.body, {
+    where: { id },
+    returning: true,
+    fields: ["archived", "color", "content", "pinned"]
+  });
   //TODO: update labels, collaborators, etc
   res.json({
     author: updatedNote.author,

@@ -19,6 +19,19 @@ interface NoteAttributes {
   author: string;
   pinned: boolean;
   archived: boolean;
+  color: [
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "teal",
+    "blue",
+    "darkblue",
+    "purple",
+    "pink",
+    "brown",
+    "gray"
+  ];
 }
 
 interface NoteCreationAttributes extends Optional<NoteAttributes, "id"> {}
@@ -44,21 +57,21 @@ export default class Note extends Model<
     allowNull: true,
     type: DataTypes.ENUM(
       "red",
-      " orange",
+      "orange",
       "yellow",
       "green",
       "teal",
       "blue",
       "darkblue",
       "purple",
-      "pink ",
+      "pink",
       "brown",
       "gray"
     )
   })
   color: [
     "red",
-    " orange",
+    "orange",
     "yellow",
     "green",
     "teal",

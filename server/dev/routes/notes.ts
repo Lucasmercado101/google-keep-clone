@@ -9,7 +9,7 @@ router.use("/", isAuthenticated);
 router.get("/", (req, res) => {
   Note.findAll({
     where: { author: req.user!.userName },
-    attributes: ["title", "content", "id", "pinned", "archived"]
+    attributes: ["title", "content", "id", "pinned", "archived", "color"]
     // TODO: get collaborators, labels, etc.
   })
     .then((resp) => {
@@ -47,7 +47,8 @@ router.post("/", async (req, res) => {
     title: newNote.title,
     content: newNote.content,
     pinned: newNote.pinned,
-    archived: newNote.archived
+    archived: newNote.archived,
+    color: newNote.color
   });
 });
 
@@ -70,7 +71,8 @@ router.put("/:id", async (req, res) => {
     title: updatedNote.title,
     content: updatedNote.content,
     pinned: updatedNote.pinned,
-    archived: updatedNote.archived
+    archived: updatedNote.archived,
+    color: updatedNote.color
   });
 });
 
@@ -85,7 +87,7 @@ router.get("/search", async (req, res) => {
       }
     },
     limit: +limit,
-    attributes: ["id", "title", "content", "pinned", "archived"]
+    attributes: ["id", "title", "content", "pinned", "archived", "color"]
   }).then((notes) => res.json(notes));
   // TODO: pagination
 });

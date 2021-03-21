@@ -19,11 +19,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type props = {
-  id: number;
   onSelectColor: (selectedColor: string) => void;
 };
 
-const ColorPicker: React.FC<props> = ({ id, onSelectColor }) => {
+const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 

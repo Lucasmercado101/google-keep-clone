@@ -162,7 +162,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               style={{ transform: "scaleX(-1)" }}
             />
           </IconButton>
-          <ColorPicker id={id} onSelectColor={(color) => {}} />
+          <ColorPicker onSelectColor={(color) => {}} />
           <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />
           </IconButton>

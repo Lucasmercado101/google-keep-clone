@@ -1,6 +1,5 @@
-import { AxiosError } from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getAllMyNotes, Note, putNote, getNotesResp } from "../api";
+import { getAllMyNotes, putNote, getNotesResp, deleteNote } from "../api";
 
 export function useFetchAllMyNotes() {
   const data = useQuery<getNotesResp, Error>("notes", getAllMyNotes);
@@ -16,6 +15,15 @@ export function usePutNote() {
   );
   return (id: string | number, data: any) =>
     mutation.mutateAsync({ id, data }).then(() => {
+      queryClient.invalidateQueries("notes");
+    });
+}
+
+export function useDeleteNote() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation((id: number) => deleteNote(id));
+  return (id: number) =>
+    mutation.mutateAsync(id).then(() => {
       queryClient.invalidateQueries("notes");
     });
 }

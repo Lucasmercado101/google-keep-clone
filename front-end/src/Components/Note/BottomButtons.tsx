@@ -55,13 +55,6 @@ const BottomButtons: React.FC<props> = ({ style, extraButtons = null }) => {
       <IconButton className={classes.iconContainer} color="inherit">
         <MoreIcon className={classes.icon} />
       </IconButton>
-      {/* TODO: fix this, this is just for design test */}
-      {extraButtons &&
-        extraButtons.map((CustomIcon) => (
-          <IconButton className={classes.iconContainer} color="inherit">
-            <CustomIcon className={classes.icon} />
-          </IconButton>
-        ))}
     </div>
   );
 };

@@ -1,4 +1,11 @@
-import { makeStyles, Typography, Modal, IconButton } from "@material-ui/core";
+import {
+  makeStyles,
+  Typography,
+  Modal,
+  IconButton,
+  Menu,
+  MenuItem
+} from "@material-ui/core";
 import { useState } from "react";
 import {
   CheckCircle as SelectNoteIcon,
@@ -14,7 +21,7 @@ import EditNote from "../../Components/EditNote/EditNote";
 import Icon from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import clsx from "clsx";
-import { usePutNote } from "../../Hooks/queries";
+import { usePutNote, useDeleteNote } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -92,9 +99,22 @@ function shorten(str: string | undefined | null, len: number) {
 
 const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
   const putNote = usePutNote();
+  const deleteNote = useDeleteNote();
   const [isHovering, setIsHovering] = useState(false);
   const classes = useStyles();
   const [isEditingModal, setIsEditingModal] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setAnchorEl(e.currentTarget);
+  };
+
+  const handleClose = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
+    e.stopPropagation();
+    setAnchorEl(null);
+  };
 
   const showOnHover = clsx(classes.hidden, isHovering && classes.show);
 
@@ -161,9 +181,29 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               <ArchiveIcon className={classes.icon} />
             )}
           </IconButton>
-          <IconButton className={classes.iconContainer} color="inherit">
+          <IconButton
+            onClick={handleClick}
+            className={classes.iconContainer}
+            color="inherit"
+          >
             <MoreIcon className={classes.icon} />
           </IconButton>
+          <Menu
+            id="simple-menu"
+            anchorEl={anchorEl}
+            keepMounted
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+          >
+            <MenuItem
+              onClick={(e) => {
+                handleClose(e);
+                deleteNote(id);
+              }}
+            >
+              Delete note
+            </MenuItem>
+          </Menu>
         </div>
       </div>
       <Modal className={classes.modal} open={isEditingModal}>

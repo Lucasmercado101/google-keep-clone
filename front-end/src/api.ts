@@ -45,3 +45,7 @@ export const putNote = (id: string | number, data: any) => {
 export const createNewNote = (data: any) => {
   return axios.post<Note>("/note/", data).then((resp) => resp.data);
 };
+
+export const deleteNote = (id: number) => {
+  return axios.delete(`/note/${id}`).then((resp) => resp.data);
+};

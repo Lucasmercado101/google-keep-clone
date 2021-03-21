@@ -18,7 +18,6 @@ router.post("/register", async (req, res) => {
 });
 
 router.get("/me", (req, res) => {
-  console.log(req.user);
   if (req.isAuthenticated()) {
     return res.json({ userName: req.user!.userName });
   } else res.sendStatus(401);

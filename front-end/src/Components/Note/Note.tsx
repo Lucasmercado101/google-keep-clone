@@ -22,6 +22,7 @@ import Icon from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import clsx from "clsx";
 import { usePutNote, useDeleteNote } from "../../Hooks/queries";
+import ColorPicker from "./ColorPicker";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -161,9 +162,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               style={{ transform: "scaleX(-1)" }}
             />
           </IconButton>
-          <IconButton className={classes.iconContainer} color="inherit">
-            <CanvasIcon className={classes.icon} />
-          </IconButton>
+          <ColorPicker />
           <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />
           </IconButton>

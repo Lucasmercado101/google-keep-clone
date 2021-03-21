@@ -7,11 +7,10 @@ import {
   ColorLensOutlined as CanvasIcon,
   CropOriginal as AddImageIcon,
   ArchiveOutlined as ArchiveIcon,
-  UnarchiveOutlined as UnarchiveOutline,
+  UnarchiveOutlined as UnarchiveIcon,
   MoreVertOutlined as MoreIcon
 } from "@material-ui/icons";
 import EditNote from "../../Components/EditNote/EditNote";
-import BottomButtons from "./BottomButtons";
 import Icon from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import clsx from "clsx";
@@ -97,7 +96,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
   const classes = useStyles();
   const [isEditingModal, setIsEditingModal] = useState(false);
 
-  const show = clsx(classes.hidden, isHovering && classes.show);
+  const showOnHover = clsx(classes.hidden, isHovering && classes.show);
 
   return (
     <>
@@ -122,7 +121,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
                 e.stopPropagation();
                 putNote(id, { pinned: !pinned });
               }}
-              className={show}
+              className={showOnHover}
               style={{ marginRight: -5 }}
               size="small"
             >
@@ -132,7 +131,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
           <Typography>{shorten(content, 235)}</Typography>
         </div>
 
-        <div className={clsx(classes.actionsContainer, show)}>
+        <div className={clsx(classes.actionsContainer, showOnHover)}>
           <IconButton className={classes.iconContainer} color="inherit">
             <ReminderIcon className={classes.icon + " " + classes.icon} />
           </IconButton>
@@ -148,8 +147,19 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
           <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />
           </IconButton>
-          <IconButton className={classes.iconContainer} color="inherit">
-            <ArchiveIcon className={classes.icon} />
+          <IconButton
+            className={classes.iconContainer}
+            onClick={(e) => {
+              e.stopPropagation();
+              putNote(id, { archived: !archived });
+            }}
+            color="inherit"
+          >
+            {archived ? (
+              <UnarchiveIcon className={classes.icon} />
+            ) : (
+              <ArchiveIcon className={classes.icon} />
+            )}
           </IconButton>
           <IconButton className={classes.iconContainer} color="inherit">
             <MoreIcon className={classes.icon} />

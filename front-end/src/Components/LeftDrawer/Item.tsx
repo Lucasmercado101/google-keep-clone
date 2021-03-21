@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme) => ({
     margin: 0,
     display: "flex",
     justifyContent: "center",
-    cursor: "pointer"
+    cursor: "pointer",
+    color: theme.palette.text.primary
   },
   listHighlight: {
     opacity: 0.2,

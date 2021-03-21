@@ -119,7 +119,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
             <IconButton
               onClick={(e) => {
                 e.stopPropagation();
-                putNote(id, { pinned: !pinned });
+                putNote(id, { pinned: !pinned, archived: false });
               }}
               className={showOnHover}
               style={{ marginRight: -5 }}
@@ -151,7 +151,7 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
             className={classes.iconContainer}
             onClick={(e) => {
               e.stopPropagation();
-              putNote(id, { archived: !archived });
+              putNote(id, { archived: !archived, pinned: false });
             }}
             color="inherit"
           >

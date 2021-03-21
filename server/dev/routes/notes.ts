@@ -12,7 +12,19 @@ router.get("/", (req, res) => {
     attributes: ["title", "content", "id", "pinned", "archived"]
     // TODO: get collaborators, labels, etc.
   })
-    .then((resp) => res.json(resp))
+    .then((resp) => {
+      const normalNotes = resp.filter((note) => !note.archived && !note.pinned);
+      const pinnedNotes = resp.filter((note) => !note.archived && note.pinned);
+      const archivedNotes = resp.filter(
+        (note) => note.archived && !note.pinned
+      );
+
+      res.json({
+        pinned: pinnedNotes,
+        archived: archivedNotes,
+        other: normalNotes
+      });
+    })
     .catch((e) => res.sendStatus(500));
 });
 

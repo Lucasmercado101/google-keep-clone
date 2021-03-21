@@ -61,9 +61,9 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
       </div>
       <div className={classes.content}>
         <Drawer />
-        <Switch>
-          <Route exact path={path}>
-            <div style={{ flexGrow: 1 }}>
+        <div style={{ flexGrow: 1 }}>
+          <Switch>
+            <Route exact path={path}>
               <div className={classes.newNoteContainer}>
                 <div className={classes.newNoteWrapper}>
                   <NewNoteBar />
@@ -79,10 +79,10 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
               ) : (
                 notesData && <NotesGrid notes={notesData.other} />
               )}
-            </div>
-          </Route>
-          <Route exact path={`${path}/archived`} component={Archived} />
-        </Switch>
+            </Route>
+            <Route exact path={`${path}/archived`} component={Archived} />
+          </Switch>
+        </div>
       </div>
     </div>
   );

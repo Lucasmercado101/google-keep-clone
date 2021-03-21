@@ -22,7 +22,10 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     background: theme.palette.background.default,
     position: "relative",
-    transition: "min-width 150ms",
+    transition: "min-width 150ms"
+  },
+  innerDrawer: {
+    position: "fixed",
     zIndex: 2
   },
   drawerClosed: {
@@ -68,7 +71,8 @@ const LeftDrawer: React.FC = observer(() => {
         className={clsx(
           classes.drawer,
           classes.drawerClosed,
-          (open || ctx.isMenuExpanded) && classes.drawerOpen
+          (open || ctx.isMenuExpanded) && classes.drawerOpen,
+          classes.innerDrawer
         )}
       >
         <List className={classes.list}>

@@ -13,10 +13,10 @@ import Archived from "../Archived/Archived";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
-    height: "100vh",
     overflow: "auto",
     display: "flex",
-    flexDirection: "column"
+    flexDirection: "column",
+    position: "relative"
   },
   newNoteContainer: {
     display: "grid",
@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: 600
   },
   content: {
+    paddingTop: theme.spacing(8),
     height: "auto",
     flexGrow: 1,
     display: "flex"
@@ -56,12 +57,10 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
 
   return (
     <div className={classes.pageContainer}>
-      <div>
-        <NavBar />
-      </div>
+      <NavBar />
       <div className={classes.content}>
         <Drawer />
-        <div style={{ flexGrow: 1 }}>
+        <div style={{ flexGrow: 1, zIndex: 1, position: "relative" }}>
           <Switch>
             <Route exact path={path}>
               <div className={classes.newNoteContainer}>

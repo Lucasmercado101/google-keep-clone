@@ -1,4 +1,4 @@
-import { useContext, cloneElement } from "react";
+import { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   AppBar,
@@ -9,7 +9,12 @@ import {
 import MenuIcon from "@material-ui/icons/Menu";
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
+import {
+  Brightness7 as SunIcon,
+  Brightness4 as MoonIcon
+} from "@material-ui/icons/";
 // import DashboardIcon from '@material-ui/icons/Dashboard'; // switch to grid view icon
+
 import {
   ViewAgendaOutlined as ListIcon,
   SettingsOutlined as SettingsIcon,
@@ -100,9 +105,18 @@ const NavBar: React.FC = observer(() => {
               <SettingsIcon />
             </IconButton>
           </div>
-          <IconButton edge="end" color="inherit">
-            <UserIcon />
-          </IconButton>
+          <div style={{ display: "flex", gap: 15 }}>
+            <IconButton
+              edge="end"
+              color="inherit"
+              onClick={() => (ctx.darkMode = !ctx.darkMode)}
+            >
+              {ctx.darkMode ? <SunIcon /> : <MoonIcon />}
+            </IconButton>
+            <IconButton edge="end" color="inherit">
+              <UserIcon />
+            </IconButton>
+          </div>
         </div>
       </Toolbar>
     </AppBar>

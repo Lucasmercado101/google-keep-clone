@@ -40,6 +40,36 @@ export default class Note extends Model<
   @Column({ allowNull: true })
   archived: boolean;
 
+  @Column({
+    allowNull: true,
+    type: DataTypes.ENUM(
+      "red",
+      " orange",
+      "yellow",
+      "green",
+      "teal",
+      "blue",
+      "darkblue",
+      "purple",
+      "pink ",
+      "brown",
+      "gray"
+    )
+  })
+  color: [
+    "red",
+    " orange",
+    "yellow",
+    "green",
+    "teal",
+    "blue",
+    "darkblue",
+    "purple",
+    "pink ",
+    "brown",
+    "gray"
+  ];
+
   @ForeignKey(() => User)
   @Column
   author: string;

@@ -57,6 +57,7 @@ const EditNote: React.FC<props> = ({
   content,
   className,
   newNote = false,
+  color,
   ...otherProps
 }) => {
   const classes = useStyles(newNote);

@@ -9,6 +9,21 @@ export type Note = {
   content: string;
   pinned: boolean;
   archived: boolean;
+  color:
+    | null
+    | [
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "teal",
+        "blue",
+        "darkblue",
+        "purple",
+        "pink",
+        "brown",
+        "gray"
+      ];
 };
 
 type pinnedNote = Note & {

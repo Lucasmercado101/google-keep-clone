@@ -25,7 +25,7 @@ import { usePutNote, useDeleteNote } from "../../Hooks/queries";
 import ColorPicker from "./ColorPicker";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  container: (color: any) => ({
     width: 240,
     maxWidth: 240,
     borderRadius: 8,
@@ -33,8 +33,22 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 100,
     maxHeight: 450,
     height: "100%",
-    position: "relative"
-  },
+    position: "relative",
+    overflow: "hidden",
+    "&::after": {
+      zIndex: -1,
+      content: "''",
+      position: "absolute",
+      height: "100%",
+      top: 0,
+      left: 0,
+      width: "100%",
+      filter: "saturate(350%) opacity(0.25)",
+      backgroundImage: color.color
+        ? `linear-gradient(${color.color}, ${color.color})`
+        : "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0))"
+    }
+  }),
   title: {
     fontWeight: 500,
     marginBottom: 5,
@@ -45,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     display: "flex"
   },
+
   modalContent: {
     margin: "auto",
     maxHeight: "100vh",
@@ -91,6 +106,7 @@ type props = {
   archived: boolean;
   pinned: boolean;
   id: number;
+  color: string;
 };
 
 function shorten(str: string | undefined | null, len: number) {
@@ -98,11 +114,18 @@ function shorten(str: string | undefined | null, len: number) {
   return str.length > len ? `${str.substr(0, len - 3).trim()}...` : str;
 }
 
-const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
+const Note: React.FC<props> = ({
+  id,
+  archived,
+  content,
+  pinned,
+  title,
+  color
+}) => {
+  const classes = useStyles({ color });
   const putNote = usePutNote();
   const deleteNote = useDeleteNote();
   const [isHovering, setIsHovering] = useState(false);
-  const classes = useStyles();
   const [isEditingModal, setIsEditingModal] = useState(false);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -162,7 +185,9 @@ const Note: React.FC<props> = ({ id, archived, content, pinned, title }) => {
               style={{ transform: "scaleX(-1)" }}
             />
           </IconButton>
-          <ColorPicker onSelectColor={(color) => {}} />
+          <ColorPicker
+            onSelectColor={(color) => putNote(id, { color: color })}
+          />
           <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />
           </IconButton>

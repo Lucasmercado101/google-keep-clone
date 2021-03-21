@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type props = {
-  onSelectColor: (selectedColor: string) => void;
+  onSelectColor: (selectedColor?: string | null) => void;
 };
 
 const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
@@ -67,10 +67,7 @@ const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
   const handlePopoverClose = () => {
     setAnchorEl(null);
   };
-  // 26 * 26 y 4 width * 3 height
-  //   default ,red, orange yellow
-  // green, Teal, Blue, Dark Blue,
-  // Purple ,Pink , Brown, Gray
+
   const open = Boolean(anchorEl);
   return (
     <div onClick={(e) => e.stopPropagation()} onMouseLeave={handlePopoverClose}>
@@ -97,56 +94,92 @@ const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
         onClose={handlePopoverClose}
       >
         <Paper className={classes.paper}>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor(null)}
+          >
             <div
               style={{ background: "transparent" }}
               className={clsx(classes.color, classes.transparentColor)}
             />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("red")}
+          >
             <div style={{ background: "red" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
 
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("orange")}
+          >
             <div style={{ background: "orange" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
 
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("yellow")}
+          >
             <div style={{ background: "yellow" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("green")}
+          >
             <div style={{ background: "green" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("teal")}
+          >
             <div style={{ background: "teal" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("blue")}
+          >
             <div style={{ background: "blue" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("darkblue")}
+          >
             <div style={{ background: "darkblue" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("purple")}
+          >
             <div style={{ background: "purple" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("pink")}
+          >
             <div style={{ background: "pink" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("brown")}
+          >
             <div style={{ background: "brown" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>
-          <div className={classes.colorWrapper}>
+          <div
+            className={classes.colorWrapper}
+            onClick={() => onSelectColor("gray")}
+          >
             <div style={{ background: "gray" }} className={classes.color} />
             <div className={classes.colorSelectedOutline} />
           </div>

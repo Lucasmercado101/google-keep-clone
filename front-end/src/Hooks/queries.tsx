@@ -1,9 +1,9 @@
 import { AxiosError } from "axios";
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getAllMyNotes, Note, putNote } from "../api";
+import { getAllMyNotes, Note, putNote, getNotesResp } from "../api";
 
 export function useFetchAllMyNotes() {
-  const data = useQuery<Note[], Error>("notes", getAllMyNotes);
+  const data = useQuery<getNotesResp, Error>("notes", getAllMyNotes);
 
   return data;
 }

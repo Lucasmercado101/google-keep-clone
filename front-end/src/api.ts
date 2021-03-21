@@ -11,6 +11,19 @@ export type Note = {
   archived: boolean;
 };
 
+type pinnedNote = Note & {
+  pinned: true;
+};
+type archivedNote = Note & {
+  archived: true;
+};
+
+export type getNotesResp = {
+  pinned: pinnedNote[];
+  archived: archivedNote[];
+  other: Note[];
+};
+
 export const logIn = (data: { userName: string; password: string }) => {
   return axios
     .post<{ userName: string }>("/auth/login", data)
@@ -22,7 +35,7 @@ export const isLoggedIn = () => {
 };
 
 export const getAllMyNotes = () => {
-  return axios.get<Note[]>("/note/").then((resp) => resp.data);
+  return axios.get<getNotesResp>("/note/").then((resp) => resp.data);
 };
 
 export const putNote = (id: string | number, data: any) => {

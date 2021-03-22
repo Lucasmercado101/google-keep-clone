@@ -30,9 +30,8 @@ const useStyles = makeStyles((theme) => ({
   root: (isScrolledDown) => ({
     zIndex: 3,
     background: theme.palette.background.default,
-    borderBottom: `thin solid ${
-      isScrolledDown ? "transparent" : theme.palette.text.disabled
-    }`
+    borderBottom: `thin solid ${isScrolledDown ? "transparent" : theme.palette.text.disabled
+      }`
   }),
   menuButton: {
     marginRight: theme.spacing(1)
@@ -41,7 +40,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1
   },
   iconButtons: {
-    margin: 0,
+    margin: "0 15px 0 0",
     [theme.breakpoints.up("md")]: {
       margin: "0 30px"
     }
@@ -101,11 +100,6 @@ const NavBar: React.FC = observer(() => {
             <IconButton color="inherit">
               <ListIcon />
             </IconButton>
-            <IconButton color="inherit">
-              <SettingsIcon />
-            </IconButton>
-          </div>
-          <div style={{ display: "flex", gap: 15 }}>
             <IconButton
               edge="end"
               color="inherit"
@@ -113,10 +107,10 @@ const NavBar: React.FC = observer(() => {
             >
               {ctx.darkMode ? <SunIcon /> : <MoonIcon />}
             </IconButton>
-            <IconButton edge="end" color="inherit">
-              <UserIcon />
-            </IconButton>
           </div>
+          <IconButton edge="end" color="inherit">
+            <UserIcon />
+          </IconButton>
         </div>
       </Toolbar>
     </AppBar>

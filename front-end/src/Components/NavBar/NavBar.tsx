@@ -9,9 +9,6 @@ import {
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 import {
-} from "@material-ui/icons/";
-
-import {
   Menu as HamburgerIcon,
   Brightness7 as SunIcon,
   Brightness4 as MoonIcon,
@@ -85,28 +82,25 @@ const NavBar: React.FC = observer(() => {
         <Logo />
         <SearchBar />
         <div className={classes.right}>
-          <div className={classes.iconButtons}>
-            <IconButton
-              onClick={() => queryClient.invalidateQueries("notes")}
-              color="inherit"
-            >
-              {isFetchingNotes ? (
-                <CircularProgress size={19} color="inherit" />
-              ) : (
-                <RefreshIcon />
-              )}
-            </IconButton>
-            <IconButton color="inherit" onClick={() => ctx.listView = !ctx.listView}>
-              {ctx.listView ? <GridIcon /> : <ListIcon />}
-            </IconButton>
-            <IconButton
-              edge="end"
-              color="inherit"
-              onClick={() => (ctx.darkMode = !ctx.darkMode)}
-            >
-              {ctx.darkMode ? <SunIcon /> : <MoonIcon />}
-            </IconButton>
-          </div>
+          <IconButton
+            onClick={() => queryClient.invalidateQueries("notes")}
+            color="inherit"
+          >
+            {isFetchingNotes ? (
+              <CircularProgress size={19} color="inherit" />
+            ) : (
+              <RefreshIcon />
+            )}
+          </IconButton>
+          <IconButton color="inherit" onClick={() => ctx.listView = !ctx.listView}>
+            {ctx.listView ? <GridIcon /> : <ListIcon />}
+          </IconButton>
+          <IconButton
+            color="inherit"
+            onClick={() => (ctx.darkMode = !ctx.darkMode)}
+          >
+            {ctx.darkMode ? <SunIcon /> : <MoonIcon />}
+          </IconButton>
           <IconButton edge="end" color="inherit">
             <UserIcon />
           </IconButton>

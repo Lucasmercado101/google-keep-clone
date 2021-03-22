@@ -6,20 +6,19 @@ import {
   IconButton,
   CircularProgress
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
 import Logo from "./Logo";
 import SearchBar from "./SearchBar";
 import {
-  Brightness7 as SunIcon,
-  Brightness4 as MoonIcon
 } from "@material-ui/icons/";
-// import DashboardIcon from '@material-ui/icons/Dashboard'; // switch to grid view icon
 
 import {
+  Menu as HamburgerIcon,
+  Brightness7 as SunIcon,
+  Brightness4 as MoonIcon,
   ViewAgendaOutlined as ListIcon,
-  SettingsOutlined as SettingsIcon,
   RefreshOutlined as RefreshIcon,
-  AccountCircle as UserIcon
+  AccountCircle as UserIcon,
+  Dashboard as GridIcon,
 } from "@material-ui/icons";
 import { observer } from "mobx-react-lite";
 import { GlobalStateContext } from "../../StateProvider";
@@ -81,7 +80,7 @@ const NavBar: React.FC = observer(() => {
           color="inherit"
           onClick={() => (ctx.isMenuExpanded = !ctx.isMenuExpanded)}
         >
-          <MenuIcon />
+          <HamburgerIcon />
         </IconButton>
         <Logo />
         <SearchBar />
@@ -97,8 +96,8 @@ const NavBar: React.FC = observer(() => {
                 <RefreshIcon />
               )}
             </IconButton>
-            <IconButton color="inherit">
-              <ListIcon />
+            <IconButton color="inherit" onClick={() => ctx.listView = !ctx.listView}>
+              {ctx.listView ? <GridIcon /> : <ListIcon />}
             </IconButton>
             <IconButton
               edge="end"

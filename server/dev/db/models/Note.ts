@@ -19,7 +19,7 @@ interface NoteAttributes {
   author: string;
   pinned: boolean;
   archived: boolean;
-  color: [
+  color?: [
     "red",
     "orange",
     "yellow",

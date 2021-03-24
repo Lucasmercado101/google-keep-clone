@@ -6,6 +6,7 @@ import {
   Unique,
   HasMany
 } from "sequelize-typescript";
+import Label from "./Label";
 import Note from "./Note";
 
 @Table
@@ -20,4 +21,7 @@ export default class User extends Model {
 
   @HasMany(() => Note)
   notes: Note[];
+
+  @HasMany(() => Label)
+  labels: Label[];
 }

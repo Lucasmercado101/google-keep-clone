@@ -12,6 +12,7 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   //TODO: check if label already exists
+  if (!req.body.name) return res.status(400).json("You must provide a name");
   const newLabel = await Label.create({ name: req.body.name });
   await req.user!.$add("label", newLabel);
   res.sendStatus(200);

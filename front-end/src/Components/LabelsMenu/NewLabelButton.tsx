@@ -8,6 +8,10 @@ type props = {
 };
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    width: "100%",
+    justifyContent: "flex-start"
+  },
   divider: {
     background: theme.palette.text.disabled
   },
@@ -46,6 +50,7 @@ const NewLabelButton: React.FC<props> = ({ newLabelName }) => {
     <>
       <Divider className={classes.divider} />
       <ButtonBase
+        classes={{ root: classes.root }}
         onClick={() => postNewLabel(newLabelName)}
         disableTouchRipple
         focusRipple

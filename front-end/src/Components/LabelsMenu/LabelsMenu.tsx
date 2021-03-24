@@ -13,6 +13,7 @@ import { makeStyles } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import { useGetLabels } from "../../Hooks/queries";
 import NewLabelButton from "./NewLabelButton";
+import { label } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -63,7 +64,7 @@ function LabelsMenu() {
   const classes = useStyles();
   const [newLabelName, setNewLabelName] = useState("");
 
-  const { data: labelsData } = useGetLabels();
+  const { data: labelsData = [] } = useGetLabels();
 
   return (
     <Paper elevation={3} className={classes.container}>
@@ -80,8 +81,11 @@ function LabelsMenu() {
         </div>
       </div>
       <List classes={{ root: classes.listRoot }} className={classes.list}>
-        {labelsData &&
-          labelsData.map((label) => (
+        {labelsData
+          .filter((label: label) =>
+            label.name.toLowerCase().includes(newLabelName.toLowerCase())
+          )
+          .map((label) => (
             <ListItem
               classes={{ gutters: classes.listItemContainer }}
               className={classes.listItem}
@@ -104,7 +108,8 @@ function LabelsMenu() {
             </ListItem>
           ))}
       </List>
-      {newLabelName && <NewLabelButton newLabelName={newLabelName} />}
+      {!labelsData.find((label) => label.name.toLowerCase() === newLabelName) &&
+        newLabelName && <NewLabelButton newLabelName={newLabelName} />}
     </Paper>
   );
 }

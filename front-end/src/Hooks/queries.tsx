@@ -1,9 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "react-query";
-import { getAllMyNotes, putNote, getNotesResp, deleteNote } from "../api";
+import {
+  getAllMyNotes,
+  putNote,
+  getNotesResp,
+  deleteNote,
+  getLabels,
+  label,
+  addNewLabel
+} from "../api";
 
 export function useFetchAllMyNotes() {
   const data = useQuery<getNotesResp, Error>("notes", getAllMyNotes);
-
   return data;
 }
 
@@ -25,5 +32,18 @@ export function useDeleteNote() {
   return (id: number) =>
     mutation.mutateAsync(id).then(() => {
       queryClient.invalidateQueries("notes");
+    });
+}
+
+export function useGetLabels() {
+  return useQuery<label[], Error>("labels", getLabels);
+}
+
+export function usePostNewLabel() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation((name: string) => addNewLabel(name));
+  return (name: string) =>
+    mutation.mutateAsync(name).then(() => {
+      queryClient.invalidateQueries("labels");
     });
 }

@@ -3,6 +3,11 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:5000";
 axios.defaults.withCredentials = true;
 
+type baseModelData = {
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export type Note = {
   id: number;
   title: string;
@@ -24,7 +29,7 @@ export type Note = {
         "brown",
         "gray"
       ];
-};
+} & baseModelData;
 
 type pinnedNote = Note & {
   pinned: true;
@@ -38,6 +43,10 @@ export type getNotesResp = {
   archived: archivedNote[];
   other: Note[];
 };
+
+export type label = {
+  name: string;
+} & baseModelData;
 
 export const logIn = (data: { userName: string; password: string }) => {
   return axios
@@ -63,4 +72,12 @@ export const createNewNote = (data: any) => {
 
 export const deleteNote = (id: number) => {
   return axios.delete(`/note/${id}`).then((resp) => resp.data);
+};
+
+export const getLabels = () => {
+  return axios.get<label[]>(`/label/`).then((resp) => resp.data);
+};
+
+export const addNewLabel = (name: string) => {
+  return axios.post("/label/", { name }).then((resp) => resp.data);
 };

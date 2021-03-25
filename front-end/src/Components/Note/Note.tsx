@@ -16,6 +16,7 @@ import { usePutNote } from "../../Hooks/queries";
 import ColorPicker from "./ColorPicker";
 import MoreMenu from "./MoreMenu";
 import { label } from "../../api";
+import Tags from "./Tags";
 
 const useStyles = makeStyles((theme) => ({
   container: (color: any) => ({
@@ -156,6 +157,7 @@ const Note: React.FC<props> = ({
           </div>
           <Typography>{shorten(content, 235)}</Typography>
         </div>
+        <Tags labels={labels} />
 
         <div className={clsx(classes.actionsContainer, showOnHover)}>
           <IconButton className={classes.iconContainer} color="inherit">

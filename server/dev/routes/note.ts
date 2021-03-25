@@ -73,17 +73,28 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { labels } = req.body as { labels?: number[] };
+  const { labels, ...otherData } = req.body as any;
   const note = await Note.findOne({
     where: { id, author: req.user!.userName },
     attributes: noteAttributesToReturn
   });
 
+  if (!note) return res.sendStatus(404);
+
+  if (otherData && Object.keys(otherData).length)
+    await note.update(
+      otherData,
+      {
+        where: { id, author: req.user!.userName }
+      },
+      {
+        fields: ["title", "content", "pinned", "archived", "color"]
+      }
+    );
+
   const userLabels = await Label.findAll({
     where: { id: { [Op.in]: labels }, owner: req.user!.userName }
   });
-
-  if (!note) return res.sendStatus(404);
 
   if (labels) await note.$set("labels", userLabels);
 

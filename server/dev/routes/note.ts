@@ -65,12 +65,6 @@ router.post("/", async (req, res) => {
   });
 });
 
-router.delete("/:id", async (req, res) => {
-  const { id } = req.params;
-  await Note.destroy({ where: { id, author: req.user!.userName } });
-  res.sendStatus(200);
-});
-
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
   const { labels, ...otherData } = req.body as any;
@@ -124,6 +118,23 @@ router.get("/search", async (req, res) => {
     attributes: noteAttributesToReturn
   }).then((notes) => res.json(notes));
   // TODO: pagination
+});
+
+router.delete("/label", async (req, res) => {
+  const { labelId, noteId } = req.body;
+  const note = await Note.findOne({
+    where: { id: noteId, author: req.user!.userName },
+    attributes: noteAttributesToReturn
+  });
+
+  await note?.$remove("label", labelId);
+  res.sendStatus(200);
+});
+
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  await Note.destroy({ where: { id, author: req.user!.userName } });
+  res.sendStatus(200);
 });
 
 export default router;

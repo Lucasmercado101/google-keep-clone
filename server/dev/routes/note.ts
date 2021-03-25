@@ -4,7 +4,6 @@ import { Op } from "sequelize";
 const router = Router();
 import isAuthenticated from "./middleware/isAuthenticated";
 import Label from "../db/models/Label";
-import NoteLabel from "../db/models/NoteLabel";
 
 router.use("/", isAuthenticated);
 
@@ -68,30 +67,41 @@ router.post("/", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const { id } = req.params;
-  await Note.destroy({ where: { id } });
+  await Note.destroy({ where: { id, author: req.user!.userName } });
   res.sendStatus(200);
 });
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
-  const { labels } = req.body as { labels?: number[] };
-  const [_, [updatedNote]] = await Note.update(req.body, {
-    where: { id },
-    returning: true,
-    fields: ["archived", "color", "content", "pinned"]
+  const { labels, ...otherData } = req.body as any;
+  const note = await Note.findOne({
+    where: { id, author: req.user!.userName },
+    attributes: noteAttributesToReturn
   });
 
-  if (labels) updatedNote.$set("labels", labels);
+  if (!note) return res.sendStatus(404);
 
-  //TODO: update labels, collaborators, etc
+  if (otherData && Object.keys(otherData).length)
+    await note.update(
+      otherData,
+      {
+        where: { id, author: req.user!.userName }
+      },
+      {
+        fields: ["title", "content", "pinned", "archived", "color"]
+      }
+    );
+
+  const userLabels = await Label.findAll({
+    where: { id: { [Op.in]: labels }, owner: req.user!.userName }
+  });
+
+  if (labels) await note.$set("labels", userLabels);
+
+  //TODO: collaborators, etc
   res.json({
-    author: updatedNote.author,
-    title: updatedNote.title,
-    content: updatedNote.content,
-    pinned: updatedNote.pinned,
-    archived: updatedNote.archived,
-    color: updatedNote.color,
-    labels: await updatedNote.$get("labels", {
+    ...note.toJSON(),
+    labels: await note.$get("labels", {
       attributes: ["id", "name"],
       //@ts-ignore
       joinTableAttributes: []

@@ -1,6 +1,5 @@
 import { Router } from "express";
 import Label from "../db/models/Label";
-import User from "../db/models/User";
 const router = Router();
 import isAuthenticated from "./middleware/isAuthenticated";
 
@@ -11,7 +10,12 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  //TODO: check if label already exists
+  if (
+    !!(await req.user!.$get("labels")).find(
+      (label) => label.name === req.body.name
+    )
+  )
+    return res.sendStatus(409);
   if (!req.body.name) return res.status(400).json("You must provide a name");
   const newLabel = await Label.create({ name: req.body.name });
   await req.user!.$add("label", newLabel);

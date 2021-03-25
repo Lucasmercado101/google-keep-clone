@@ -3,13 +3,27 @@ import Note from "../db/models/Note";
 import { Op } from "sequelize";
 const router = Router();
 import isAuthenticated from "./middleware/isAuthenticated";
+import Label from "../db/models/Label";
+import NoteLabel from "../db/models/NoteLabel";
 
 router.use("/", isAuthenticated);
+
+const noteAttributesToReturn = [
+  "title",
+  "content",
+  "id",
+  "pinned",
+  "archived",
+  "color"
+];
 
 router.get("/", (req, res) => {
   Note.findAll({
     where: { author: req.user!.userName },
-    attributes: ["title", "content", "id", "pinned", "archived", "color"]
+    attributes: noteAttributesToReturn,
+    include: [
+      { model: Label, attributes: ["name", "id"], through: { attributes: [] } }
+    ]
     // TODO: get collaborators, labels, etc.
   })
     .then((resp) => {
@@ -60,11 +74,15 @@ router.delete("/:id", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   const { id } = req.params;
+  const { labels } = req.body as { labels?: number[] };
   const [_, [updatedNote]] = await Note.update(req.body, {
     where: { id },
     returning: true,
     fields: ["archived", "color", "content", "pinned"]
   });
+
+  if (labels) updatedNote.$set("labels", labels);
+
   //TODO: update labels, collaborators, etc
   res.json({
     author: updatedNote.author,
@@ -72,7 +90,12 @@ router.put("/:id", async (req, res) => {
     content: updatedNote.content,
     pinned: updatedNote.pinned,
     archived: updatedNote.archived,
-    color: updatedNote.color
+    color: updatedNote.color,
+    labels: await updatedNote.$get("labels", {
+      attributes: ["id", "name"],
+      //@ts-ignore
+      joinTableAttributes: []
+    })
   });
 });
 
@@ -87,7 +110,7 @@ router.get("/search", async (req, res) => {
       }
     },
     limit: +limit,
-    attributes: ["id", "title", "content", "pinned", "archived", "color"]
+    attributes: noteAttributesToReturn
   }).then((notes) => res.json(notes));
   // TODO: pagination
 });

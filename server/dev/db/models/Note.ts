@@ -32,6 +32,7 @@ interface NoteAttributes {
     "brown",
     "gray"
   ];
+  labels?: Label[];
 }
 
 interface NoteCreationAttributes extends Optional<NoteAttributes, "id"> {}

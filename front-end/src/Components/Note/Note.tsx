@@ -157,7 +157,7 @@ const Note: React.FC<props> = ({
           </div>
           <Typography>{shorten(content, 235)}</Typography>
         </div>
-        <Tags labels={labels} />
+        <Tags noteId={id} labels={labels} />
 
         <div className={clsx(classes.actionsContainer, showOnHover)}>
           <IconButton className={classes.iconContainer} color="inherit">

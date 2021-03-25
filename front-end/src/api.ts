@@ -82,3 +82,9 @@ export const getLabels = () => {
 export const addNewLabel = (name: string) => {
   return axios.post("/label/", { name }).then((resp) => resp.data);
 };
+
+export const removeLabelFromNote = (noteId: number, labelId: number) => {
+  return axios
+    .delete("/note/label/", { data: { noteId, labelId } })
+    .then((resp) => resp.data);
+};

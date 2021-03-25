@@ -6,7 +6,8 @@ import {
   deleteNote,
   getLabels,
   label,
-  addNewLabel
+  addNewLabel,
+  removeLabelFromNote
 } from "../api";
 
 export function useFetchAllMyNotes() {
@@ -22,6 +23,20 @@ export function usePutNote() {
   );
   return (id: string | number, data: any) =>
     mutation.mutateAsync({ id, data }).then(() => {
+      queryClient.invalidateQueries("notes");
+    });
+}
+
+export function useRemoveLabelFromNote() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation(
+    ({ noteId, labelId }: { noteId: number; labelId: number }) =>
+      removeLabelFromNote(noteId, labelId)
+  );
+  return (noteId: number, labelId: number) =>
+    mutation.mutateAsync({ noteId, labelId }).then(() => {
+      // TODO: this should update only the note whose label
+      // was deleted, not all notes
       queryClient.invalidateQueries("notes");
     });
 }

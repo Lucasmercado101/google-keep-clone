@@ -1,6 +1,7 @@
 import { Chip, makeStyles } from "@material-ui/core";
 import { label } from "../../api";
 import CloseIcon from "@material-ui/icons/Close";
+import { useRemoveLabelFromNote } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
   tagContainer: {
@@ -34,19 +35,24 @@ const useStyles = makeStyles((theme) => ({
     border: `thin solid ${theme.palette.text.disabled}`,
     maxHeight: 25,
     minHeight: 25,
-    padding: "0 8px"
+    padding: "0 8px",
+    pointerEvents: "none"
   }
 }));
 
-const Tags: React.FC<{ labels: label[] }> = ({ labels }) => {
+type props = {
+  labels: label[];
+  noteId: number;
+};
+
+const Tags: React.FC<props> = ({ labels, noteId }) => {
   const classes = useStyles();
+  const removeLabelFromNote = useRemoveLabelFromNote();
 
   let labelsToShow: label[] = [];
-  let moreLabels = 0;
 
   if (labels.length <= 3) labelsToShow = [...labels].splice(0, 3);
   else labelsToShow = [...labels].splice(0, 2);
-  //   const rest = labels.splice(-3);
 
   return (
     <div className={classes.tagContainer}>
@@ -57,7 +63,9 @@ const Tags: React.FC<{ labels: label[] }> = ({ labels }) => {
           onClick={(e) => {
             e.stopPropagation();
           }}
-          onDelete={() => {}}
+          onDelete={() => {
+            removeLabelFromNote(noteId, label.id);
+          }}
           deleteIcon={<CloseIcon className={classes.removeLabelButton} />}
         />
       ))}

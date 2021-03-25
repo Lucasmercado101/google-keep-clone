@@ -10,7 +10,6 @@ import { useFetchAllMyNotes } from "../../Hooks/queries";
 import Drawer from "../../Components/LeftDrawer/LeftDrawer";
 import { Switch, Route, useRouteMatch } from "react-router-dom";
 import Archived from "../Archived/Archived";
-import LabelsMenu from "../../Components/LabelsMenu/LabelsMenu"
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -83,7 +82,6 @@ const Home: React.FC<RouteChildrenProps> = ({ history }) => {
             <Route exact path={`${path}/archived`} component={Archived} />
           </Switch>
         </div>
-        <LabelsMenu />
       </div>
     </div>
   );

@@ -1,28 +1,21 @@
-import {
-  makeStyles,
-  Typography,
-  Modal,
-  IconButton,
-  Menu,
-  MenuItem
-} from "@material-ui/core";
+import { makeStyles, Typography, Modal, IconButton } from "@material-ui/core";
 import { useState } from "react";
 import {
   CheckCircle as SelectNoteIcon,
   AddAlertOutlined as ReminderIcon,
   PersonAddOutlined as AddCollaboratorIcon,
-  ColorLensOutlined as CanvasIcon,
   CropOriginal as AddImageIcon,
   ArchiveOutlined as ArchiveIcon,
-  UnarchiveOutlined as UnarchiveIcon,
-  MoreVertOutlined as MoreIcon
+  UnarchiveOutlined as UnarchiveIcon
 } from "@material-ui/icons";
 import EditNote from "../../Components/EditNote/EditNote";
 import Icon from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import clsx from "clsx";
-import { usePutNote, useDeleteNote } from "../../Hooks/queries";
+import { usePutNote } from "../../Hooks/queries";
 import ColorPicker from "./ColorPicker";
+import MoreMenu from "./MoreMenu";
+import { label } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   container: (color: any) => ({
@@ -107,6 +100,7 @@ type props = {
   pinned: boolean;
   id: number;
   color: string;
+  labels: label[];
 };
 
 function shorten(str: string | undefined | null, len: number) {
@@ -120,25 +114,13 @@ const Note: React.FC<props> = ({
   content,
   pinned,
   title,
-  color
+  color,
+  labels
 }) => {
   const classes = useStyles({ color });
   const putNote = usePutNote();
-  const deleteNote = useDeleteNote();
   const [isHovering, setIsHovering] = useState(false);
   const [isEditingModal, setIsEditingModal] = useState(false);
-
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.stopPropagation();
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = (e: React.MouseEvent<HTMLLIElement, MouseEvent>) => {
-    e.stopPropagation();
-    setAnchorEl(null);
-  };
 
   const showOnHover = clsx(classes.hidden, isHovering && classes.show);
 
@@ -205,29 +187,7 @@ const Note: React.FC<props> = ({
               <ArchiveIcon className={classes.icon} />
             )}
           </IconButton>
-          <IconButton
-            onClick={handleClick}
-            className={classes.iconContainer}
-            color="inherit"
-          >
-            <MoreIcon className={classes.icon} />
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            <MenuItem
-              onClick={(e) => {
-                handleClose(e);
-                deleteNote(id);
-              }}
-            >
-              Delete note
-            </MenuItem>
-          </Menu>
+          <MoreMenu noteId={id} labels={labels?.map((label) => label.id)} />
         </div>
       </div>
       <Modal className={classes.modal} open={isEditingModal}>

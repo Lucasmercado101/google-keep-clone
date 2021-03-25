@@ -45,6 +45,7 @@ export type getNotesResp = {
 };
 
 export type label = {
+  id: number;
   name: string;
 } & baseModelData;
 

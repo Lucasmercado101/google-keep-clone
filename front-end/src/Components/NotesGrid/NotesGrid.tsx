@@ -64,17 +64,20 @@ const Notes: React.FC<props> = ({ notes, title }) => {
         columnClassName={classes.notesGridItem}
       >
         {notes &&
-          notes.map(({ title, content, archived, pinned, id, color }) => (
-            <Note
-              key={id}
-              id={id}
-              title={title}
-              content={content}
-              pinned={pinned}
-              archived={archived}
-              color={color}
-            />
-          ))}
+          notes.map(
+            ({ title, content, archived, pinned, id, color, labels }) => (
+              <Note
+                key={id}
+                id={id}
+                title={title}
+                content={content}
+                pinned={pinned}
+                archived={archived}
+                color={color}
+                labels={labels}
+              />
+            )
+          )}
       </Masonry>
     </Container>
   );

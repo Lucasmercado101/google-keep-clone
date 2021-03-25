@@ -45,5 +45,8 @@ export function usePostNewLabel() {
   return (name: string) =>
     mutation.mutateAsync(name).then(() => {
       queryClient.invalidateQueries("labels");
+      // TODO: this is only so that when i add/remove
+      // a label i can show it on the note, change this
+      queryClient.invalidateQueries("notes");
     });
 }

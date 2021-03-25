@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FC } from "react";
 import {
   List,
   ListItem,
@@ -60,9 +60,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function LabelsMenu() {
+type props = {
+  selectedLabels?: number[];
+  onSelectLabel: (selectedLabels: number[]) => void;
+};
+
+const LabelsMenu: FC<props> = ({ selectedLabels, onSelectLabel }) => {
   const classes = useStyles();
   const [newLabelName, setNewLabelName] = useState("");
+  const [newlySelectedLabels, setNewlySelectedLabels] = useState(
+    selectedLabels || []
+  );
 
   const { data: labelsData = [] } = useGetLabels();
 
@@ -85,21 +93,40 @@ function LabelsMenu() {
           .filter((label: label) =>
             label.name.toLowerCase().includes(newLabelName.toLowerCase())
           )
-          .map((label) => (
+          .map((label: label) => (
             <ListItem
+              key={label.id}
               classes={{ gutters: classes.listItemContainer }}
               className={classes.listItem}
               button
               disableRipple
               disableTouchRipple
               dense
+              onClick={() => {
+                const newLabels =
+                  newlySelectedLabels.findIndex(
+                    (stateLabel) => stateLabel === label.id
+                  ) === -1
+                    ? [...newlySelectedLabels, label.id]
+                    : newlySelectedLabels.filter(
+                        (stateLabel) => stateLabel !== label.id
+                      );
+                setNewlySelectedLabels(newLabels);
+                onSelectLabel(newLabels);
+              }}
             >
               <ListItemIcon className={classes.iconContainer}>
                 <Checkbox
                   className={classes.icon}
                   edge="start"
+                  checked={
+                    newlySelectedLabels.findIndex(
+                      (stateLabel) => stateLabel === label.id
+                    ) !== -1
+                  }
                   tabIndex={-1}
                   style={{ pointerEvents: "none" }}
+                  color="default"
                 />
               </ListItemIcon>
               <ListItemText classes={{ primary: classes.listItemText }}>
@@ -108,10 +135,12 @@ function LabelsMenu() {
             </ListItem>
           ))}
       </List>
-      {!labelsData.find((label) => label.name.toLowerCase() === newLabelName) &&
+      {!labelsData.find(
+        (label: label) => label.name.toLowerCase() === newLabelName
+      ) &&
         newLabelName && <NewLabelButton newLabelName={newLabelName} />}
     </Paper>
   );
-}
+};
 
 export default LabelsMenu;

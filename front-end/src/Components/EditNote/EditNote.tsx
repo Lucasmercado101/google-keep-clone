@@ -5,24 +5,39 @@ import Icon from "@mdi/react";
 import { mdiPinOutline } from "@mdi/js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
+// import BottomButtons from "../Note/BottomButtons";
+import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
-  container: {
+  container: (isNewNote) => ({
     borderRadius: 8,
     border: `thin solid ${theme.palette.text.disabled}`,
     padding: theme.spacing(1, 2),
     maxWidth: 600,
+    minHeight: isNewNote ? 0 : 180,
+    maxHeight: 650,
     width: "100%",
     display: "flex",
     flexDirection: "column",
     background: theme.palette.background.default
-  },
+  }),
   titleArea: {
     display: "flex",
     alignItems: "flex-start"
   },
-  title: {
+  title: (newNote) => ({
+    flexGrow: 1,
+    fontSize: newNote ? "initial" : "1.6rem",
+    marginBottom: newNote ? theme.spacing(2) : theme.spacing(1)
+  }),
+  contentBottom: {
     flexGrow: 1
+  },
+  bottomArea: {
+    display: "flex"
+  },
+  actions: {
+    width: "70%"
   }
 }));
 
@@ -30,6 +45,7 @@ type props = {
   onClickOutside?: (data?: any) => void;
   style?: any;
   className?: any;
+  newNote?: boolean;
 } & Partial<Note>;
 
 const EditNote: React.FC<props> = ({
@@ -40,9 +56,11 @@ const EditNote: React.FC<props> = ({
   title,
   content,
   className,
+  newNote = false,
+  color,
   ...otherProps
 }) => {
-  const classes = useStyles();
+  const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -88,12 +106,24 @@ const EditNote: React.FC<props> = ({
             <Icon path={mdiPinOutline} size={1} />
           </IconButton>
         </div>
+
         <InputBase
           multiline
+          style={{ overflow: "auto" }}
+          id="contentArea"
           name="content"
           placeholder="Take a note..."
           inputProps={{ ref: register }}
         />
+        <label htmlFor="contentArea" className={classes.contentBottom}></label>
+        {/* <div className={classes.bottomArea}>
+          <div className={classes.actions}>
+            <BottomButtons
+              extraButtons={[UndoIcon, RedoIcon]}
+              style={{ justifyContent: "space-between" }}
+            />
+          </div>
+        </div> */}
       </div>
     </ClickAwayListener>
   );

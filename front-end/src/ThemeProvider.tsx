@@ -1,19 +1,22 @@
-import React from "react";
+import { useContext } from "react";
 import { createMuiTheme } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/core/styles";
 import { blue } from "@material-ui/core/colors";
+import { observer } from "mobx-react-lite";
+import { GlobalStateContext } from "./StateProvider";
 
-const Theme: React.FC = ({ children }) => {
-  const darkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+const Theme: React.FC = observer(({ children }) => {
+  const ctx = useContext(GlobalStateContext);
+  const darkMode = ctx.darkMode;
 
   const theme = createMuiTheme({
     palette: {
       type: darkMode ? "dark" : "light",
-      primary: { main: darkMode ? blue[300] : "#3f51b5" }
+      primary: { main: blue[300] }
     }
   });
 
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
-};
+});
 
 export default Theme;

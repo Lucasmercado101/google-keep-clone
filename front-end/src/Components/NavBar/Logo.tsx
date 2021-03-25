@@ -7,11 +7,13 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     display: "flex",
     alignItems: "center",
-    margin: theme.spacing(0, 10, 0, 0),
     color: theme.palette.text.primary,
     textDecoration: "none",
     "&:hover": {
       textDecoration: "underline"
+    },
+    [theme.breakpoints.up("md")]: {
+      margin: theme.spacing(0, 10, 0, 0)
     }
   },
   logoIcon: {

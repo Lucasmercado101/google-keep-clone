@@ -1,13 +1,18 @@
-import Note from "../../Components/Note/Note";
+import Note from "../Note/Note";
 import Masonry from "react-masonry-css";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Typography } from "@material-ui/core";
 import Container from "@material-ui/core/Container";
-import { useFetchAllMyNotes } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    width: "90%",
+    marginBottom: theme.spacing(7)
+  },
   notesGrid: {
     display: "flex",
-    width: "90%",
+    width: "100%",
     alignItems: "flex-start",
     margin: "auto"
   },
@@ -16,11 +21,15 @@ const useStyles = makeStyles((theme) => ({
     width: 240,
     height: "100%",
     marginLeft: theme.spacing(1),
-    paddingLeft: theme.spacing(1) /* gutter size offset */,
     backgroundClip: "padding-box",
     "& > div": {
       marginBottom: theme.spacing(1) // space between items
     }
+  },
+  title: {
+    textTransform: "uppercase",
+    margin: theme.spacing(0, 0, 1, 3),
+    color: theme.palette.text.secondary
   }
 }));
 
@@ -34,21 +43,28 @@ const breakpointColumnsObj = {
   800: 1
 };
 
-function Notes() {
+type props = {
+  notes: any[] | null | undefined;
+  title?: string;
+};
+
+const Notes: React.FC<props> = ({ notes, title }) => {
   const classes = useStyles();
-  const { data: notesData } = useFetchAllMyNotes();
 
   //TODO: drag and drop, add ordinals to notes
   //TODO: select notes and make it copy-able to clipboard
   return (
-    <Container maxWidth="xl" style={{ display: "flex" }}>
+    <Container maxWidth="xl" className={classes.container}>
+      <Typography variant="caption" component="small" className={classes.title}>
+        {title}
+      </Typography>
       <Masonry
         breakpointCols={breakpointColumnsObj}
         className={classes.notesGrid}
         columnClassName={classes.notesGridItem}
       >
-        {notesData &&
-          notesData.map(({ title, content, archived, pinned, id }) => (
+        {notes &&
+          notes.map(({ title, content, archived, pinned, id, color }) => (
             <Note
               key={id}
               id={id}
@@ -56,11 +72,12 @@ function Notes() {
               content={content}
               pinned={pinned}
               archived={archived}
+              color={color}
             />
           ))}
       </Masonry>
     </Container>
   );
-}
+};
 
 export default Notes;

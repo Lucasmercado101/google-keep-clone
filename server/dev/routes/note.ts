@@ -92,11 +92,12 @@ router.put("/:id", async (req, res) => {
       }
     );
 
-  const userLabels = await Label.findAll({
-    where: { id: { [Op.in]: labels }, owner: req.user!.userName }
-  });
-
-  if (labels) await note.$set("labels", userLabels);
+  if (labels) {
+    const userLabels = await Label.findAll({
+      where: { id: { [Op.in]: labels }, owner: req.user!.userName }
+    });
+    await note.$set("labels", userLabels);
+  }
 
   //TODO: collaborators, etc
   res.json({

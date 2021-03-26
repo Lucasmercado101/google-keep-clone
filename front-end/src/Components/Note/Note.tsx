@@ -36,9 +36,10 @@ const useStyles = makeStyles((theme) => ({
       left: 0,
       width: "100%",
       filter: "saturate(350%) opacity(0.25)",
-      backgroundImage: color.color
-        ? `linear-gradient(${color.color}, ${color.color})`
-        : "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0))"
+      backgroundImage:
+        color && color.color
+          ? `linear-gradient(${color.color}, ${color.color})`
+          : "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0))"
     }
   }),
   title: {
@@ -167,7 +168,9 @@ const Note: React.FC<props> = ({
             />
           </IconButton>
           <ColorPicker
-            onSelectColor={(color) => putNote(id, { color: color })}
+            onSelectColor={(color) =>
+              putNote(id, { color: color ? color : null })
+            }
           />
           <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />

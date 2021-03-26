@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type props = {
-  onSelectColor: (selectedColor?: string | null) => void;
+  onSelectColor: (selectedColor?: string) => void;
 };
 
 const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
@@ -96,7 +96,7 @@ const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
         <Paper className={classes.paper}>
           <div
             className={classes.colorWrapper}
-            onClick={() => onSelectColor(null)}
+            onClick={() => onSelectColor(undefined)}
           >
             <div
               style={{ background: "transparent" }}

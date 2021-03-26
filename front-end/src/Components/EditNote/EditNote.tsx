@@ -1,12 +1,12 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { InputBase, makeStyles, IconButton } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import Icon from "@mdi/react";
 import { mdiPinOutline } from "@mdi/js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
-// import BottomButtons from "../Note/BottomButtons";
-import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
+import ColorPicker from "../Note/ColorPicker";
+// import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   container: (isNewNote) => ({
@@ -62,6 +62,9 @@ const EditNote: React.FC<props> = ({
 }) => {
   const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
+  const [newNoteValues, setNewNoteValues] = useState<{ color?: string }>({
+    color: undefined
+  });
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -86,6 +89,7 @@ const EditNote: React.FC<props> = ({
   return (
     <ClickAwayListener onClickAway={() => onClickOutside(getValues())}>
       <div {...otherProps} className={`${className} ${classes.container}`}>
+        {JSON.stringify(newNoteValues)}
         <div className={classes.titleArea}>
           <InputBase
             className={classes.title}
@@ -116,14 +120,11 @@ const EditNote: React.FC<props> = ({
           inputProps={{ ref: register }}
         />
         <label htmlFor="contentArea" className={classes.contentBottom}></label>
-        {/* <div className={classes.bottomArea}>
-          <div className={classes.actions}>
-            <BottomButtons
-              extraButtons={[UndoIcon, RedoIcon]}
-              style={{ justifyContent: "space-between" }}
-            />
-          </div>
-        </div> */}
+        <ColorPicker
+          onSelectColor={(color) =>
+            setNewNoteValues({ ...newNoteValues, color: color })
+          }
+        />
       </div>
     </ClickAwayListener>
   );

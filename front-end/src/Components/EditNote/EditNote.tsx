@@ -6,6 +6,8 @@ import { mdiPinOutline } from "@mdi/js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
 import ColorPicker from "../Note/ColorPicker";
+import ArchiveButton from "../Note/ArchiveButton";
+import PinIcon from "../Note/PinIcon";
 // import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
@@ -33,11 +35,10 @@ const useStyles = makeStyles((theme) => ({
   contentBottom: {
     flexGrow: 1
   },
-  bottomArea: {
-    display: "flex"
-  },
-  actions: {
-    width: "70%"
+  noteActions: {
+    flexGrow: 1,
+    display: "flex",
+    gap: 15
   }
 }));
 
@@ -62,8 +63,10 @@ const EditNote: React.FC<props> = ({
 }) => {
   const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
-  const [newNoteValues, setNewNoteValues] = useState<{ color?: string }>({
-    color: undefined
+  const [newNoteValues, setNewNoteValues] = useState<Partial<Note>>({
+    color: undefined,
+    archived: false,
+    pinned: false
   });
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -103,12 +106,13 @@ const EditNote: React.FC<props> = ({
               }
             }}
           />
-          <IconButton
-            style={{ float: "right", display: "inline-block" }}
+          <PinIcon
             size="small"
-          >
-            <Icon path={mdiPinOutline} size={1} />
-          </IconButton>
+            pinned={!!newNoteValues.pinned}
+            onClick={() =>
+              setNewNoteValues((prev) => ({ ...prev, pinned: !prev.pinned }))
+            }
+          />
         </div>
 
         <InputBase
@@ -120,11 +124,23 @@ const EditNote: React.FC<props> = ({
           inputProps={{ ref: register }}
         />
         <label htmlFor="contentArea" className={classes.contentBottom}></label>
-        <ColorPicker
-          onSelectColor={(color) =>
-            setNewNoteValues({ ...newNoteValues, color: color })
-          }
-        />
+        <div className={classes.noteActions}>
+          <ColorPicker
+            edge="start"
+            onSelectColor={(color) =>
+              setNewNoteValues({ ...newNoteValues, color: color })
+            }
+          />
+          <ArchiveButton
+            archived={!!newNoteValues.archived}
+            onClick={() =>
+              setNewNoteValues((prev) => ({
+                ...prev,
+                archived: !prev.archived
+              }))
+            }
+          />
+        </div>
       </div>
     </ClickAwayListener>
   );

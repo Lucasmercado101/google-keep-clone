@@ -4,19 +4,17 @@ import {
   CheckCircle as SelectNoteIcon,
   AddAlertOutlined as ReminderIcon,
   PersonAddOutlined as AddCollaboratorIcon,
-  CropOriginal as AddImageIcon,
-  ArchiveOutlined as ArchiveIcon,
-  UnarchiveOutlined as UnarchiveIcon
+  CropOriginal as AddImageIcon
 } from "@material-ui/icons";
 import EditNote from "../../Components/EditNote/EditNote";
-import Icon from "@mdi/react";
-import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import clsx from "clsx";
 import { usePutNote } from "../../Hooks/queries";
 import ColorPicker from "./ColorPicker";
 import MoreMenu from "./MoreMenu";
 import { label } from "../../api";
 import Tags from "./Tags";
+import ArchiveButton from "./ArchiveButton";
+import PinIcon from "./PinIcon";
 
 const useStyles = makeStyles((theme) => ({
   container: (color: any) => ({
@@ -143,7 +141,8 @@ const Note: React.FC<props> = ({
             >
               {shorten(title, 50)}
             </Typography>
-            <IconButton
+            <PinIcon
+              pinned={pinned}
               onClick={(e) => {
                 e.stopPropagation();
                 putNote(id, { pinned: !pinned, archived: false });
@@ -151,9 +150,7 @@ const Note: React.FC<props> = ({
               className={showOnHover}
               style={{ marginRight: -5 }}
               size="small"
-            >
-              <Icon path={pinned ? UnpinIcon : PinIcon} size={1} />
-            </IconButton>
+            />
           </div>
           <Typography>{shorten(content, 235)}</Typography>
         </div>
@@ -175,20 +172,13 @@ const Note: React.FC<props> = ({
           <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />
           </IconButton>
-          <IconButton
-            className={classes.iconContainer}
+          <ArchiveButton
+            archived={archived}
             onClick={(e) => {
               e.stopPropagation();
               putNote(id, { archived: !archived, pinned: false });
             }}
-            color="inherit"
-          >
-            {archived ? (
-              <UnarchiveIcon className={classes.icon} />
-            ) : (
-              <ArchiveIcon className={classes.icon} />
-            )}
-          </IconButton>
+          />
           <MoreMenu noteId={id} labels={labels?.map((label) => label.id)} />
         </div>
       </div>

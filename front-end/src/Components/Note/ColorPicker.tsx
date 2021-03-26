@@ -1,6 +1,13 @@
 import { useState } from "react";
 import { ColorLensOutlined as CanvasIcon } from "@material-ui/icons";
-import { IconButton, makeStyles, Popover, Paper } from "@material-ui/core";
+import {
+  IconButton,
+  makeStyles,
+  Popover,
+  Paper,
+  IconButtonProps
+} from "@material-ui/core";
+import { noteColors } from "../../api";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -51,10 +58,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type props = {
-  onSelectColor: (selectedColor?: string) => void;
-};
+  onSelectColor: (selectedColor?: noteColors) => void;
+} & IconButtonProps;
 
-const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
+const ColorPicker: React.FC<props> = ({ onSelectColor, ...otherProps }) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -72,6 +79,7 @@ const ColorPicker: React.FC<props> = ({ onSelectColor }) => {
   return (
     <div onClick={(e) => e.stopPropagation()} onMouseLeave={handlePopoverClose}>
       <IconButton
+        {...otherProps}
         onMouseEnter={handlePopoverOpen}
         className={classes.iconContainer}
         color="inherit"

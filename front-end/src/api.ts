@@ -8,27 +8,27 @@ type baseModelData = {
   updatedAt: Date;
 };
 
+export type noteColors =
+  | null
+  | "red"
+  | "orange"
+  | "yellow"
+  | "green"
+  | "teal"
+  | "blue"
+  | "darkblue"
+  | "purple"
+  | "pink"
+  | "brown"
+  | "gray";
+
 export type Note = {
   id: number;
   title: string;
   content: string;
   pinned: boolean;
   archived: boolean;
-  color:
-    | null
-    | [
-        "red",
-        "orange",
-        "yellow",
-        "green",
-        "teal",
-        "blue",
-        "darkblue",
-        "purple",
-        "pink",
-        "brown",
-        "gray"
-      ];
+  color: noteColors;
 } & baseModelData;
 
 type pinnedNote = Note & {

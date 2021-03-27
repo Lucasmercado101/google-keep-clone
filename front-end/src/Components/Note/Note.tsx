@@ -15,6 +15,7 @@ import { label } from "../../api";
 import Tags from "./Tags";
 import ArchiveButton from "./ArchiveButton";
 import PinIcon from "./PinIcon";
+import { useRemoveLabelFromNote } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
   container: (color: any) => ({
@@ -90,6 +91,12 @@ const useStyles = makeStyles((theme) => ({
   icon: {
     width: 18,
     height: 18
+  },
+  tagContainer: {
+    padding: theme.spacing(0, 2),
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1)
   }
 }));
 
@@ -119,6 +126,7 @@ const Note: React.FC<props> = ({
 }) => {
   const classes = useStyles({ color });
   const putNote = usePutNote();
+  const removeLabelFromNote = useRemoveLabelFromNote();
   const [isHovering, setIsHovering] = useState(false);
   const [isEditingModal, setIsEditingModal] = useState(false);
 
@@ -155,7 +163,14 @@ const Note: React.FC<props> = ({
           </div>
           <Typography>{shorten(content, 235)}</Typography>
         </div>
-        <Tags noteId={id} labels={labels} />
+        <Tags
+          className={classes.tagContainer}
+          maxShown={3}
+          onDelete={(labelId) => {
+            removeLabelFromNote(id, labelId);
+          }}
+          labels={labels}
+        />
 
         <div className={clsx(classes.actionsContainer, showOnHover)}>
           <IconButton className={classes.iconContainer} color="inherit">
@@ -192,6 +207,7 @@ const Note: React.FC<props> = ({
           content={content}
           pinned={pinned}
           title={title}
+          labels={labels}
           onClickOutside={(data) => {
             putNote(id, data);
             setIsEditingModal(false);

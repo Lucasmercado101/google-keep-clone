@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   makeStyles,
   Paper,
@@ -13,7 +13,7 @@ import {
   InputBase,
   Modal
 } from "@material-ui/core";
-import { useDeleteLabel, useGetLabels } from "../../Hooks/queries";
+import { useDeleteLabel, useGetLabels, usePutLabel } from "../../Hooks/queries";
 import {
   Label as LabelIcon,
   Delete as TrashIcon,
@@ -113,8 +113,16 @@ const EditLabelsMenu: React.FC<props> = ({ onClose }) => {
   const { data: labelsData } = useGetLabels();
   const [isEditing, setIsEditing] = useState<null | number>();
   const deleteLabel = useDeleteLabel();
+  const putLabel = usePutLabel();
   const [labelToDeleteId, setLabelToDeleteId] = useState<null | number>();
   const [isDeleteLabelModalOpen, setIsDeleteLabelModalOpen] = useState(false);
+  const [newLabelsData, setNewLabelsData] = useState<{} | any>({});
+
+  useEffect(() => {
+    let newLabels: any = {};
+    labelsData?.forEach((label) => (newLabels[label.id] = label.name));
+    setNewLabelsData(newLabels || {});
+  }, [labelsData]);
 
   return (
     <>
@@ -152,16 +160,27 @@ const EditLabelsMenu: React.FC<props> = ({ onClose }) => {
                       )}
                     </IconButton>
                   </ListItemIcon>
+
                   <InputBase
                     onFocus={() => setIsEditing(label.id)}
-                    onBlur={() => setIsEditing(null)}
                     inputProps={{ className: classes.listItemText }}
-                    value={label.name}
+                    value={newLabelsData[label.id]}
+                    onChange={(e) =>
+                      setNewLabelsData({
+                        ...newLabelsData,
+                        [label.id]: e.target.value
+                      })
+                    }
                   />
                   <ListItemSecondaryAction>
                     <IconButton size="small" edge="end" aria-label="delete">
                       {isEditing === label.id ? (
-                        <ConfirmIcon className={classes.listItemIcon} />
+                        <ConfirmIcon
+                          onClick={() =>
+                            putLabel(label.id, newLabelsData[label.id])
+                          }
+                          className={classes.listItemIcon}
+                        />
                       ) : (
                         <EditIcon className={classes.listItemIcon} />
                       )}
@@ -189,7 +208,7 @@ const EditLabelsMenu: React.FC<props> = ({ onClose }) => {
         <div className={classes.confirmPaperWrapper}>
           <Paper className={classes.confirmPaper}>
             <Typography variant="body2">
-              We’ll delete this label and remove it from all of your Keep notes.
+              We’ll delete this label and remove it from all of your Meep notes.
               Your notes won’t be deleted.
             </Typography>
             <div className={classes.confirmModalButtons}>

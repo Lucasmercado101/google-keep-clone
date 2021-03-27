@@ -96,3 +96,7 @@ export const removeLabelFromNote = (noteId: number, labelId: number) => {
 export const getLabelById = (labelId: number) => {
   return axios.get("/label/" + labelId).then((resp) => resp.data);
 };
+
+export const putLabelById = (labelId: number, name: string) => {
+  return axios.put("/label/" + labelId, { name }).then((resp) => resp.data);
+};

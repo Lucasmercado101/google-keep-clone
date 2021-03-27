@@ -9,7 +9,8 @@ import {
   addNewLabel,
   removeLabelFromNote,
   getLabelById,
-  deleteLabel
+  deleteLabel,
+  putLabelById
 } from "../api";
 
 export function useFetchAllMyNotes() {
@@ -25,6 +26,20 @@ export function usePutNote() {
   );
   return (id: string | number, data: any) =>
     mutation.mutateAsync({ id, data }).then(() => {
+      queryClient.invalidateQueries("notes");
+    });
+}
+
+export function usePutLabel() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation((variables: { id: number; name: string }) =>
+    putLabelById(variables.id, variables.name)
+  );
+  return (id: number, name: string) =>
+    mutation.mutateAsync({ id, name }).then(() => {
+      queryClient.invalidateQueries("labels");
+      // TODO: this should update only the note whose label
+      // was updated, not all notes
       queryClient.invalidateQueries("notes");
     });
 }

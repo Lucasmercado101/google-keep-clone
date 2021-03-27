@@ -1,4 +1,4 @@
-import { useState, FC } from "react";
+import { useState } from "react";
 import {
   List,
   ListItem,
@@ -14,6 +14,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import { useGetLabels } from "../../Hooks/queries";
 import NewLabelButton from "./NewLabelButton";
 import { label } from "../../api";
+import SearchBarHeader from "./SearchBarHeader";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -65,7 +66,7 @@ type props = {
   onSelectLabel: (selectedLabels: number[]) => void;
 };
 
-const LabelsMenu: FC<props> = ({ selectedLabels, onSelectLabel }) => {
+const LabelsMenu: React.FC<props> = ({ selectedLabels, onSelectLabel }) => {
   const classes = useStyles();
   const [newLabelName, setNewLabelName] = useState("");
   const [newlySelectedLabels, setNewlySelectedLabels] = useState(
@@ -76,18 +77,10 @@ const LabelsMenu: FC<props> = ({ selectedLabels, onSelectLabel }) => {
 
   return (
     <Paper elevation={3} className={classes.container}>
-      <div className={classes.header}>
-        <Typography variant="subtitle1">Label note</Typography>
-        <div className={classes.searchBarWrapper}>
-          <InputBase
-            value={newLabelName}
-            onChange={(e) => setNewLabelName(e.target.value)}
-            inputProps={{ className: classes.searchBar }}
-            placeholder="Enter label name"
-          />
-          <SearchIcon className={classes.searchBarIcon} color="inherit" />
-        </div>
-      </div>
+      <SearchBarHeader
+        newLabelName={newLabelName}
+        setNewLabelName={setNewLabelName}
+      />
       <List classes={{ root: classes.listRoot }} className={classes.list}>
         {labelsData
           .filter((label: label) =>

@@ -59,8 +59,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type props = {
-  selectedLabels?: number[];
-  onSelectLabel: (selectedLabels: number[]) => void;
+  selectedLabels?: label[];
+  onSelectLabel: (selectedLabels: label[]) => void;
 };
 
 const LabelsMenu: React.FC<props> = ({ selectedLabels, onSelectLabel }) => {
@@ -93,14 +93,17 @@ const LabelsMenu: React.FC<props> = ({ selectedLabels, onSelectLabel }) => {
               disableTouchRipple
               dense
               onClick={() => {
-                const newLabels =
+                const labelAlreadySelected =
                   newlySelectedLabels.findIndex(
-                    (stateLabel) => stateLabel === label.id
-                  ) === -1
-                    ? [...newlySelectedLabels, label.id]
-                    : newlySelectedLabels.filter(
-                        (stateLabel) => stateLabel !== label.id
-                      );
+                    (lbl) => lbl.id === label.id
+                  ) !== -1;
+
+                const newLabels = labelAlreadySelected
+                  ? newlySelectedLabels.filter(
+                      (stateLabel) => stateLabel.id !== label.id
+                    )
+                  : [...newlySelectedLabels, label];
+
                 setNewlySelectedLabels(newLabels);
                 onSelectLabel(newLabels);
               }}
@@ -111,7 +114,7 @@ const LabelsMenu: React.FC<props> = ({ selectedLabels, onSelectLabel }) => {
                   edge="start"
                   checked={
                     newlySelectedLabels.findIndex(
-                      (stateLabel) => stateLabel === label.id
+                      (stateLabel) => stateLabel.id === label.id
                     ) !== -1
                   }
                   tabIndex={-1}

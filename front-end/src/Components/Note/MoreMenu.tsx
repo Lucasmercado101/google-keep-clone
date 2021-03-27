@@ -9,6 +9,7 @@ import {
 import { useDeleteNote, usePutNote } from "../../Hooks/queries";
 import { MoreVertOutlined as MoreIcon } from "@material-ui/icons";
 import LabelsMenu from "../LabelsMenu/LabelsMenu";
+import { label } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   iconContainer: {
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
 
 type props = {
   noteId: number;
-  labels?: number[];
+  labels?: label[];
 };
 
 const MoreMenu: FC<props> = ({ noteId, labels }) => {
@@ -97,8 +98,8 @@ const MoreMenu: FC<props> = ({ noteId, labels }) => {
       >
         <LabelsMenu
           selectedLabels={labels}
-          onSelectLabel={(selectedLabels: number[]) => {
-            putNote(noteId, { labels: selectedLabels });
+          onSelectLabel={(selectedLabels: label[]) => {
+            putNote(noteId, { labels: selectedLabels.map((lbl) => lbl.id) });
           }}
         />
       </Popover>

@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import { MoreVertOutlined as MoreIcon } from "@material-ui/icons";
 import LabelsMenu from "../LabelsMenu/LabelsMenu";
+import { label } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   iconContainer: {
@@ -21,8 +22,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type props = {
-  selectedLabels?: number[];
-  onSelectLabel: (selectedLabels: number[]) => void;
+  selectedLabels?: label[];
+  onSelectLabel: (selectedLabels: label[]) => void;
 };
 
 const MoreMenu: React.FC<props> = ({ selectedLabels, onSelectLabel }) => {

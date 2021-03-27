@@ -2,6 +2,7 @@ import { Router } from "express";
 import Label from "../db/models/Label";
 const router = Router();
 import isAuthenticated from "./middleware/isAuthenticated";
+import { Op } from "sequelize";
 
 router.use("/", isAuthenticated);
 
@@ -32,6 +33,26 @@ router.delete("/:id", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
   res.json(await Label.findOne({ where: { owner: req.user!.userName, id } }));
+});
+
+router.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  if (!id || !name) return res.sendStatus(400);
+
+  const label = await Label.findOne({
+    where: { owner: req.user!.userName, id }
+  });
+  if (!label) return res.sendStatus(404);
+
+  const existingLabel = await Label.findOne({
+    where: { name }
+  });
+  if (existingLabel && existingLabel.id !== +id) return res.sendStatus(409);
+
+  label.name = name;
+  await label.save();
+  res.sendStatus(200);
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { List, makeStyles } from "@material-ui/core";
+import { List, makeStyles, Modal } from "@material-ui/core";
 import { GlobalStateContext } from "../../StateProvider";
 import {
   LabelOutlined as LabelsIcon,
@@ -14,6 +14,7 @@ import clsx from "clsx";
 import ListItem from "./Item";
 import { observer } from "mobx-react-lite";
 import { Link } from "react-router-dom";
+import EditLabelsMenu from "../EditLabelsMenu/EditLabelsMenu";
 
 const useStyles = makeStyles((theme) => ({
   drawer: {
@@ -47,7 +48,17 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: isMenuExpandedToggle ? theme.spacing(35) : theme.spacing(10),
     overflow: "visible"
   }),
-  link: { textDecoration: "none" }
+  link: { textDecoration: "none" },
+  labelsMenuModal: {
+    display: "grid",
+    placeItems: "center"
+  },
+  editLabelsMenuWrapper: {
+    width: 300,
+    "&:hover, &:focus": {
+      outline: "none"
+    }
+  }
 }));
 
 const LeftDrawer: React.FC = observer(() => {
@@ -56,71 +67,89 @@ const LeftDrawer: React.FC = observer(() => {
   const [open, setOpen] = useState(false);
   const classes = useStyles(ctx.isMenuExpanded);
 
+  const [isEditLabelsModalOpen, setIsEditLabelsModalOpen] = useState(false);
+
+  const handleCloseEditLabelsMenu = () => setIsEditLabelsModalOpen(false);
+  const handleOpenEditLabelsMenu = () => setIsEditLabelsModalOpen(true);
+
   return (
-    <div
-      className={clsx(
-        classes.wrapper,
-        classes.drawer,
-        classes.drawerClosed,
-        (open || ctx.isMenuExpanded) && classes.drawerOpen
-      )}
-    >
+    <>
       <div
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
         className={clsx(
+          classes.wrapper,
           classes.drawer,
           classes.drawerClosed,
-          (open || ctx.isMenuExpanded) && classes.drawerOpen,
-          classes.innerDrawer
+          (open || ctx.isMenuExpanded) && classes.drawerOpen
         )}
       >
-        <List className={classes.list}>
-          <Link
-            onClick={() => setIsSelected(0)}
-            className={classes.link}
-            to="/notes"
-          >
-            <ListItem
-              isSelected={isSelected === 0}
-              icon={<Icon path={LightBulbIcon} size={1} />}
-              primary="Notes"
-              isListOpen={open || ctx.isMenuExpanded}
-            />
-          </Link>
-          {/* <Link
+        <div
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+          className={clsx(
+            classes.drawer,
+            classes.drawerClosed,
+            (open || ctx.isMenuExpanded) && classes.drawerOpen,
+            classes.innerDrawer
+          )}
+        >
+          <List className={classes.list}>
+            <Link
+              onClick={() => setIsSelected(0)}
+              className={classes.link}
+              to="/notes"
+            >
+              <ListItem
+                isSelected={isSelected === 0}
+                icon={<Icon path={LightBulbIcon} size={1} />}
+                primary="Notes"
+                isListOpen={open || ctx.isMenuExpanded}
+              />
+            </Link>
+            {/* <Link
             onClick={() => setIsSelected(1)}
             className={classes.link}
             to="/notes/reminders"
           > */}
-          <ListItem
+            {/* <ListItem
             isSelected={isSelected === 1}
             icon={<RemindersIcon />}
             primary="Reminders"
             isListOpen={open}
-          />
-          {/* </Link> */}
-          <ListItem
-            icon={<EditLabelsIcon />}
-            primary="Edit labels"
-            isListOpen={open}
-          />
-          <Link
-            onClick={() => setIsSelected(2)}
-            className={classes.link}
-            to="/notes/archived"
-          >
+          /> */}
+            {/* </Link> */}
             <ListItem
-              isSelected={isSelected === 2}
-              icon={<ArchivesIcon />}
-              primary="Archive"
+              icon={<EditLabelsIcon />}
+              primary="Edit labels"
+              onClick={handleOpenEditLabelsMenu}
               isListOpen={open}
             />
-          </Link>
-          <ListItem icon={<TrashIcon />} primary="Trash" isListOpen={open} />
-        </List>
+
+            <Link
+              onClick={() => setIsSelected(2)}
+              className={classes.link}
+              to="/notes/archived"
+            >
+              <ListItem
+                isSelected={isSelected === 2}
+                icon={<ArchivesIcon />}
+                primary="Archive"
+                isListOpen={open}
+              />
+            </Link>
+            {/* <ListItem icon={<TrashIcon />} primary="Trash" isListOpen={open} /> */}
+          </List>
+        </div>
       </div>
-    </div>
+      <Modal
+        open={isEditLabelsModalOpen}
+        onClose={handleCloseEditLabelsMenu}
+        className={classes.labelsMenuModal}
+      >
+        <div className={classes.editLabelsMenuWrapper}>
+          <EditLabelsMenu onClose={handleCloseEditLabelsMenu} />
+        </div>
+      </Modal>
+    </>
   );
 });
 

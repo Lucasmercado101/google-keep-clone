@@ -3,7 +3,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  makeStyles
+  makeStyles,
+  ListItemProps
 } from "@material-ui/core";
 import clsx from "clsx";
 
@@ -27,7 +28,6 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: 48,
     top: 0,
     left: "-100%",
-    // left: 0,
     right: 0,
     zIndex: 1,
     transition: "clip-path 850ms",
@@ -62,18 +62,24 @@ type props = {
   primary: string;
   isListOpen: boolean;
   isSelected?: boolean;
-};
+} & ListItemProps;
 
 const Item: React.FC<props> = ({
   icon,
   primary,
   isListOpen,
-  isSelected = false
+  isSelected = false,
+  onMouseEnter,
+  onMouseLeave,
+  className,
+  button,
+  ...otherProps
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const classes = useStyles(isSelected);
   return (
     <ListItem
+      {...otherProps}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={classes.listItem}

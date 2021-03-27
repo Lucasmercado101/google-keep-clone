@@ -51,6 +51,15 @@ export function useDeleteNote() {
     });
 }
 
+export function useDeleteLabel() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation((id: number) => deleteNote(id));
+  return (id: number) =>
+    mutation.mutateAsync(id).then(() => {
+      queryClient.invalidateQueries("labels");
+    });
+}
+
 export function useGetLabels() {
   return useQuery<label[], Error>("labels", getLabels);
 }

@@ -75,6 +75,10 @@ export const deleteNote = (id: number) => {
   return axios.delete(`/note/${id}`).then((resp) => resp.data);
 };
 
+export const deleteLabel = (id: number) => {
+  return axios.delete(`/label/${id}`).then((resp) => resp.data);
+};
+
 export const getLabels = () => {
   return axios.get<label[]>(`/label/`).then((resp) => resp.data);
 };

@@ -11,7 +11,7 @@ import clsx from "clsx";
 import { usePutNote } from "../../Hooks/queries";
 import ColorPicker from "./ColorPicker";
 import MoreMenu from "./MoreMenu";
-import { label } from "../../api";
+import { label, noteColors } from "../../api";
 import Tags from "./Tags";
 import ArchiveButton from "./ArchiveButton";
 import PinIcon from "./PinIcon";
@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
     width: 240,
     maxWidth: 240,
     borderRadius: 8,
-    border: `thin solid ${theme.palette.text.disabled}`,
+    border: `thin solid ${
+      color && color.color ? "transparent" : theme.palette.text.disabled
+    }`,
     minHeight: 100,
     maxHeight: 450,
     height: "100%",
@@ -106,7 +108,7 @@ type props = {
   archived: boolean;
   pinned: boolean;
   id: number;
-  color: string;
+  color: noteColors;
   labels: label[];
 };
 
@@ -228,6 +230,7 @@ const Note: React.FC<props> = ({
           pinned={pinned}
           title={title}
           labels={labels}
+          color={color}
           onClickOutside={(data) => {
             if (!data) return;
             let newNoteData: any = data;

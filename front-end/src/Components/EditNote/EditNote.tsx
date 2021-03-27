@@ -11,23 +11,38 @@ import { label } from "../../api";
 import Tags from "../Note/Tags";
 
 const useStyles = makeStyles((theme) => ({
-  container: (isNewNote) => ({
+  container: ({ newNote, color }: any) => ({
     borderRadius: 8,
-    border: `thin solid ${theme.palette.text.disabled}`,
+    position: "relative",
+    border: `thin solid ${color ? "transparent" : theme.palette.text.disabled}`,
     padding: theme.spacing(1, 2),
     maxWidth: 600,
-    minHeight: isNewNote ? 0 : 180,
+    minHeight: { newNote } ? 0 : 180,
     maxHeight: 650,
     width: "100%",
     display: "flex",
     flexDirection: "column",
-    background: theme.palette.background.default
+    overflow: "hidden",
+    background: theme.palette.background.default,
+    "&::before": {
+      zIndex: 0,
+      content: "''",
+      position: "absolute",
+      height: "100%",
+      top: 0,
+      left: 0,
+      width: "100%",
+      filter: "saturate(350%) opacity(0.25)",
+      backgroundImage: color
+        ? `linear-gradient(${color}, ${color})`
+        : "linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0))"
+    }
   }),
   titleArea: {
     display: "flex",
     alignItems: "flex-start"
   },
-  title: (newNote) => ({
+  title: ({ newNote }: any) => ({
     flexGrow: 1,
     fontSize: newNote ? "initial" : "1.6rem",
     marginBottom: newNote ? theme.spacing(2) : theme.spacing(1)
@@ -73,16 +88,16 @@ const EditNote: React.FC<props> = ({
   labels = [],
   ...otherProps
 }) => {
-  const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
   const [newNoteValues, setNewNoteValues] = useState<
     Partial<Note> & { labels: label[] }
   >({
-    color: undefined,
+    color: color,
     archived: archived,
     pinned: pinned,
     labels
   });
+  const classes = useStyles({ newNote, color: newNoteValues.color });
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {

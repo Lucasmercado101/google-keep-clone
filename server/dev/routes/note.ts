@@ -42,7 +42,14 @@ router.get("/", (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { title, content, labels } = req.body;
+  const {
+    title,
+    content,
+    labels,
+    pinned = false,
+    archived = false,
+    color
+  } = req.body;
 
   if (!content && !title) return res.sendStatus(400);
 
@@ -50,11 +57,21 @@ router.post("/", async (req, res) => {
     author: req.user!.userName,
     title,
     content,
-    pinned: false,
-    archived: false
+    pinned: archived ? false : pinned,
+    archived,
+    color
   });
-  // if (labels) (await newNote).$set("labels", labels); TODO: check if labels exist
+
+  if (labels) {
+    const userLabels = await Label.findAll({
+      where: {
+        id: { [Op.or]: labels }
+      }
+    });
+    (await newNote).$set("labels", userLabels);
+  }
   // Add collaborators
+
   res.json({
     author: newNote.author,
     title: newNote.title,

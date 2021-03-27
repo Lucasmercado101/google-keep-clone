@@ -1,15 +1,8 @@
 import { Chip, makeStyles } from "@material-ui/core";
 import { label } from "../../api";
 import CloseIcon from "@material-ui/icons/Close";
-import { useRemoveLabelFromNote } from "../../Hooks/queries";
 
 const useStyles = makeStyles((theme) => ({
-  tagContainer: {
-    padding: theme.spacing(0, 2),
-    display: "flex",
-    flexWrap: "wrap",
-    gap: theme.spacing(1)
-  },
   tag: {
     border: `thin solid ${theme.palette.text.disabled}`,
     padding: 0,
@@ -42,20 +35,30 @@ const useStyles = makeStyles((theme) => ({
 
 type props = {
   labels: label[];
-  noteId: number;
-};
+  onDelete: (labelId: number) => void;
+  maxShown?: number;
+} & React.HTMLProps<HTMLDivElement>;
 
-const Tags: React.FC<props> = ({ labels, noteId }) => {
+const Tags: React.FC<props> = ({
+  labels,
+  onDelete,
+  maxShown,
+  ...otherProps
+}) => {
   const classes = useStyles();
-  const removeLabelFromNote = useRemoveLabelFromNote();
 
-  let labelsToShow: label[] = [];
+  let labelsToShow: label[] = [...labels];
 
-  if (labels.length <= 3) labelsToShow = [...labels].splice(0, 3);
-  else labelsToShow = [...labels].splice(0, 2);
+  if (maxShown && maxShown > 1) {
+    if (labels.length <= maxShown)
+      labelsToShow = [...labels].splice(0, maxShown);
+    else labelsToShow = [...labels].splice(0, maxShown - 1);
+  } else if (maxShown && maxShown === 1) {
+    labelsToShow = [...labels].splice(0, 1);
+  }
 
   return (
-    <div className={classes.tagContainer}>
+    <div {...otherProps}>
       {labelsToShow.map((label) => (
         <Chip
           classes={{ root: classes.tag }}
@@ -63,14 +66,12 @@ const Tags: React.FC<props> = ({ labels, noteId }) => {
           onClick={(e) => {
             e.stopPropagation();
           }}
-          onDelete={() => {
-            removeLabelFromNote(noteId, label.id);
-          }}
+          onDelete={() => onDelete(label.id)}
           deleteIcon={<CloseIcon className={classes.removeLabelButton} />}
         />
       ))}
-      {labels.length > 3 && (
-        <div className={classes.moreTag}> +{labels.length - 3} </div>
+      {!!maxShown && labels.length > maxShown && (
+        <div className={classes.moreTag}> +{labels.length - maxShown} </div>
       )}
     </div>
   );

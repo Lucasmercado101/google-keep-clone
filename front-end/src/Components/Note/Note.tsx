@@ -143,25 +143,45 @@ const Note: React.FC<props> = ({
         {/* <SelectNoteIcon className={classes.selectNoteIcon + " " + show} /> */}
         <div className={classes.textWrapper}>
           <div className={classes.titleWrapper}>
-            <Typography
-              className={classes.title}
-              variant="subtitle1"
-              component="h4"
-            >
-              {shorten(title, 50)}
-            </Typography>
-            <PinIcon
-              pinned={pinned}
-              onClick={(e) => {
-                e.stopPropagation();
-                putNote(id, { pinned: !pinned, archived: false });
-              }}
-              className={showOnHover}
-              style={{ marginRight: -5 }}
-              size="small"
-            />
+            {title && (
+              <>
+                <Typography
+                  className={classes.title}
+                  variant="subtitle1"
+                  component="h4"
+                >
+                  {shorten(title, 50)}
+                </Typography>
+                <PinIcon
+                  pinned={pinned}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    putNote(id, { pinned: !pinned, archived: false });
+                  }}
+                  className={showOnHover}
+                  style={{ marginRight: -5 }}
+                  size="small"
+                />
+              </>
+            )}
           </div>
-          <Typography>{shorten(content, 235)}</Typography>
+          <div className={classes.titleWrapper}>
+            <Typography style={{ flexGrow: 1 }}>
+              {shorten(content, 235)}
+            </Typography>
+            {!title && (
+              <PinIcon
+                pinned={pinned}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  putNote(id, { pinned: !pinned, archived: false });
+                }}
+                className={showOnHover}
+                style={{ marginRight: -5 }}
+                size="small"
+              />
+            )}
+          </div>
         </div>
         <Tags
           className={classes.tagContainer}

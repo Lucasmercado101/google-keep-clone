@@ -29,4 +29,9 @@ router.delete("/", async (req, res) => {
   res.sendStatus(200);
 });
 
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+  res.json(await Label.findOne({ where: { owner: req.user!.userName, id } }));
+});
+
 export default router;

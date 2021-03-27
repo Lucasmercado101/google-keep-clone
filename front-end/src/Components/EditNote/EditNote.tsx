@@ -1,14 +1,12 @@
 import { useRef, useEffect, useState } from "react";
-import { InputBase, makeStyles, IconButton } from "@material-ui/core";
+import { InputBase, makeStyles } from "@material-ui/core";
 import { useForm } from "react-hook-form";
-import Icon from "@mdi/react";
-import { mdiPinOutline } from "@mdi/js";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
 import ColorPicker from "../Note/ColorPicker";
 import ArchiveButton from "../Note/ArchiveButton";
 import PinIcon from "../Note/PinIcon";
-// import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
+import MoreMenu from "./MoreMenu";
 
 const useStyles = makeStyles((theme) => ({
   container: (isNewNote) => ({
@@ -38,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
   noteActions: {
     flexGrow: 1,
     display: "flex",
+    marginLeft: 5,
     gap: 15
   }
 }));
@@ -63,10 +62,13 @@ const EditNote: React.FC<props> = ({
 }) => {
   const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
-  const [newNoteValues, setNewNoteValues] = useState<Partial<Note>>({
+  const [newNoteValues, setNewNoteValues] = useState<
+    Partial<Note> & { labels: number[] }
+  >({
     color: undefined,
     archived: false,
-    pinned: false
+    pinned: false,
+    labels: []
   });
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -77,22 +79,11 @@ const EditNote: React.FC<props> = ({
   }, []);
   // TODO: Undo redo by pushing to an array every
   // x seconds and then just using pop and stuff for undo redo
-  //TODO: Convert first input base to a div with content editable
-  // and placeholder with
-  /*
-    [placeholder]:empty::before {
-        content: attr(placeholder);
-        color: #555; 
-    }
-
-    [placeholder]:empty:focus::before {
-        content: "";
-    }
-    */
   return (
-    <ClickAwayListener onClickAway={() => onClickOutside(getValues())}>
+    <ClickAwayListener
+      onClickAway={() => onClickOutside({ ...getValues(), ...newNoteValues })}
+    >
       <div {...otherProps} className={`${className} ${classes.container}`}>
-        {JSON.stringify(newNoteValues)}
         <div className={classes.titleArea}>
           <InputBase
             className={classes.title}
@@ -114,7 +105,6 @@ const EditNote: React.FC<props> = ({
             }
           />
         </div>
-
         <InputBase
           multiline
           style={{ overflow: "auto" }}
@@ -138,6 +128,12 @@ const EditNote: React.FC<props> = ({
                 ...prev,
                 archived: !prev.archived
               }))
+            }
+          />
+          <MoreMenu
+            selectedLabels={newNoteValues.labels}
+            onSelectLabel={(labels) =>
+              setNewNoteValues({ ...newNoteValues, labels })
             }
           />
         </div>

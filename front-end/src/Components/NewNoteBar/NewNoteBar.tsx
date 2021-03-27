@@ -33,9 +33,9 @@ function NewNoteBar() {
     setIsWritingNewNote(true);
   };
 
-  const handleNewNote = (data: object) => {
+  const handleNewNote = (data: any) => {
     setIsWritingNewNote(false);
-    if (!Object.keys(data).length) return;
+    if (!Object.keys(data).length && !data.title && !data.content) return;
     createNewNote(data).then(() => {
       queryClient.invalidateQueries("notes");
     });

@@ -8,7 +8,8 @@ import {
   label,
   addNewLabel,
   removeLabelFromNote,
-  getLabelById
+  getLabelById,
+  deleteLabel
 } from "../api";
 
 export function useFetchAllMyNotes() {
@@ -53,7 +54,7 @@ export function useDeleteNote() {
 
 export function useDeleteLabel() {
   const queryClient = useQueryClient();
-  const mutation = useMutation((id: number) => deleteNote(id));
+  const mutation = useMutation((id: number) => deleteLabel(id));
   return (id: number) =>
     mutation.mutateAsync(id).then(() => {
       queryClient.invalidateQueries("labels");

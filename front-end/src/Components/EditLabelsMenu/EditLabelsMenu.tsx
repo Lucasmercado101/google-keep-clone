@@ -8,7 +8,6 @@ import {
   ListItemSecondaryAction,
   Typography,
   IconButton,
-  Divider,
   Button,
   InputBase,
   Modal
@@ -28,6 +27,8 @@ import {
   Close as CancelIcon
 } from "@material-ui/icons";
 import clsx from "clsx";
+import Footer from "./Footer";
+import ConfirmDeletionModal from "./ConfirmDeletionModal";
 
 const useStyles = makeStyles((theme) => ({
   title: { padding: theme.spacing(2, 2, 0, 2) },
@@ -65,50 +66,6 @@ const useStyles = makeStyles((theme) => ({
   labelIcon: {
     display: "initial"
   },
-  doneButton: {
-    color: theme.palette.text.primary,
-    marginLeft: "auto"
-  },
-  footer: {
-    minHeight: 70,
-    maxHeight: 70
-  },
-  divider: {
-    color: theme.palette.text.secondary
-  },
-  buttonWrapper: {
-    display: "flex",
-    padding: theme.spacing(2)
-  },
-  confirmMenuModal: {
-    display: "grid",
-    placeItems: "center"
-  },
-  confirmPaperWrapper: {
-    width: 270,
-    "&:hover, &:focus": {
-      outline: "none"
-    },
-    [theme.breakpoints.up("sm")]: {
-      width: 430
-    }
-  },
-  confirmPaper: {
-    padding: theme.spacing(3, 3, 2, 3)
-  },
-  confirmModalButton: {
-    textTransform: "none",
-    padding: theme.spacing(1, 3)
-  },
-  confirmButton: {
-    color: theme.palette.secondary.main
-  },
-  confirmModalButtons: {
-    marginTop: 15,
-    display: "flex",
-    gap: 15,
-    justifyContent: "flex-end"
-  },
   addNewLabelContainer: {
     listStyleType: "none"
   },
@@ -130,7 +87,10 @@ const EditLabelsMenu: React.FC<props> = ({ onClose }) => {
   const putLabel = usePutLabel();
   const postNewLabel = usePostNewLabel();
   const [labelToDeleteId, setLabelToDeleteId] = useState<null | number>();
-  const [isDeleteLabelModalOpen, setIsDeleteLabelModalOpen] = useState(false);
+  const [
+    isDeleteConfirmationModalOpen,
+    setIsDeleteConfirmationModalOpen
+  ] = useState(false);
   const [newLabelsData, setNewLabelsData] = useState<{} | any>({});
   const [newLabelName, setNewLabelName] = useState("");
   const [isWritingNewName, setIsWritingNewName] = useState(false);
@@ -200,7 +160,7 @@ const EditLabelsMenu: React.FC<props> = ({ onClose }) => {
                   <ListItemIcon
                     onClick={() => {
                       setLabelToDeleteId(label.id);
-                      setIsDeleteLabelModalOpen(true);
+                      setIsDeleteConfirmationModalOpen(true);
                     }}
                   >
                     <IconButton size="small">
@@ -258,50 +218,17 @@ const EditLabelsMenu: React.FC<props> = ({ onClose }) => {
             </List>
           )}
         </div>
-        <div className={classes.footer}>
-          <Divider className={classes.divider} />
-          <div className={classes.buttonWrapper}>
-            <Button onClick={onClose} className={classes.doneButton}>
-              Done
-            </Button>
-          </div>
-        </div>
+        <Footer onClickDone={onClose} />
       </Paper>
-      <Modal
-        open={isDeleteLabelModalOpen}
-        onClose={() => setIsDeleteLabelModalOpen(false)}
-        className={classes.confirmMenuModal}
-      >
-        <div className={classes.confirmPaperWrapper}>
-          <Paper className={classes.confirmPaper}>
-            <Typography variant="body2">
-              We’ll delete this label and remove it from all of your Meep notes.
-              Your notes won’t be deleted.
-            </Typography>
-            <div className={classes.confirmModalButtons}>
-              <Button
-                className={classes.confirmModalButton}
-                onClick={() => setIsDeleteLabelModalOpen(false)}
-              >
-                Cancel
-              </Button>
-              <Button
-                className={clsx(
-                  classes.confirmModalButton,
-                  classes.confirmButton
-                )}
-                onClick={() => {
-                  setIsDeleteLabelModalOpen(false);
-                  deleteLabel(labelToDeleteId!);
-                  setLabelToDeleteId(null);
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          </Paper>
-        </div>
-      </Modal>
+      <ConfirmDeletionModal
+        isOpen={isDeleteConfirmationModalOpen}
+        setIsOpen={setIsDeleteConfirmationModalOpen}
+        onConfirm={() => {
+          setIsDeleteConfirmationModalOpen(false);
+          deleteLabel(labelToDeleteId!);
+          setLabelToDeleteId(null);
+        }}
+      />
     </>
   );
 };

@@ -24,7 +24,7 @@ router.post("/", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const labels = await req.user!.$get("labels");
-  const label = labels.find((label) => label.id === req.params.id);
+  const label = labels.find((label) => label.id === +req.params.id);
   label && (await label.destroy());
   res.sendStatus(200);
 });

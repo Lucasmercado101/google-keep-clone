@@ -4,13 +4,10 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Typography,
   Paper,
-  InputBase,
   Checkbox
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import SearchIcon from "@material-ui/icons/Search";
 import { useGetLabels } from "../../Hooks/queries";
 import NewLabelButton from "./NewLabelButton";
 import { label } from "../../api";

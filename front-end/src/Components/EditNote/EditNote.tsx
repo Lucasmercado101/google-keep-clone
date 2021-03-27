@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: newNote ? "initial" : "1.6rem",
     marginBottom: newNote ? theme.spacing(2) : theme.spacing(1)
   }),
+  content: {
+    minHeight: 40
+  },
   contentBottom: {
     flexGrow: 1
   },
@@ -44,7 +47,8 @@ const useStyles = makeStyles((theme) => ({
   tagContainer: {
     display: "flex",
     flexWrap: "wrap",
-    gap: theme.spacing(1)
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   }
 }));
 
@@ -120,7 +124,7 @@ const EditNote: React.FC<props> = ({
           id="contentArea"
           name="content"
           placeholder="Take a note..."
-          inputProps={{ ref: register }}
+          inputProps={{ ref: register, className: classes.content }}
         />
         <label htmlFor="contentArea" className={classes.contentBottom}></label>
         <Tags

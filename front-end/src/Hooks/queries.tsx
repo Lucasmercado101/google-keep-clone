@@ -7,7 +7,8 @@ import {
   getLabels,
   label,
   addNewLabel,
-  removeLabelFromNote
+  removeLabelFromNote,
+  getLabelById
 } from "../api";
 
 export function useFetchAllMyNotes() {
@@ -52,6 +53,16 @@ export function useDeleteNote() {
 
 export function useGetLabels() {
   return useQuery<label[], Error>("labels", getLabels);
+}
+
+export function useGetLabelById(labelId: number) {
+  return useQuery<label, Error>(
+    ["label", labelId],
+    () => getLabelById(labelId),
+    {
+      enabled: !!labelId
+    }
+  );
 }
 
 export function usePostNewLabel() {

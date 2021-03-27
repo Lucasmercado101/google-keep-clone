@@ -7,6 +7,8 @@ import ColorPicker from "../Note/ColorPicker";
 import ArchiveButton from "../Note/ArchiveButton";
 import PinIcon from "../Note/PinIcon";
 import MoreMenu from "./MoreMenu";
+import { label } from "../../api";
+import Tags from "../Note/Tags";
 
 const useStyles = makeStyles((theme) => ({
   container: (isNewNote) => ({
@@ -38,37 +40,44 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     marginLeft: 5,
     gap: 15
+  },
+  tagContainer: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: theme.spacing(1)
   }
 }));
 
 type props = {
-  onClickOutside?: (data?: any) => void;
+  onClickOutside?: (data?: Partial<Note> & { labels: label[] }) => void;
   style?: any;
   className?: any;
   newNote?: boolean;
+  labels?: label[];
 } & Partial<Note>;
 
 const EditNote: React.FC<props> = ({
   onClickOutside = () => {},
-  archived,
-  pinned,
+  archived = false,
+  pinned = false,
   id,
   title,
   content,
   className,
   newNote = false,
   color,
+  labels = [],
   ...otherProps
 }) => {
   const classes = useStyles(newNote);
   const { register, getValues, setValue } = useForm();
   const [newNoteValues, setNewNoteValues] = useState<
-    Partial<Note> & { labels: number[] }
+    Partial<Note> & { labels: label[] }
   >({
     color: undefined,
-    archived: false,
-    pinned: false,
-    labels: []
+    archived: archived,
+    pinned: pinned,
+    labels
   });
   const focusInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -114,6 +123,16 @@ const EditNote: React.FC<props> = ({
           inputProps={{ ref: register }}
         />
         <label htmlFor="contentArea" className={classes.contentBottom}></label>
+        <Tags
+          className={classes.tagContainer}
+          onDelete={(labelId) =>
+            setNewNoteValues({
+              ...newNoteValues,
+              labels: newNoteValues.labels.filter((lbl) => lbl.id !== labelId)
+            })
+          }
+          labels={newNoteValues.labels}
+        />
         <div className={classes.noteActions}>
           <ColorPicker
             edge="start"
@@ -132,9 +151,9 @@ const EditNote: React.FC<props> = ({
           />
           <MoreMenu
             selectedLabels={newNoteValues.labels}
-            onSelectLabel={(labels) =>
-              setNewNoteValues({ ...newNoteValues, labels })
-            }
+            onSelectLabel={(labels) => {
+              setNewNoteValues({ ...newNoteValues, labels });
+            }}
           />
         </div>
       </div>

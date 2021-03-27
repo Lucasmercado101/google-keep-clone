@@ -197,7 +197,7 @@ const Note: React.FC<props> = ({
               putNote(id, { archived: !archived, pinned: false });
             }}
           />
-          <MoreMenu noteId={id} labels={labels?.map((label) => label.id)} />
+          <MoreMenu noteId={id} labels={labels} />
         </div>
       </div>
       <Modal className={classes.modal} open={isEditingModal}>
@@ -209,7 +209,10 @@ const Note: React.FC<props> = ({
           title={title}
           labels={labels}
           onClickOutside={(data) => {
-            putNote(id, data);
+            if (!data) return;
+            let newNoteData: any = data;
+            newNoteData.labels = data.labels.map((lbl) => lbl.id);
+            putNote(id, newNoteData);
             setIsEditingModal(false);
           }}
         />

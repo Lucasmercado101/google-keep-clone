@@ -60,6 +60,7 @@ const Tags: React.FC<props> = ({
   return (
     <div {...otherProps}>
       {labelsToShow.map((label) => (
+        //TODO: make it so chip doesn't expand when hovered on
         <Chip
           classes={{ root: classes.tag }}
           label={label.name}

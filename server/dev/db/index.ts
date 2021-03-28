@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import { Sequelize } from "sequelize-typescript";
 
 const { DB_NAME, DB_PASSWORD, DB_USERNAME } = process.env;

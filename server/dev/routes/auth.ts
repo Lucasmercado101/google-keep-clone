@@ -10,6 +10,10 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 
 router.post("/register", async (req, res) => {
   const { userName, password } = req.body;
+  if (!userName || !password)
+    return res
+      .status(400)
+      .json("You need to provide a 'userName' and 'password'");
   const user = await User.findByPk(userName);
   if (user) return res.status(409).json({ error: "User already exists" });
   const hashedPassword = await bcrypt.hash(password, 10);

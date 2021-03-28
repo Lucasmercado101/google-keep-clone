@@ -9,9 +9,27 @@ beforeAll(() => {
 });
 
 describe("/auth", () => {
-  describe("GET /register", () => {
-    it("add", (done) => {
-      app.get("/note").expect(401).end(done);
+  describe("/register", () => {
+    describe("POST", () => {
+      it("Should return 400 if nothing was sent", (done) => {
+        app.post("/auth/register").expect(400).end(done);
+      });
+
+      it("Should return 400 if only 'userName' was sent", (done) => {
+        app
+          .post("/auth/register")
+          .send({ userName: "john" })
+          .expect(400)
+          .end(done);
+      });
+
+      it("Should return 400 if only 'password' was sent", (done) => {
+        app
+          .post("/auth/register")
+          .send({ password: "superSafePasswordISwear" })
+          .expect(400)
+          .end(done);
+      });
     });
   });
 });

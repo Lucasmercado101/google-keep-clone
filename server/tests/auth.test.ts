@@ -18,6 +18,11 @@ const invalidUser = {
 
 let app: supertest.SuperAgentTest;
 
+async function getConnectSidCookie() {
+  const access_info = new CookieAccessInfo("");
+  return app.jar.getCookie("connect.sid", access_info);
+}
+
 beforeEach(() => {
   // so cookies don't persist among all tests
   app = agent(server);
@@ -222,16 +227,42 @@ describe("/auth", () => {
     });
 
     describe("if valid user was sent it should", () => {
-      beforeEach(() => {});
       it("return 200", (done) => {
         app.post("/auth/login").send(newUser).expect(200).end(done);
       });
 
       it("set session cookie", async (done) => {
-        const access_info = new CookieAccessInfo("");
-        await app.post("/auth/login").send(newUser);
-        expect(app.jar.getCookie("connect.sid", access_info)).not.toBeNull();
+        await app.post("/auth/login").send(newUser).expect(200);
+
+        expect(getConnectSidCookie()).not.toBeNull();
         done();
+      });
+    });
+  });
+
+  describe("GET /me", () => {
+    beforeAll(async () => {
+      await User.sync({ force: true });
+      await User.create(newUser);
+    });
+
+    it("should return 401 if logged out", (done) =>
+      app.get("/auth/me").expect(401).end(done));
+
+    describe("if logged in should return", () => {
+      beforeEach(async () => await app.post("/auth/login").send(newUser));
+      it("200 if logged in", async (done) => {
+        app.get("/auth/me").expect(200).end(done);
+      });
+
+      it("an object with the user's username", async (done) => {
+        app
+          .get("/auth/me")
+          .expect(200)
+          .then((resp) => {
+            expect(resp.body.userName).toBe(newUser.userName);
+            done();
+          });
       });
     });
   });

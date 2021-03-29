@@ -10,6 +10,13 @@ const newUser = {
   password: "superSafePasswordISwear"
 };
 
+const invalidUser = {
+  userName:
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  password:
+    "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+};
+
 beforeAll(() => {
   return db.sync({ force: true });
 });
@@ -17,7 +24,7 @@ beforeAll(() => {
 describe("/auth", () => {
   describe("/register", () => {
     describe("POST", () => {
-      describe("Should return ", () => {
+      describe("Should return", () => {
         describe("400 if", () => {
           it("nothing was sent", (done) =>
             app
@@ -97,6 +104,64 @@ describe("/auth", () => {
                 );
                 done();
               }));
+
+          describe("and 'username' is too long", () => {
+            test("400", (done) => {
+              app
+                .post("/auth/register")
+                .send({
+                  userName: invalidUser.userName,
+                  password: newUser.password
+                })
+                .expect(400)
+                .end(done);
+            });
+
+            test("an error message", (done) => {
+              app
+                .post("/auth/register")
+                .send({
+                  userName: invalidUser.userName,
+                  password: newUser.password
+                })
+                .expect(400)
+                .then((resp) => {
+                  expect(resp.body).toBe(
+                    "Username must be smaller or equal than 255 characters"
+                  );
+                  done();
+                });
+            });
+          });
+
+          describe("and 'password' is too long", () => {
+            test("400", (done) => {
+              app
+                .post("/auth/register")
+                .send({
+                  userName: newUser.userName,
+                  password: invalidUser.password
+                })
+                .expect(400)
+                .end(done);
+            });
+
+            test("an error message", (done) => {
+              app
+                .post("/auth/register")
+                .send({
+                  userName: newUser.userName,
+                  password: invalidUser.password
+                })
+                .expect(400)
+                .then((resp) => {
+                  expect(resp.body).toBe(
+                    "Password must be smaller or equal than 255 characters"
+                  );
+                  done();
+                });
+            });
+          });
         });
 
         describe("if user already exists", () => {

@@ -1,9 +1,8 @@
-import { agent } from "supertest";
+import supertest, { agent } from "supertest";
 import server from "../dev/server";
 import db from "../dev/db";
 import User from "../dev/db/models/User";
-
-const app = agent(server);
+import { CookieAccessInfo } from "cookiejar";
 
 const newUser = {
   userName: "john",
@@ -16,6 +15,13 @@ const invalidUser = {
   password:
     "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
+
+let app: supertest.SuperAgentTest;
+
+beforeEach(() => {
+  // so cookies don't persist among all tests
+  app = agent(server);
+});
 
 beforeAll(() => {
   return db.sync({ force: true });
@@ -216,8 +222,16 @@ describe("/auth", () => {
     });
 
     describe("if valid user was sent it should", () => {
+      beforeEach(() => {});
       it("return 200", (done) => {
         app.post("/auth/login").send(newUser).expect(200).end(done);
+      });
+
+      it("set session cookie", async (done) => {
+        const access_info = new CookieAccessInfo("");
+        await app.post("/auth/login").send(newUser);
+        expect(app.jar.getCookie("connect.sid", access_info)).not.toBeNull();
+        done();
       });
     });
   });

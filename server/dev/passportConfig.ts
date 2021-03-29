@@ -31,7 +31,7 @@ export default (passport: PassportStatic) => {
   passport.deserializeUser(function (userName: string, done) {
     User.findByPk(userName)
       .then(function (user) {
-        if (!user) return done(null, false)
+        if (!user) return done(null, false);
         done(null, user);
       })
       .catch((err) => done(err));

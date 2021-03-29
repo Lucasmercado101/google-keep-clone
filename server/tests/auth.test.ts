@@ -1,9 +1,9 @@
-import request from "supertest";
+import { agent } from "supertest";
 import server from "../dev/server";
 import db from "../dev/db";
 import User from "../dev/db/models/User";
 
-const app = request(server);
+const app = agent(server);
 
 const newUser = {
   userName: "john",

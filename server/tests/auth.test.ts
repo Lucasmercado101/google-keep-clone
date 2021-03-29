@@ -195,32 +195,32 @@ describe("/auth", () => {
 
     describe("should return 404 if", () => {
       it("nothing was sent", (done) => {
-        app.get("/auth/login").expect(404).end(done);
+        app.post("/auth/login").expect(404).end(done);
       });
 
       it("only 'userName' was sent", (done) => {
-        app.get("/auth/login").send({ userName: "asd" }).expect(404).end(done);
+        app.post("/auth/login").send({ userName: "asd" }).expect(404).end(done);
       });
 
       it("only 'password' was sent", (done) => {
-        app.get("/auth/login").send({ password: "asd" }).expect(404).end(done);
+        app.post("/auth/login").send({ password: "asd" }).expect(404).end(done);
       });
 
       it("invalid 'userName' and 'password' were sent", (done) => {
         app
-          .get("/auth/login")
+          .post("/auth/login")
           .send({ userName: "asd", password: "asd" })
           .expect(404)
           .end(done);
       });
     });
-  });
 
-  // describe("if valid user was sent it should", () => {
-  //   it("return 200", (done) => {
-  //     app.get("/auth/login").send(newUser).expect(200).end(done);
-  //   });
-  // });
+    describe("if valid user was sent it should", () => {
+      it("return 200", (done) => {
+        app.post("/auth/login").send(newUser).expect(200).end(done);
+      });
+    });
+  });
 });
 
 afterAll(() => {

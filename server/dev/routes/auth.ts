@@ -2,7 +2,6 @@ import { Router } from "express";
 import passport from "passport";
 const router = Router();
 import User from "../db/models/User";
-import bcrypt from "bcryptjs";
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
   res.json({ userName: req.user!.userName });
@@ -25,9 +24,8 @@ router.post("/register", async (req, res) => {
       .json("Username must be smaller or equal than 255 characters");
   const user = await User.findByPk(userName);
   if (user) return res.status(409).json("User already exists");
-  const hashedPassword = await bcrypt.hash(password, 10);
   try {
-    const newUser = await User.create({ userName, password: hashedPassword });
+    const newUser = await User.create({ userName, password });
     res.json(newUser);
   } catch (e) {
     res.sendStatus(500);

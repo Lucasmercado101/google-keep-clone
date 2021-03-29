@@ -167,7 +167,10 @@ describe("/auth", () => {
         describe("if user already exists", () => {
           beforeAll(async () => {
             await User.sync({ force: true });
-            await User.create({ userName: newUser.userName });
+            await User.create({
+              userName: newUser.userName,
+              password: newUser.password
+            });
           });
 
           it("409", (done) => {
@@ -187,6 +190,13 @@ describe("/auth", () => {
       });
     });
   });
+
+  // describe("/login", () => {
+  //   beforeAll(async () => {
+  //     await User.sync({ force: true });
+  //   });
+  //   it.todo("");
+  // });
 });
 
 afterAll(() => {

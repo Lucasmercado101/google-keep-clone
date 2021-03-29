@@ -4,10 +4,12 @@ import {
   Model,
   PrimaryKey,
   Unique,
-  HasMany
+  HasMany,
+  BeforeCreate
 } from "sequelize-typescript";
 import Label from "./Label";
 import Note from "./Note";
+import bcrypt from "bcryptjs";
 
 @Table
 export default class User extends Model {
@@ -18,6 +20,11 @@ export default class User extends Model {
 
   @Column
   password: string;
+
+  @BeforeCreate
+  static async encryptPassword(instance: User) {
+    instance.password = await bcrypt.hash(instance.password, 10);
+  }
 
   @HasMany(() => Note)
   notes: Note[];

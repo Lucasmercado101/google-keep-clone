@@ -13,12 +13,12 @@ router.post("/register", async (req, res) => {
   if (!userName || !password)
     return res
       .status(400)
-      .json("You need to provide a 'userName' and 'password'");
+      .json("You need to provide both a 'userName' and 'password'");
   const user = await User.findByPk(userName);
-  if (user) return res.status(409).json({ error: "User already exists" });
+  if (user) return res.status(409).json("User already exists");
   const hashedPassword = await bcrypt.hash(password, 10);
-  await User.create({ userName, password: hashedPassword });
-  res.sendStatus(200);
+  const newUser = await User.create({ userName, password: hashedPassword });
+  res.json(newUser);
 });
 
 router.get("/me", (req, res) => {

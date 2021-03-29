@@ -3,9 +3,17 @@ import passport from "passport";
 const router = Router();
 import User from "../db/models/User";
 
-router.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json({ userName: req.user!.userName });
-});
+router.post("/login", (req, res, next) =>
+  passport.authenticate("local", function (err: Error, user: User) {
+    if (err) return res.sendStatus(500);
+    if (!user) return res.sendStatus(404);
+
+    req.login(user, function (err) {
+      if (err) return res.sendStatus(500);
+      return res.sendStatus(200);
+    });
+  })(req, res, next)
+);
 
 router.post("/register", async (req, res) => {
   const { userName, password } = req.body;

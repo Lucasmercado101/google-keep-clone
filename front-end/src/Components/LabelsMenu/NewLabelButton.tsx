@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme) => ({
   },
   addIcon: {
     height: 20,
-    width: 20
+    width: 20,
+    marginTop: -3
   },
   toCreateText: {
     fontWeight: 600,

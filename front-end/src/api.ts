@@ -55,6 +55,12 @@ export const logIn = (data: { userName: string; password: string }) => {
     .then((resp) => resp.data);
 };
 
+export const createAccount = (data: { userName: string; password: string }) => {
+  return axios
+    .post<{ userName: string }>("/auth/register", data)
+    .then((resp) => resp.data);
+};
+
 export const isLoggedIn = () => {
   return axios.get<{ userName: string }>("/auth/me").then((resp) => resp.data);
 };

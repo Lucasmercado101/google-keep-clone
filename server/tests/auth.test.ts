@@ -18,9 +18,10 @@ const invalidUser = {
 
 let app: supertest.SuperAgentTest;
 
-async function getConnectSidCookie() {
+function getConnectSidCookie() {
   const access_info = new CookieAccessInfo("");
-  return app.jar.getCookie("connect.sid", access_info);
+  const cookie = app.jar.getCookie("connect.sid", access_info);
+  return cookie ? cookie : null;
 }
 
 beforeEach(() => {
@@ -250,7 +251,10 @@ describe("/auth", () => {
       app.get("/auth/me").expect(401).end(done));
 
     describe("if logged in should return", () => {
-      beforeEach(async () => await app.post("/auth/login").send(newUser));
+      beforeEach(
+        async () => await app.post("/auth/login").send(newUser).expect(200)
+      );
+
       it("200 if logged in", async (done) => {
         app.get("/auth/me").expect(200).end(done);
       });
@@ -265,6 +269,29 @@ describe("/auth", () => {
           });
       });
     });
+  });
+
+  describe("GET /logout", () => {
+    beforeAll(async () => {
+      await User.sync({ force: true });
+      await User.create(newUser);
+    });
+
+    beforeEach(
+      async () => await app.post("/auth/login").send(newUser).expect(200)
+    );
+
+    it("should return a 200", (done) =>
+      app.get("/auth/logout").expect(200).end(done));
+
+    it("should clear session cookies", async (done) =>
+      app
+        .get("/auth/logout")
+        .expect(200)
+        .then(async () => {
+          expect(getConnectSidCookie()).toBeNull();
+          done();
+        }));
   });
 });
 

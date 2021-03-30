@@ -48,6 +48,7 @@ router.get("/me", (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.logOut();
+  res.clearCookie("connect.sid");
   res.sendStatus(200);
 });
 

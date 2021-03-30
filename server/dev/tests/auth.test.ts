@@ -1,7 +1,7 @@
 import supertest, { agent } from "supertest";
-import server from "../dev/server";
-import db from "../dev/db";
-import User from "../dev/db/models/User";
+import server from "../server";
+import db from "../db";
+import User from "../db/models/User";
 import { CookieAccessInfo } from "cookiejar";
 
 const newUser = {

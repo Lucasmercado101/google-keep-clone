@@ -25,7 +25,10 @@ if (NODE_ENV !== "production") {
   sequelize = new Sequelize(DATABASE_URL!, {
     dialect: "postgres",
     models: [__dirname + "/models"],
-    logging: false
+    logging: false,
+    dialectOptions: {
+      ssl: { require: true, rejectUnauthorized: false }
+    }
   });
 }
 

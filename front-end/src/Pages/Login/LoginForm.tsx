@@ -10,7 +10,7 @@ import {
   Collapse
 } from "@material-ui/core";
 import { logIn } from "../../api";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 import { Alert, AlertTitle } from "@material-ui/lab";
 import { AxiosError } from "axios";
 
@@ -38,6 +38,15 @@ const useStyles = makeStyles((theme) => ({
   },
   subtitle: {
     color: theme.palette.text.secondary
+  },
+  bottomText: {
+    margin: "auto",
+    "& a": {
+      color: theme.palette.primary.light
+    },
+    "& a:visited": {
+      color: theme.palette.primary.main
+    }
   }
 }));
 
@@ -103,6 +112,9 @@ const LoginForm: React.FC = observer(() => {
             Log In
           </Button>
         </div>
+        <Typography variant="body2" className={classes.bottomText}>
+          Don't have an account? <Link to="/register">Sign up</Link>
+        </Typography>
       </form>
     </div>
   );

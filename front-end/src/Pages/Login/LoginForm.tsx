@@ -12,6 +12,7 @@ import {
 import { logIn } from "../../api";
 import { useHistory } from "react-router-dom";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { AxiosError } from "axios";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -54,8 +55,12 @@ const LoginForm: React.FC = observer(() => {
         ctx.userData = resp;
         history.replace("/notes");
       })
-      .catch((e) => {
-        setError(`Incorrect username or password (${e.response.status})`);
+      .catch((e?: AxiosError) => {
+        if (e?.response) {
+          if (e.response.status === 404)
+            setError(`Incorrect username or password (${e?.response?.status})`);
+          else setError(`An unknown error ocurred`);
+        }
       });
   };
 

@@ -25,7 +25,9 @@ server.use(
   session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    proxy: true,
+    saveUninitialized: false,
+    cookie: { sameSite: "none", httpOnly: false, secure: true }
   })
 );
 server.use(passport.initialize());

@@ -1,4 +1,5 @@
 <!-- PROJECT LOGO -->
+[![Notes App](/images/preview.png)](https://google-keep-clone-ashen.vercel.app)<br />
 <br />
 <p align="center">
     <h2 align="center">Meep</h1>
@@ -28,7 +29,6 @@
 
 ## About The Project
 
-[![Notes App](/images/preview.png)](https://google-keep-clone-ashen.vercel.app)<br />
 
 ### Built With
 

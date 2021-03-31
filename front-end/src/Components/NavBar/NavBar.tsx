@@ -14,20 +14,21 @@ import {
   Brightness4 as MoonIcon,
   ViewAgendaOutlined as ListIcon,
   RefreshOutlined as RefreshIcon,
-  AccountCircle as UserIcon,
-  Dashboard as GridIcon,
+  Dashboard as GridIcon
 } from "@material-ui/icons";
 import { observer } from "mobx-react-lite";
 import { GlobalStateContext } from "../../StateProvider";
 import { useIsFetching, useQueryClient } from "react-query";
 import useScrollTrigger from "@material-ui/core/useScrollTrigger";
+import UserMenu from "./UserMenu";
 
 const useStyles = makeStyles((theme) => ({
   root: (isScrolledDown) => ({
     zIndex: 3,
     background: theme.palette.background.default,
-    borderBottom: `thin solid ${isScrolledDown ? "transparent" : theme.palette.text.disabled
-      }`
+    borderBottom: `thin solid ${
+      isScrolledDown ? "transparent" : theme.palette.text.disabled
+    }`
   }),
   menuButton: {
     marginRight: theme.spacing(1)
@@ -92,7 +93,10 @@ const NavBar: React.FC = observer(() => {
               <RefreshIcon />
             )}
           </IconButton>
-          <IconButton color="inherit" onClick={() => ctx.listView = !ctx.listView}>
+          <IconButton
+            color="inherit"
+            onClick={() => (ctx.listView = !ctx.listView)}
+          >
             {ctx.listView ? <GridIcon /> : <ListIcon />}
           </IconButton>
           <IconButton
@@ -101,9 +105,7 @@ const NavBar: React.FC = observer(() => {
           >
             {ctx.darkMode ? <SunIcon /> : <MoonIcon />}
           </IconButton>
-          <IconButton edge="end" color="inherit">
-            <UserIcon />
-          </IconButton>
+          <UserMenu />
         </div>
       </Toolbar>
     </AppBar>

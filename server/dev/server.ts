@@ -8,7 +8,7 @@ import passportConfig from "./passportConfig";
 import bodyParser from "body-parser";
 
 const {
-  FRONT_WEBSITE_URL = "*",
+  FRONT_WEBSITE_URL,
   SESSION_SECRET = "devTesting",
   NODE_ENV
 } = process.env;
@@ -24,7 +24,23 @@ const server = express();
 server.use(morgan("dev"));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
-server.use(cors({ origin: FRONT_WEBSITE_URL, credentials: true }));
+
+const localHostRegex = /http(s)?:\/\/localhost:\d+/;
+
+server.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(new Error("Not allowed by CORS"));
+
+      if (NODE_ENV !== "production" && localHostRegex.test(origin))
+        return callback(null, true);
+      else if (FRONT_WEBSITE_URL === origin) return callback(null, true);
+
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true
+  })
+);
 
 if (NODE_ENV === "production") {
   server.use(

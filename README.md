@@ -94,14 +94,14 @@ General:
 
 - [x] dark theme / light theme
 - [x] can log in
-- [] can log out
-- [] working searchbar
-- [] settings menu
-- [] can change note layout to `list` or `grid`
-- [] export all notes as `.txt`
-- [] select multiple notes and delete, add labels, etc. to selected
-- [] can click and drag to select multiple notes
-- [] drag and drop notes
+- [ ] can log out
+- [ ] working searchbar
+- [ ] settings menu
+- [ ] can change note layout to `list` or `grid`
+- [ ] export all notes as `.txt`
+- [ ] select multiple notes and delete, add labels, etc. to selected
+- [ ] can click and drag to select multiple notes
+- [ ] drag and drop notes
 
 Drawer on the left:
 
@@ -109,14 +109,14 @@ Drawer on the left:
 - [x] menu button on navbar to toggle expanded drawer
 - [x] notes button
 - [x] archived notes button
-- [] reminder notes button
-- [] a button for every label
+- [ ] reminder notes button
+- [ ] a button for every label
 
 Can add and delete:
 
 - [x] notes
 - [x] labels
-- [] reminders
+- [ ] reminders
 
 Note:
 
@@ -124,13 +124,13 @@ Note:
 - [x] can pin a note
 - [x] can archive a note
 - [x] can change note's color
-- [] can make copy of note
-- [] undo / redo buttons when editing note
-- [] can add / remove list items
-- [] can add / remove a reminder
-- [] can add / remove a collaborator
-- [] can add / remove an image
-- [] can add / remove a drawing
+- [ ] can make copy of note
+- [ ] undo / redo buttons when editing note
+- [ ] can add / remove list items
+- [ ] can add / remove a reminder
+- [ ] can add / remove a collaborator
+- [ ] can add / remove an image
+- [ ] can add / remove a drawing
 
 <!-- LICENSE -->
 

@@ -96,7 +96,6 @@ const RegisterForm: React.FC = observer(() => {
             inputProps={{ ref: register({ required: true }) }}
             name="password"
             label="Password"
-            type="password"
           />
           <Button type="submit" color="primary" variant="contained">
             Register

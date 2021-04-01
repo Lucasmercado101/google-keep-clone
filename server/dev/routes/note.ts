@@ -22,7 +22,8 @@ router.get("/", (req, res) => {
     attributes: noteAttributesToReturn,
     include: [
       { model: Label, attributes: ["name", "id"], through: { attributes: [] } }
-    ]
+    ],
+    order: [["id", "ASC"]]
     // TODO: get collaborators, labels, etc.
   })
     .then((resp) => {

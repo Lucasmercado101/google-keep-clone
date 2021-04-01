@@ -4,13 +4,12 @@ import {
   Model,
   BelongsToMany,
   ForeignKey,
-  HasMany
+  DataType
 } from "sequelize-typescript";
 import { DataTypes, Optional } from "sequelize";
 import Label from "./Label";
 import NoteLabel from "./NoteLabel";
 import User from "./User";
-import Reminder from "./Reminder";
 
 interface NoteAttributes {
   id?: number;
@@ -93,7 +92,7 @@ export default class Note extends Model<
   @BelongsToMany(() => Label, () => NoteLabel)
   labels: Array<Label & { NoteLabel: NoteLabel }>;
 
-  @HasMany(() => Reminder)
-  reminders: Reminder[];
+  @Column({ type: DataType.DATE, allowNull: true })
+  reminder: Date;
 }
 //TODO: Add Types (reminder, collaborated) as an enum? and infer from what it is and has?

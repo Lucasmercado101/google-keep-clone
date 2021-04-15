@@ -83,7 +83,9 @@ const useStyles = makeStyles((theme) => ({
   },
   actionsContainer: {
     display: "flex",
-    justifyContent: "space-evenly",
+    // justifyContent: "space-evenly",
+    gap: 5,
+    paddingLeft: 5,
     margin: "10px 0 5px 0"
   },
   iconContainer: {
@@ -195,23 +197,23 @@ const Note: React.FC<props> = ({
         />
 
         <div className={clsx(classes.actionsContainer, showOnHover)}>
-          <IconButton className={classes.iconContainer} color="inherit">
+          {/* <IconButton className={classes.iconContainer} color="inherit">
             <ReminderIcon className={classes.icon + " " + classes.icon} />
-          </IconButton>
-          <IconButton className={classes.iconContainer} color="inherit">
+          </IconButton> */}
+          {/* <IconButton className={classes.iconContainer} color="inherit">
             <AddCollaboratorIcon
               className={classes.icon}
               style={{ transform: "scaleX(-1)" }}
             />
-          </IconButton>
+          </IconButton> */}
           <ColorPicker
             onSelectColor={(color) =>
               putNote(id, { color: color ? color : null })
             }
           />
-          <IconButton className={classes.iconContainer} color="inherit">
+          {/* <IconButton className={classes.iconContainer} color="inherit">
             <AddImageIcon className={classes.icon} />
-          </IconButton>
+          </IconButton> */}
           <ArchiveButton
             archived={archived}
             onClick={(e) => {

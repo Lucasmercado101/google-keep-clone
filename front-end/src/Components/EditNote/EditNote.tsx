@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
-import { InputBase, makeStyles } from "@material-ui/core";
-import { useForm } from "react-hook-form";
+import { InputBase, makeStyles, IconButton } from "@material-ui/core";
+import { Undo as UndoIcon, Redo as RedoIcon } from "@material-ui/icons";
 import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 import { Note } from "../../api";
 import ColorPicker from "../Note/ColorPicker";
@@ -9,6 +9,8 @@ import PinIcon from "../Note/PinIcon";
 import MoreMenu from "./MoreMenu";
 import { label } from "../../api";
 import Tags from "../Note/Tags";
+import { useMachine } from "@xstate/react";
+import noteMachine from "./noteMachine";
 
 const useStyles = makeStyles((theme) => ({
   container: ({ newNote, color }: any) => ({
@@ -64,6 +66,14 @@ const useStyles = makeStyles((theme) => ({
     flexWrap: "wrap",
     gap: theme.spacing(1),
     marginBottom: theme.spacing(1)
+  },
+  iconContainer: {
+    height: 34,
+    width: 34
+  },
+  icon: {
+    width: 18,
+    height: 18
   }
 }));
 
@@ -79,16 +89,23 @@ const EditNote: React.FC<props> = ({
   onClickOutside = () => {},
   archived = false,
   pinned = false,
+  title = "",
+  content = "",
   id,
-  title,
-  content,
   className,
   newNote = false,
   color,
   labels = [],
   ...otherProps
 }) => {
-  const { register, getValues, setValue } = useForm();
+  const [current, send] = useMachine(
+    noteMachine.withContext({
+      content,
+      title,
+      history: [{ content, title }],
+      historyPointer: 0
+    })
+  );
   const [newNoteValues, setNewNoteValues] = useState<
     Partial<Note> & { labels: label[] }
   >({
@@ -98,18 +115,16 @@ const EditNote: React.FC<props> = ({
     labels
   });
   const classes = useStyles({ newNote, color: newNoteValues.color });
-  const focusInputRef = useRef<HTMLInputElement | null>(null);
 
-  useEffect(() => {
-    focusInputRef?.current?.focus();
-    setValue("title", title);
-    setValue("content", content);
-  }, []);
-  // TODO: Undo redo by pushing to an array every
-  // x seconds and then just using pop and stuff for undo redo
   return (
     <ClickAwayListener
-      onClickAway={() => onClickOutside({ ...getValues(), ...newNoteValues })}
+      onClickAway={() =>
+        onClickOutside({
+          title: current.context.title,
+          content: current.context.content,
+          ...newNoteValues
+        })
+      }
     >
       <div {...otherProps} className={`${className} ${classes.container}`}>
         <div className={classes.titleArea}>
@@ -118,12 +133,10 @@ const EditNote: React.FC<props> = ({
             multiline
             name="title"
             placeholder="Title"
-            inputProps={{
-              ref: (e: HTMLInputElement | null) => {
-                register(e);
-                focusInputRef.current = e;
-              }
-            }}
+            value={current.context.title}
+            onChange={(e) =>
+              send({ type: "TYPING_TITLE", title: e.target.value })
+            }
           />
           <PinIcon
             size="small"
@@ -139,9 +152,13 @@ const EditNote: React.FC<props> = ({
           id="contentArea"
           name="content"
           placeholder="Take a note..."
-          inputProps={{ ref: register, className: classes.content }}
+          value={current.context.content}
+          onChange={(e) =>
+            send({ type: "TYPING_CONTENT", content: e.target.value })
+          }
+          inputProps={{ className: classes.content }}
         />
-        <label htmlFor="contentArea" className={classes.contentBottom}></label>
+        <label htmlFor="contentArea" className={classes.contentBottom} />
         <Tags
           className={classes.tagContainer}
           onDelete={(labelId) =>
@@ -173,7 +190,26 @@ const EditNote: React.FC<props> = ({
             onSelectLabel={(labels) => {
               setNewNoteValues({ ...newNoteValues, labels });
             }}
-          />
+          />{" "}
+          <IconButton
+            disabled={current.context.historyPointer < 1}
+            className={classes.iconContainer}
+            onClick={() => send({ type: "UNDO" })}
+            color="inherit"
+          >
+            <UndoIcon className={classes.icon} />
+          </IconButton>
+          <IconButton
+            disabled={
+              current.context.historyPointer + 1 ===
+              current.context.history.length
+            }
+            onClick={() => send({ type: "REDO" })}
+            className={classes.iconContainer}
+            color="inherit"
+          >
+            <RedoIcon className={classes.icon} />
+          </IconButton>
         </div>
       </div>
     </ClickAwayListener>

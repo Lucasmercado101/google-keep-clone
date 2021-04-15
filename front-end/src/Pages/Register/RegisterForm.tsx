@@ -7,7 +7,8 @@ import {
   TextField,
   Typography,
   Button,
-  Collapse
+  Collapse,
+  CircularProgress
 } from "@material-ui/core";
 import { createAccount } from "../../api";
 import { useHistory, Link } from "react-router-dom";
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 const RegisterForm: React.FC = observer(() => {
   const [error, setError] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
   const history = useHistory();
   let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
@@ -59,9 +61,11 @@ const RegisterForm: React.FC = observer(() => {
 
   const onSubmit = (data: { userName: string; password: string }) => {
     setError("");
+    setIsRegistering(true);
     createAccount(data)
       .then(() => history.replace("/"))
       .catch((e?: AxiosError) => {
+        setIsRegistering(false);
         if (e?.response) {
           if ([400, 409].includes(e.response.status))
             setError(`Error: ${e.response.data}`);
@@ -97,8 +101,13 @@ const RegisterForm: React.FC = observer(() => {
             name="password"
             label="Password"
           />
-          <Button type="submit" color="primary" variant="contained">
-            Register
+          <Button
+            disabled={isRegistering}
+            type="submit"
+            color="primary"
+            variant="contained"
+          >
+            {isRegistering ? <CircularProgress /> : "Register"}
           </Button>
         </div>
         <Typography variant="body2" className={classes.bottomText}>

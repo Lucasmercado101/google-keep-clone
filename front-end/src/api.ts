@@ -56,6 +56,10 @@ export const logIn = (data: { userName: string; password: string }) => {
     .then((resp) => resp.data);
 };
 
+export const logOut = () => {
+  return axios.get("/auth/logout");
+};
+
 export const createAccount = (data: { userName: string; password: string }) => {
   return axios
     .post<{ userName: string }>("/auth/register", data)

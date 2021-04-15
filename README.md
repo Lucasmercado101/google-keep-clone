@@ -1,5 +1,8 @@
 <!-- PROJECT LOGO -->
+
+[![Notes App](/images/preview.png)](https://google-keep-clone-ashen.vercel.app)<br />
 <br />
+
 <p align="center">
     <h2 align="center">Meep</h1>
 
@@ -27,8 +30,6 @@
 <!-- ABOUT THE PROJECT -->
 
 ## About The Project
-
-[![Notes App](/images/preview.png)](https://google-keep-clone-ashen.vercel.app)<br />
 
 ### Built With
 
@@ -94,7 +95,7 @@ General:
 
 - [x] dark theme / light theme
 - [x] can log in
-- [ ] can log out
+- [x] can log out
 - [ ] working searchbar
 - [ ] settings menu
 - [ ] can change note layout to `list` or `grid`

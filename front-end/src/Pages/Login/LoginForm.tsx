@@ -7,7 +7,8 @@ import {
   TextField,
   Typography,
   Button,
-  Collapse
+  Collapse,
+  CircularProgress
 } from "@material-ui/core";
 import { logIn } from "../../api";
 import { useHistory, Link } from "react-router-dom";
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 
 const LoginForm: React.FC = observer(() => {
   const [error, setError] = useState("");
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const history = useHistory();
   let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
@@ -59,12 +61,11 @@ const LoginForm: React.FC = observer(() => {
 
   const onSubmit = (data: { userName: string; password: string }) => {
     setError("");
+    setIsLoggingIn(true);
     logIn(data)
-      .then((resp) => {
-        ctx.userData = resp;
-        history.replace("/notes");
-      })
+      .then(() => history.replace("/notes"))
       .catch((e?: AxiosError) => {
+        setIsLoggingIn(false);
         if (e?.response) {
           if (e.response.status === 404)
             setError(`Incorrect username or password (${e?.response?.status})`);
@@ -108,8 +109,13 @@ const LoginForm: React.FC = observer(() => {
             label="Password"
             type="password"
           />
-          <Button type="submit" color="primary" variant="contained">
-            Log In
+          <Button
+            disabled={isLoggingIn}
+            type="submit"
+            color="primary"
+            variant="contained"
+          >
+            {isLoggingIn ? <CircularProgress /> : "Log In"}
           </Button>
         </div>
         <Typography variant="body2" className={classes.bottomText}>

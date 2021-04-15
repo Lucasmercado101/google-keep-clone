@@ -25,8 +25,6 @@ server.use(morgan("dev"));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({ extended: true }));
 
-const localHostRegex = /http(s)?:\/\/localhost:\d+/;
-
 server.use(
   cors({
     origin: (origin, callback) => {

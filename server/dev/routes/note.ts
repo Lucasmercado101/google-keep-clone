@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
   if (labels) {
     const userLabels = await Label.findAll({
       where: {
-        id: { [Op.or]: labels }
+        id: { [Op.in]: labels }
       }
     });
     (await newNote).$set("labels", userLabels);

@@ -125,8 +125,8 @@ Note:
 - [x] can pin a note
 - [x] can archive a note
 - [x] can change note's color
+- [x] undo / redo when editing note
 - [ ] can make copy of note
-- [ ] undo / redo buttons when editing note
 - [ ] can add / remove list items
 - [ ] can add / remove a reminder
 - [ ] can add / remove a collaborator

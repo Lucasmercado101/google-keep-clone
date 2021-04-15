@@ -115,6 +115,11 @@ const EditNote: React.FC<props> = ({
     labels
   });
   const classes = useStyles({ newNote, color: newNoteValues.color });
+  const focusInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    focusInputRef?.current?.focus();
+  }, []);
 
   return (
     <ClickAwayListener
@@ -134,6 +139,9 @@ const EditNote: React.FC<props> = ({
             name="title"
             placeholder="Title"
             value={current.context.title}
+            inputProps={{
+              ref: focusInputRef
+            }}
             onChange={(e) =>
               send({ type: "TYPING_TITLE", title: e.target.value })
             }
@@ -190,7 +198,7 @@ const EditNote: React.FC<props> = ({
             onSelectLabel={(labels) => {
               setNewNoteValues({ ...newNoteValues, labels });
             }}
-          />{" "}
+          />
           <IconButton
             disabled={current.context.historyPointer < 1}
             className={classes.iconContainer}

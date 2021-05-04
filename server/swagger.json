@@ -36,6 +36,44 @@
           "owner": "john389",
           "name": "work"
         }
+      },
+      "Note": {
+        "type": "object",
+        "required": ["id", "title", "content", "pinned", "archived", "author"],
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "pinned": { "type": "boolean" },
+          "archived": { "type": "boolean" },
+          "author": { "type": "string" },
+          "color": {
+            "type": "string",
+            "enum": [
+              "red",
+              "orange",
+              "yellow",
+              "green",
+              "teal",
+              "blue",
+              "darkblue",
+              "purple",
+              "pink ",
+              "brown",
+              "gray",
+              null
+            ]
+          }
+        },
+        "example": {
+          "id": 3,
+          "title": "Chores",
+          "content": "Take out the trash next thursday",
+          "pinned": true,
+          "archived": false,
+          "color": null,
+          "labels": []
+        }
       }
     }
   },
@@ -66,15 +104,7 @@
         },
         "responses": {
           "200": {
-            "description": "Succesfully authenticated \n The session ID is returned in a cookie named `connect.sid`. You need to include this cookie in subsequent requests.",
-            "headers": {
-              "Set-Cookies": {
-                "schema": {
-                  "type": "string",
-                  "example": "connect.sid=abcde12345; Path=/; HttpOnly"
-                }
-              }
-            }
+            "description": "Successfully authenticated"
           },
           "404": {
             "description": "Username or password is incorrect, user not found"
@@ -138,7 +168,7 @@
     },
     "/labels": {
       "get": {
-        "tags": ["Label"],
+        "tags": ["Labels"],
         "summary": "Get all your labels",
         "responses": {
           "200": {
@@ -155,14 +185,14 @@
             }
           },
           "401": {
-            "description": "Unauthorized, Log in first"
+            "description": "Unauthorized, Log in"
           }
         }
       }
     },
     "/labels/{labelId}": {
       "delete": {
-        "tags": ["Label"],
+        "tags": ["Labels"],
         "summary": "Deletes a label",
         "parameters": [
           {
@@ -182,6 +212,74 @@
           "404": {
             "description": "Label does not exist"
           }
+        }
+      }
+    },
+    "/notes": {
+      "get": {
+        "tags": ["Notes"],
+        "summary": "Gets all your notes",
+        "responses": {
+          "200": {
+            "description": "Notes fetched"
+          },
+          "401": {
+            "description": "Unauthorized, log in"
+          }
+        }
+      }
+    },
+    "/notes/{noteId}": {
+      "get": {
+        "summary": "Gets a note",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Note fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Note does not exist" }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a note",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Note successfully deleted"
+          },
+          "404": { "description": "Note does not exist" }
         }
       }
     }

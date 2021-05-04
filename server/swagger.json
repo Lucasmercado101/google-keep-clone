@@ -1,0 +1,109 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Meep",
+    "description": "Meep REST API",
+    "version": "1.0.0"
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "userName": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "userName"]
+      },
+      "Label": {
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "owner": "a",
+          "name": "b"
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Login"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User"
+              },
+              "example": {
+                "userName": "john14",
+                "password": "password1"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Logged in succesfully"
+          }
+        }
+      }
+    },
+    "/labels": {
+      "get": {
+        "tags": ["Label"],
+        "summary": "Get all your labels",
+        "responses": {
+          "200": {
+            "description": "A list of all your labels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Label"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/labels/{labelId}": {
+      "delete": {
+        "tags": ["Label"],
+        "summary": "Deletes a label",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Label successfully deleted"
+          },
+          "404": {
+            "description": "Label does not exist"
+          }
+        }
+      }
+    }
+  }
+}

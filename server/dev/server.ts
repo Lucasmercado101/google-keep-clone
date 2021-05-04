@@ -6,6 +6,8 @@ import session from "express-session";
 import passport from "passport";
 import passportConfig from "./passportConfig";
 import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
+const swaggerJson = require("../swagger.json");
 
 const {
   FRONT_WEBSITE_URL,
@@ -64,5 +66,6 @@ passportConfig(passport);
 // ------------------------
 
 server.use("/", routes);
+server.use("/", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 export default server;

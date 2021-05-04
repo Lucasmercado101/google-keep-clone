@@ -7,6 +7,6 @@ const router = Router();
 
 router.use("/auth", authRouter);
 router.use("/labels", labelRouter);
-router.use("/note", notesRouter);
+router.use("/notes", notesRouter);
 
 export default router;

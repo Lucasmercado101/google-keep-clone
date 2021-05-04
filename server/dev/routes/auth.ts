@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
   if (user) return res.status(409).json("User already exists");
   try {
     const newUser = await User.create({ userName, password });
-    res.json(newUser);
+    res.json(newUser.userName);
   } catch (e) {
     res.sendStatus(500);
   }
@@ -46,7 +46,7 @@ router.get("/me", (req, res) => {
   } else res.sendStatus(401);
 });
 
-router.get("/logout", (req, res) => {
+router.post("/logout", (req, res) => {
   req.logOut();
   res.clearCookie("connect.sid");
   res.sendStatus(200);

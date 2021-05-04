@@ -8,6 +8,7 @@
   "components": {
     "schemas": {
       "User": {
+        "type": "object",
         "properties": {
           "id": {
             "type": "integer"
@@ -16,9 +17,13 @@
             "type": "string"
           }
         },
-        "required": ["id", "userName"]
+        "example": {
+          "id": 5,
+          "userName": "john389"
+        }
       },
       "Label": {
+        "type": "object",
         "properties": {
           "owner": {
             "type": "string"
@@ -28,8 +33,8 @@
           }
         },
         "example": {
-          "owner": "a",
-          "name": "b"
+          "owner": "john389",
+          "name": "work"
         }
       }
     }
@@ -37,7 +42,7 @@
   "paths": {
     "/auth/login": {
       "post": {
-        "tags": ["Login"],
+        "tags": ["Authentication"],
         "requestBody": {
           "required": true,
           "content": {
@@ -61,7 +66,72 @@
         },
         "responses": {
           "200": {
-            "description": "Logged in succesfully"
+            "description": "Succesfully authenticated \n The session ID is returned in a cookie named `connect.sid`. You need to include this cookie in subsequent requests.",
+            "headers": {
+              "Set-Cookies": {
+                "schema": {
+                  "type": "string",
+                  "example": "connect.sid=abcde12345; Path=/; HttpOnly"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Username or password is incorrect, user not found"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["userName", "password"],
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "example": "jacob379"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registered successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "userName": "john389"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values sent"
+          },
+          "409": {
+            "description": "User already exists"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Authentication"],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out"
           }
         }
       }
@@ -83,6 +153,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized, Log in first"
           }
         }
       }

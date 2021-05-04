@@ -41,13 +41,20 @@
         "requestBody": {
           "required": true,
           "content": {
-            "application/json": {
+            "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "#/components/schemas/User"
-              },
-              "example": {
-                "userName": "john14",
-                "password": "password1"
+                "type": "object",
+                "required": ["userName", "password"],
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "example": "jacob379"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password1"
+                  }
+                }
               }
             }
           }

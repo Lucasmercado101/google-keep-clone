@@ -31,11 +31,19 @@
           },
           "name": {
             "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
           }
         },
         "example": {
           "owner": "john389",
-          "name": "work"
+          "name": "work",
+          "createdAt": "2021-05-05T12:55:52.327Z",
+          "updatedAt": "2021-05-05T12:55:52.338Z"
         }
       },
       "Note": {

@@ -15,24 +15,23 @@ interface NoteAttributes {
   id?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
   author: string;
   pinned: boolean;
   archived: boolean;
-  color?: [
-    "red",
-    "orange",
-    "yellow",
-    "green",
-    "teal",
-    "blue",
-    "darkblue",
-    "purple",
-    "pink",
-    "brown",
-    "gray"
-  ];
+  color?:
+    | "red"
+    | "orange"
+    | "yellow"
+    | "green"
+    | "teal"
+    | "blue"
+    | "darkblue"
+    | "purple"
+    | "pink"
+    | "brown"
+    | "gray";
   labels?: Label[];
 }
 

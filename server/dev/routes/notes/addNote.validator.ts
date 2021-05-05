@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export interface newNote {
+export interface newNoteAttributes {
   title: string;
   content: string;
   labels: number[];
@@ -21,18 +21,17 @@ export interface newNote {
     | null;
 }
 
-export const newNoteSchema = Joi.object<newNote>()
+export const newNoteSchema = Joi.object<newNoteAttributes>()
   .keys({
     title: Joi.string(),
     content: Joi.string(),
     labels: Joi.array().items(Joi.number()).optional(),
-    pinned: Joi.alternatives()
-      .conditional("archived", {
-        is: true,
-        then: false,
-        otherwise: Joi.boolean().default(false)
-      })
-      .default(false),
+    pinned: Joi.boolean()
+      .when("archived", { is: true, then: false })
+      .default(false)
+      .messages({
+        "any.only": "'pinned' and 'archived' cannot be both true simultaneously"
+      }),
     archived: Joi.boolean().default(false),
     color: Joi.string()
       .valid(

@@ -1,10 +1,5 @@
 import { Router } from "express";
-// import notesRouter from "./note";
-// import labelRouter from "../../middleware/label";
 import glob from "glob";
-
-// router.use("/labels", labelRouter);
-// router.use("/notes", notesRouter);
 
 export default glob
   .sync("**/*.?(js|ts)", { cwd: `${__dirname}/` })

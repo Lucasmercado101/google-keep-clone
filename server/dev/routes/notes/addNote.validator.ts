@@ -17,8 +17,7 @@ export interface newNoteAttributes {
     | "purple"
     | "pink"
     | "brown"
-    | "gray"
-    | null;
+    | "gray";
 }
 
 export const newNoteSchema = Joi.object<newNoteAttributes>()
@@ -43,8 +42,7 @@ export const newNoteSchema = Joi.object<newNoteAttributes>()
         "purple",
         "pink",
         "brown",
-        "gray",
-        null
+        "gray"
       )
       .optional()
   })

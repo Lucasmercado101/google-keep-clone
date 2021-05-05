@@ -1,12 +1,12 @@
 import Joi from "joi";
 
 export interface newNoteAttributes {
-  title: string;
-  content: string;
-  labels: number[];
+  title?: string;
+  content?: string;
+  labels?: number[];
   pinned: boolean;
   archived: boolean;
-  color:
+  color?:
     | "red"
     | "orange"
     | "yellow"

@@ -11,10 +11,10 @@ import NoteLabel from "./NoteLabel";
 import User from "./User";
 
 @Scopes(() => ({
-  userLabel(ownerId) {
+  userLabel(ownerUserName) {
     return {
       where: {
-        owner: ownerId
+        owner: ownerUserName
       }
     };
   }

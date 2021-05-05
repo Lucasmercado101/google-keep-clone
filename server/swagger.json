@@ -314,7 +314,7 @@
               "type": "integer"
             },
             "required": true,
-            "description": "Numeric ID of the label to add to the note"
+            "description": "Numeric ID of the label to remove from the note"
           }
         ],
         "responses": {
@@ -333,6 +333,38 @@
           },
           "404": {
             "description": "Note or Label does not exist"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a note's label",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to add to the note"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Note does not exist or note does not have that label"
           }
         }
       }

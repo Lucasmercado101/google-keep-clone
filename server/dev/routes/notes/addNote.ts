@@ -3,6 +3,8 @@ import Note from "../../db/models/Note";
 import Label from "../../db/models/Label";
 import { Op } from "sequelize";
 import isAuthenticated from "../middleware/isAuthenticated";
+import { newNoteSchema, newNoteAttributes } from "./addNote.validator";
+import Joi, { ValidationError } from "joi";
 
 const ROUTE = "/notes";
 
@@ -10,43 +12,37 @@ export default Router({ mergeParams: true }).post(
   ROUTE,
   isAuthenticated,
   async (req, res) => {
-    const {
-      title,
-      content,
-      labels,
-      pinned = false,
-      archived = false,
-      color
-    } = req.body;
+    let newNoteData: newNoteAttributes;
+    try {
+      newNoteData = Joi.attempt(req.body, newNoteSchema, { abortEarly: false });
+    } catch (e) {
+      if (e.isJoi) return res.status(400).send((e as ValidationError).message);
+      return res.sendStatus(500);
+    }
 
-    if (!content && !title) return res.sendStatus(400);
-
+    const { labels: labelIds, ...noteData } = newNoteData;
     const newNote = await Note.create({
       author: req.user!.userName,
-      title,
-      content,
-      pinned: archived ? false : pinned,
-      archived,
-      color
+      ...noteData
     });
 
-    if (labels) {
-      const userLabels = await Label.findAll({
-        where: {
-          id: { [Op.in]: labels }
-        }
-      });
-      (await newNote).$set("labels", userLabels);
-    }
-    // Add collaborators
+    const labels = await getMyLabels(labelIds, req.user!.userName);
+    labels && (await newNote.$set("labels", labels));
 
-    res.json({
-      author: newNote.author,
-      title: newNote.title,
-      content: newNote.content,
-      pinned: newNote.pinned,
-      archived: newNote.archived,
-      color: newNote.color
+    return res.json({
+      ...newNote.toJSON(),
+      //@ts-ignore
+      labels: await newNote.$get("labels", { joinTableAttributes: [] })
     });
   }
 );
+
+async function getMyLabels(
+  labelIds: number[] | undefined,
+  ownerUserName: string
+) {
+  if (!labelIds) return;
+  return await Label.scope({
+    method: ["userLabel", ownerUserName]
+  }).findAll({ where: { id: { [Op.in]: labelIds } } });
+}

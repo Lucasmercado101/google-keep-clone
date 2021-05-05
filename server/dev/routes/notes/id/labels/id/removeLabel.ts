@@ -18,12 +18,11 @@ export default Router({ mergeParams: true }).delete(
   isAuthenticated,
   async (req, res) => {
     const { labelId, noteId } = req.params;
-    const note = await Note.findOne({
-      where: { id: noteId, author: req.user!.userName },
-      attributes: noteAttributesToReturn
-    });
-
-    await note?.$remove("label", labelId);
+    const note = await Note.findByPk(noteId);
+    if (!note) return res.status(404).send("Note does not exist");
+    if (!(await note.$get("labels")).find((label) => label.id === +labelId))
+      return res.status(404).send("Note does not have that label");
+    await note.$remove("label", labelId);
     res.sendStatus(200);
   }
 );

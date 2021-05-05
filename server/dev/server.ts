@@ -65,7 +65,8 @@ passportConfig(passport);
 
 // ------------------------
 
-server.use("/", routes);
+server.use("/api", routes);
+server.use("/api", (req, res) => res.sendStatus(404));
 server.use("/", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 export default server;

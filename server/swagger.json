@@ -48,7 +48,7 @@
       },
       "Note": {
         "type": "object",
-        "required": ["id", "title", "content", "pinned", "archived", "author"],
+        "required": ["id", "pinned", "archived", "author"],
         "properties": {
           "id": { "type": "integer" },
           "title": { "type": "string" },
@@ -234,6 +234,55 @@
           },
           "401": {
             "description": "Unauthorized, log in"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Notes"],
+        "summary": "Add a new note",
+        "description": "Requires either a title or content",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "chores" },
+                  "content": {
+                    "type": "string",
+                    "example": "take out the trash"
+                  },
+                  "pinned": { "type": "boolean", "example": false },
+                  "archived": { "type": "boolean", "example": false },
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red",
+                      "orange",
+                      "yellow",
+                      "green",
+                      "teal",
+                      "blue",
+                      "darkblue",
+                      "purple",
+                      "pink ",
+                      "brown",
+                      "gray",
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully"
+          },
+          "400": {
+            "description": "Invalid data sent"
           }
         }
       }

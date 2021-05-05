@@ -26,7 +26,7 @@ export default Router({ mergeParams: true }).post(
       ...noteData
     });
 
-    const labels = await getMyLabels(labelIds, req.user!.userName);
+    const labels = await filterMyLabels(labelIds, req.user!.userName);
     labels && (await newNote.$set("labels", labels));
 
     return res.json({
@@ -37,7 +37,7 @@ export default Router({ mergeParams: true }).post(
   }
 );
 
-async function getMyLabels(
+async function filterMyLabels(
   labelIds: number[] | undefined,
   ownerUserName: string
 ) {

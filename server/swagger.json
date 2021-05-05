@@ -250,7 +250,7 @@
               "type": "integer"
             },
             "required": true,
-            "description": "Numeric ID of the label to fetch"
+            "description": "Numeric ID of the note to fetch"
           }
         ],
         "responses": {
@@ -289,6 +289,51 @@
             "description": "Note successfully deleted"
           },
           "404": { "description": "Note does not exist" }
+        }
+      }
+    },
+    "/notes/{noteId}/labels/{labelId}": {
+      "post": {
+        "summary": "Add a label to a note",
+        "description": "Adds a label to a note and returns an array of all the note's labels",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to add to the note"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Label"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Note or Label does not exist"
+          }
         }
       }
     }

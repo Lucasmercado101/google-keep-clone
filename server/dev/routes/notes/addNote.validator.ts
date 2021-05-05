@@ -1,29 +1,54 @@
 import Joi from "joi";
 
-export const newNoteSchema = Joi.object()
+export interface newNote {
+  title: string;
+  content: string;
+  labels: number[];
+  pinned: boolean;
+  archived: boolean;
+  color:
+    | "red"
+    | "orange"
+    | "yellow"
+    | "green"
+    | "teal"
+    | "blue"
+    | "darkblue"
+    | "purple"
+    | "pink"
+    | "brown"
+    | "gray"
+    | null;
+}
+
+export const newNoteSchema = Joi.object<newNote>()
   .keys({
-    title: Joi.string().allow(""),
-    content: Joi.string().allow(""),
+    title: Joi.string(),
+    content: Joi.string(),
     labels: Joi.array().items(Joi.number()).optional(),
-    pinned: Joi.boolean().default(false),
-    archived: Joi.ref("pinned"),
-    color: Joi.array()
-      .items(
-        Joi.string().valid(
-          "red",
-          "orange",
-          "yellow",
-          "green",
-          "teal",
-          "blue",
-          "darkblue",
-          "purple",
-          "pink",
-          "brown",
-          "gray"
-        )
+    pinned: Joi.alternatives()
+      .conditional("archived", {
+        is: true,
+        then: false,
+        otherwise: Joi.boolean().default(false)
+      })
+      .default(false),
+    archived: Joi.boolean().default(false),
+    color: Joi.string()
+      .valid(
+        "red",
+        "orange",
+        "yellow",
+        "green",
+        "teal",
+        "blue",
+        "darkblue",
+        "purple",
+        "pink",
+        "brown",
+        "gray",
+        null
       )
-      .length(1)
       .optional()
   })
   .or("title", "content");

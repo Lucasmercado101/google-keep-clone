@@ -3,12 +3,22 @@ import {
   Column,
   Model,
   BelongsToMany,
-  ForeignKey
+  ForeignKey,
+  Scopes
 } from "sequelize-typescript";
 import Note from "./Note";
 import NoteLabel from "./NoteLabel";
 import User from "./User";
 
+@Scopes(() => ({
+  userLabel(ownerId) {
+    return {
+      where: {
+        owner: ownerId
+      }
+    };
+  }
+}))
 @Table
 export default class Label extends Model {
   @Column

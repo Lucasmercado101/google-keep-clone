@@ -44,6 +44,7 @@ export const newNoteSchema = Joi.object<newNoteAttributes>()
         "brown",
         "gray"
       )
+      .empty("")
       .optional()
   })
   .or("title", "content")

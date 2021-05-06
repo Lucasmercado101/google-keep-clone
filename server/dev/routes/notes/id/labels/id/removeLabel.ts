@@ -9,10 +9,10 @@ export default Router({ mergeParams: true }).delete(
   isAuthenticated,
   async (req, res) => {
     const { labelId, noteId } = req.params;
-    const note = await Note.findByPk(noteId);
+    const [note] = await req.user!.$get("notes", { where: { id: noteId } });
     if (!note) return res.status(404).send("Note does not exist");
-    if (!(await note.$get("labels")).find((label) => label.id === +labelId))
-      return res.status(404).send("Note does not have that label");
+    const [label] = await note.$get("labels", { where: { id: labelId } });
+    if (!label) return res.status(404).send("Note does not have that label");
     await note.$remove("label", labelId);
     res.sendStatus(200);
   }

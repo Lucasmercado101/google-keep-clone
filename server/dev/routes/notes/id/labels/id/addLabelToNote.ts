@@ -15,9 +15,7 @@ export default Router({ mergeParams: true }).post(
     const { labelId, noteId } = req.params;
     const note = await Note.findByPk(noteId);
     if (!note) return res.status(404).send("Note does not exist");
-    const label = await Label.scope({
-      method: ["userLabel", req.user!.userName]
-    }).findByPk(labelId);
+    const [label] = await req.user!.$get("labels", { where: { id: labelId } });
     if (!label) return res.status(404).send("Label does not exist");
     await note.$add("label", label); // Does nothing if it was already added
     res.json(await note.$get("labels", <any>{ joinTableAttributes: [] }));

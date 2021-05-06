@@ -12,11 +12,8 @@ export default Router({ mergeParams: true }).put(
   async (req, res) => {
     const { labelId } = req.params;
     const { name } = req.body;
-    if (!labelId || !name) return res.sendStatus(400);
-
-    const label = await Label.findOne({
-      where: { owner: req.user!.userName, id: labelId }
-    });
+    if (!name) return res.sendStatus(400);
+    const [label] = await req.user!.$get("labels", { where: { id: labelId } });
     if (!label) return res.sendStatus(404);
 
     const existingLabel = await Label.findOne({

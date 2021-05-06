@@ -7,6 +7,6 @@ export default Router({ mergeParams: true }).get(
   ROUTE,
   isAuthenticated,
   async (req, res) => {
-    res.json(await req.user?.$get("labels"));
+    res.json(await req.user!.$get("labels"));
   }
 );

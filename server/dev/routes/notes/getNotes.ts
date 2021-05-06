@@ -29,7 +29,6 @@ export default Router({ mergeParams: true }).get(
         }
       ],
       order: [["id", "ASC"]]
-      // TODO: get collaborators, labels, etc.
     })
       .then((resp) => {
         const normalNotes = resp.filter(

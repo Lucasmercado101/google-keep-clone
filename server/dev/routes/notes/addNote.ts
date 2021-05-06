@@ -20,16 +20,18 @@ export default Router({ mergeParams: true }).post(
       return res.sendStatus(500);
     }
 
-    const { labels: labelIds, ...noteData } = newNoteData;
+    const { labelIds, ...noteData } = newNoteData;
     const newNote = await Note.create({
       author: req.user!.userName,
       ...noteData
     });
 
-    const labels = await req.user!.$get("labels", {
-      where: { id: { [Op.in]: labelIds } }
-    });
-    if (labels) await newNote.$set("labels", labels);
+    if (labelIds) {
+      const labels = await req.user!.$get("labels", {
+        where: { id: { [Op.in]: labelIds } }
+      });
+      if (labels.length) await newNote.$set("labels", labels);
+    }
 
     return res.json({
       ...newNote.toJSON(),

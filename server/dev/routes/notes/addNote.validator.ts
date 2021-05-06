@@ -29,8 +29,8 @@ const pinnedSchema = Joi.boolean()
 
 export const newNoteSchema = Joi.object<newNoteAttributes>()
   .keys({
-    title: Joi.string(),
-    content: Joi.string(),
+    title: Joi.alternatives().try(Joi.string(), Joi.number().cast("string")),
+    content: Joi.alternatives().try(Joi.string(), Joi.number().cast("string")),
     labelIds: Joi.array().items(Joi.number()).optional(),
     pinned: pinnedSchema,
     archived: Joi.boolean().default(false),

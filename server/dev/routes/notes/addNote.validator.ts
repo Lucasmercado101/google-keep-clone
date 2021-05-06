@@ -3,7 +3,7 @@ import Joi from "joi";
 export interface newNoteAttributes {
   title?: string;
   content?: string;
-  labels?: number[];
+  labelIds?: number[];
   pinned: boolean;
   archived: boolean;
   color?:
@@ -31,7 +31,7 @@ export const newNoteSchema = Joi.object<newNoteAttributes>()
   .keys({
     title: Joi.string(),
     content: Joi.string(),
-    labels: Joi.array().items(Joi.number()).optional(),
+    labelIds: Joi.array().items(Joi.number()).optional(),
     pinned: pinnedSchema,
     archived: Joi.boolean().default(false),
     color: Joi.string()

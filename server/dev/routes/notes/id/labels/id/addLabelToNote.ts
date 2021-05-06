@@ -13,7 +13,7 @@ export default Router({ mergeParams: true }).post(
   isParamANumber("labelId"),
   async (req, res) => {
     const { labelId, noteId } = req.params;
-    const note = await Note.findByPk(noteId);
+    const [note] = await req.user!.$get("notes", { where: { id: noteId } });
     if (!note) return res.status(404).send("Note does not exist");
     const [label] = await req.user!.$get("labels", { where: { id: labelId } });
     if (!label) return res.status(404).send("Label does not exist");

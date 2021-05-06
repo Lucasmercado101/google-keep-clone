@@ -1,59 +1,63 @@
 import { Router } from "express";
-import Note from "../../../db/models/Note";
-import Label from "../../../db/models/Label";
 import { Op } from "sequelize";
 import isAuthenticated from "../../middleware/isAuthenticated";
+import isParamANumber from "../../middleware/isParamANumber";
+import { editNoteAttributes, editNoteSchema } from "./editNote.validator";
+import Joi, { ValidationError } from "joi";
 
 const ROUTE = "/notes/:noteId";
-
-const noteAttributesToReturn = [
-  "title",
-  "content",
-  "id",
-  "pinned",
-  "archived",
-  "color"
-];
 
 export default Router({ mergeParams: true }).put(
   ROUTE,
   isAuthenticated,
+  isParamANumber("noteId"),
   async (req, res) => {
     const { noteId } = req.params;
-    const { labels, ...otherData } = req.body as any;
-    const note = await Note.findOne({
-      where: { id: noteId, author: req.user!.userName },
-      attributes: noteAttributesToReturn
-    });
 
-    if (!note) return res.sendStatus(404);
-
-    if (otherData && Object.keys(otherData).length)
-      await note.update(
-        otherData,
-        {
-          where: { noteId, author: req.user!.userName }
-        },
-        {
-          fields: ["title", "content", "pinned", "archived", "color"]
-        }
-      );
-
-    if (labels) {
-      const userLabels = await Label.findAll({
-        where: { id: { [Op.in]: labels }, owner: req.user!.userName }
+    let editNoteData: editNoteAttributes;
+    try {
+      editNoteData = Joi.attempt(req.body, editNoteSchema, {
+        abortEarly: false
       });
-      await note.$set("labels", userLabels);
+    } catch (e) {
+      if (e.isJoi) return res.status(400).send((e as ValidationError).message);
+      return res.sendStatus(500);
     }
 
-    //TODO: collaborators, etc
-    res.json({
+    const [note] = await req.user!.$get("notes", { where: { id: noteId } });
+    if (!note) return res.status(404).send("Note does not exist");
+
+    const { labelIds, ...otherEditNoteData } = editNoteData;
+
+    if (labelIds) {
+      const labels = await req.user!.$get("labels", {
+        where: { id: { [Op.in]: labelIds } }
+      });
+      await note.$set("labels", labels);
+    }
+
+    for (const [key, value] of Object.entries(otherEditNoteData)) {
+      note.setDataValue(
+        key as
+          | "title"
+          | "content"
+          | "pinned"
+          | "archived"
+          | "color"
+          | "id"
+          | "createdAt"
+          | "updatedAt"
+          | "author",
+        value
+      );
+    }
+
+    await note.save();
+
+    return res.json({
       ...note.toJSON(),
-      labels: await note.$get("labels", {
-        attributes: ["id", "name"],
-        //@ts-ignore
-        joinTableAttributes: []
-      })
+      //@ts-ignore
+      labels: await note.$get("labels", { joinTableAttributes: [] })
     });
   }
 );

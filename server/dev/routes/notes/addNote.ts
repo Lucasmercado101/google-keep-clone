@@ -26,8 +26,10 @@ export default Router({ mergeParams: true }).post(
       ...noteData
     });
 
-    const labels = await filterMyLabels(labelIds, req.user!.userName);
-    labels && (await newNote.$set("labels", labels));
+    const labels = await req.user!.$get("labels", {
+      where: { id: { [Op.in]: labelIds } }
+    });
+    if (labels) await newNote.$set("labels", labels);
 
     return res.json({
       ...newNote.toJSON(),
@@ -36,13 +38,3 @@ export default Router({ mergeParams: true }).post(
     });
   }
 );
-
-async function filterMyLabels(
-  labelIds: number[] | undefined,
-  ownerUserName: string
-) {
-  if (!labelIds) return;
-  return await Label.scope({
-    method: ["userLabel", ownerUserName]
-  }).findAll({ where: { id: { [Op.in]: labelIds } } });
-}

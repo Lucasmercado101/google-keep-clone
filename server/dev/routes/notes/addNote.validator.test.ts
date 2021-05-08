@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { newNoteSchema, newNoteAttributes } from "./addNote.validator";
+import { newNoteSchema } from "./addNote.validator";
 
 describe("Joi.attempt", () => {
   describe("should fail if", () => {

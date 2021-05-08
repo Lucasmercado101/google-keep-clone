@@ -23,7 +23,6 @@ export default Router({ mergeParams: true }).get(
     }
 
     const { pinned, archived } = req.query;
-    console.log(req.query);
 
     res.json(
       await req.user!.$get("notes", {

@@ -9,7 +9,9 @@ const ROUTE = "/notes";
 const paramsSchema = Joi.object({
   pinned: Joi.boolean().optional(),
   archived: Joi.boolean().optional()
-}).xor("pinned", "archived");
+})
+  .xor("pinned", "archived")
+  .valid({});
 
 export default Router({ mergeParams: true }).get(
   ROUTE,
@@ -26,6 +28,7 @@ export default Router({ mergeParams: true }).get(
 
     res.json(
       await req.user!.$get("notes", {
+        order: [["id", "ASC"]],
         include: [
           {
             model: Label,

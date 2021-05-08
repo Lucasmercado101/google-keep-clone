@@ -1,52 +1,41 @@
 import { Router } from "express";
-import Note from "../../db/models/Note";
 import Label from "../../db/models/Label";
 import isAuthenticated from "../middleware/isAuthenticated";
+import Joi from "joi";
+import { ValidationError } from "sequelize/types";
 
 const ROUTE = "/notes";
 
-const noteAttributesToReturn = [
-  "title",
-  "content",
-  "id",
-  "pinned",
-  "archived",
-  "color"
-];
+const paramsSchema = Joi.object({
+  pinned: Joi.boolean().optional(),
+  archived: Joi.boolean().optional()
+}).xor("pinned", "archived");
 
 export default Router({ mergeParams: true }).get(
   ROUTE,
   isAuthenticated,
-  (req, res) => {
-    Note.findAll({
-      where: { author: req.user!.userName },
-      attributes: noteAttributesToReturn,
-      include: [
-        {
-          model: Label,
-          attributes: ["name", "id"],
-          through: { attributes: [] }
-        }
-      ],
-      order: [["id", "ASC"]]
-    })
-      .then((resp) => {
-        const normalNotes = resp.filter(
-          (note) => !note.archived && !note.pinned
-        );
-        const pinnedNotes = resp.filter(
-          (note) => !note.archived && note.pinned
-        );
-        const archivedNotes = resp.filter(
-          (note) => note.archived && !note.pinned
-        );
+  async (req, res) => {
+    try {
+      Joi.attempt(req.query, paramsSchema);
+    } catch (e) {
+      if (e.isJoi) return res.status(400).send((e as ValidationError).message);
+      return res.sendStatus(500);
+    }
 
-        res.json({
-          pinned: pinnedNotes,
-          archived: archivedNotes,
-          other: normalNotes
-        });
+    const { pinned, archived } = req.query;
+    console.log(req.query);
+
+    res.json(
+      await req.user!.$get("notes", {
+        include: [
+          {
+            model: Label,
+            through: { attributes: [] }
+          }
+        ],
+        ...(pinned && { where: { pinned: true } }),
+        ...(archived && { where: { archived: true } })
       })
-      .catch((e) => res.sendStatus(500));
+    );
   }
 );

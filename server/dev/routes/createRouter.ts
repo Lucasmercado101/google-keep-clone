@@ -2,7 +2,7 @@ import { Router } from "express";
 import glob from "glob";
 
 export default glob
-  .sync("**/*.?(js|ts)", { cwd: `${__dirname}/` })
+  .sync("**/!(*.test).ts", { cwd: `${__dirname}/` })
   .map((filename) => require(`./${filename}`))
   .map((file) => file.default)
   .filter((file) => !!file)

@@ -16,11 +16,10 @@ export default Router({ mergeParams: true }).put(
     const [label] = await req.user!.$get("labels", { where: { id: labelId } });
     if (!label) return res.sendStatus(404);
 
-    const existingLabel = await Label.findOne({
+    const [existingLabel] = await req.user!.$get("labels", {
       where: { name }
     });
-    if (existingLabel && existingLabel.id !== +labelId)
-      return res.sendStatus(409);
+    if (existingLabel) return res.sendStatus(409);
 
     label.name = name;
     await label.save();

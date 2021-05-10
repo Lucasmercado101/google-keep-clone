@@ -13,6 +13,7 @@ export default Router({ mergeParams: true }).put(
     const { labelId } = req.params;
     const { name } = req.body;
     if (!name) return res.sendStatus(400);
+
     const [label] = await req.user!.$get("labels", { where: { id: labelId } });
     if (!label) return res.sendStatus(404);
 

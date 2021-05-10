@@ -9,8 +9,8 @@ export default Router({ mergeParams: true }).delete(
   isAuthenticated,
   isParamANumber("labelId"),
   async (req, res) => {
-    const labels = await req.user!.$get("labels");
-    const label = labels.find((label) => label.id === +req.params.labelId);
+    const { labelId } = req.params;
+    const [label] = await req.user!.$get("labels", { where: { id: labelId } });
     if (!label) return res.sendStatus(404);
     await label.destroy();
     res.sendStatus(200);

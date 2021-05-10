@@ -516,6 +516,72 @@
           },
           "404": { "description": "Note does not exist" }
         }
+      },
+      "put": {
+        "tags": ["Notes"],
+        "summary": "Add a new note",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note to fetch"
+          }
+        ],
+        "description": "Requires either a title or content",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "chores" },
+                  "content": {
+                    "type": "string",
+                    "example": "take out the trash"
+                  },
+                  "pinned": { "type": "boolean", "example": false },
+                  "archived": { "type": "boolean", "example": false },
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red",
+                      "orange",
+                      "yellow",
+                      "green",
+                      "teal",
+                      "blue",
+                      "darkblue",
+                      "purple",
+                      "pink ",
+                      "brown",
+                      "gray",
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          }
+        }
       }
     },
     "/notes/{noteId}/labels/{labelId}": {

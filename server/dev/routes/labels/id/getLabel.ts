@@ -11,8 +11,6 @@ export default Router({ mergeParams: true }).get(
   isParamANumber("labelId"),
   async (req, res) => {
     const { labelId } = req.params;
-    res.json(
-      await Label.findOne({ where: { owner: req.user!.userName, id: labelId } })
-    );
+    res.json(await req.user!.$get("labels", { where: { id: labelId } }));
   }
 );

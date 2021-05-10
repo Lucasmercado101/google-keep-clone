@@ -23,6 +23,6 @@ export default Router({ mergeParams: true }).put(
 
     label.name = name;
     await label.save();
-    res.sendStatus(200);
+    res.json(label);
   }
 );

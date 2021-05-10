@@ -1,0 +1,665 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Meep",
+    "description": "Meep REST API",
+    "version": "1.0.0"
+  },
+  "servers": [{ "url": "/api" }],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "userName": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "id": 5,
+          "userName": "john389"
+        }
+      },
+      "Label": {
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        },
+        "example": {
+          "owner": "john389",
+          "name": "work",
+          "createdAt": "2021-05-05T12:55:52.327Z",
+          "updatedAt": "2021-05-05T12:55:52.338Z"
+        }
+      },
+      "Note": {
+        "type": "object",
+        "required": ["id", "pinned", "archived", "author"],
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "content": { "type": "string" },
+          "pinned": { "type": "boolean" },
+          "archived": { "type": "boolean" },
+          "author": { "type": "string" },
+          "color": {
+            "type": "string",
+            "enum": [
+              "red",
+              "orange",
+              "yellow",
+              "green",
+              "teal",
+              "blue",
+              "darkblue",
+              "purple",
+              "pink ",
+              "brown",
+              "gray",
+              null
+            ]
+          }
+        },
+        "example": {
+          "id": 3,
+          "title": "Chores",
+          "content": "Take out the trash next thursday",
+          "pinned": true,
+          "archived": false,
+          "color": null,
+          "labels": []
+        }
+      }
+    }
+  },
+  "paths": {
+    "/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["userName", "password"],
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "example": "jacob379"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully authenticated"
+          },
+          "404": {
+            "description": "Username or password is incorrect, user not found"
+          }
+        }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": ["userName", "password"],
+                "properties": {
+                  "userName": {
+                    "type": "string",
+                    "example": "jacob379"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "password1"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Registered successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "userName": "john389"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid values sent"
+          },
+          "409": {
+            "description": "User already exists"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Authentication"],
+        "responses": {
+          "200": {
+            "description": "Successfully logged out"
+          }
+        }
+      }
+    },
+    "/labels": {
+      "get": {
+        "tags": ["Labels"],
+        "summary": "Get all your labels",
+        "responses": {
+          "200": {
+            "description": "A list of all your labels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Label"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized, Log in"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Labels"],
+        "summary": "Add a new label",
+        "required": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "chore" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Label created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          },
+          "409": {
+            "description": "Label already exists"
+          }
+        }
+      }
+    },
+    "/labels/{labelId}": {
+      "delete": {
+        "tags": ["Labels"],
+        "summary": "Deletes a label",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to delete"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Label successfully deleted"
+          },
+          "404": {
+            "description": "Label does not exist"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Labels"],
+        "summary": "Fetches a label",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Label successfully fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Label"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Label does not exist"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Labels"],
+        "summary": "Edit a label",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "required": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "chore" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Label edited successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          },
+          "409": {
+            "description": "A label with that name already exists"
+          }
+        }
+      }
+    },
+    "/notes": {
+      "get": {
+        "tags": ["Notes"],
+        "summary": "Gets all your notes",
+        "responses": {
+          "200": {
+            "description": "Notes fetched"
+          },
+          "401": {
+            "description": "Unauthorized, log in"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Notes"],
+        "summary": "Add a new note",
+        "description": "Requires either a title or content",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "chores" },
+                  "content": {
+                    "type": "string",
+                    "example": "take out the trash"
+                  },
+                  "pinned": { "type": "boolean", "example": false },
+                  "archived": { "type": "boolean", "example": false },
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red",
+                      "orange",
+                      "yellow",
+                      "green",
+                      "teal",
+                      "blue",
+                      "darkblue",
+                      "purple",
+                      "pink ",
+                      "brown",
+                      "gray",
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          }
+        }
+      }
+    },
+    "/notes/search": {
+      "post": {
+        "tags": ["Notes"],
+        "summary": "Brings you back all your notes filtered by what you searched",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": { "type": "string", "example": "chore" },
+                  "labels": { "type": "array", "example": ["chore"] },
+                  "pinned": { "type": "boolean", "example": false },
+                  "archived": { "type": "boolean", "example": false },
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red",
+                      "orange",
+                      "yellow",
+                      "green",
+                      "teal",
+                      "blue",
+                      "darkblue",
+                      "purple",
+                      "pink ",
+                      "brown",
+                      "gray",
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          }
+        }
+      }
+    },
+    "/notes/{noteId}": {
+      "get": {
+        "summary": "Gets a note",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note to fetch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Note fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Note does not exist" }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a note",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Note successfully deleted"
+          },
+          "404": { "description": "Note does not exist" }
+        }
+      },
+      "put": {
+        "tags": ["Notes"],
+        "summary": "Add a new note",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note to fetch"
+          }
+        ],
+        "description": "Requires either a title or content",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string", "example": "chores" },
+                  "content": {
+                    "type": "string",
+                    "example": "take out the trash"
+                  },
+                  "pinned": { "type": "boolean", "example": false },
+                  "archived": { "type": "boolean", "example": false },
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red",
+                      "orange",
+                      "yellow",
+                      "green",
+                      "teal",
+                      "blue",
+                      "darkblue",
+                      "purple",
+                      "pink ",
+                      "brown",
+                      "gray",
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          }
+        }
+      }
+    },
+    "/notes/{noteId}/labels/{labelId}": {
+      "post": {
+        "summary": "Add a label to a note",
+        "description": "Adds a label to a note and returns an array of all the note's labels",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to remove from the note"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Label"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Note or Label does not exist"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Remove a note's label",
+        "tags": ["Notes"],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the note"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to add to the note"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Note does not exist or note does not have that label"
+          }
+        }
+      }
+    }
+  }
+}

@@ -3,7 +3,8 @@ import {
   Column,
   Model,
   BelongsToMany,
-  ForeignKey
+  ForeignKey,
+  Scopes
 } from "sequelize-typescript";
 import Note from "./Note";
 import NoteLabel from "./NoteLabel";

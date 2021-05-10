@@ -1,11 +1,13 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import routes from "./routes";
+import routes from "./routes/createRouter";
 import session from "express-session";
 import passport from "passport";
 import passportConfig from "./passportConfig";
 import bodyParser from "body-parser";
+import swaggerUi from "swagger-ui-express";
+const swaggerJson = require("../swagger.json");
 
 const {
   FRONT_WEBSITE_URL,
@@ -63,6 +65,8 @@ passportConfig(passport);
 
 // ------------------------
 
-server.use("/", routes);
+server.use("/api", routes);
+server.use("/api", (req, res) => res.sendStatus(404));
+server.use("/", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 export default server;

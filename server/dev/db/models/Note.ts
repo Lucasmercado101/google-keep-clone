@@ -15,24 +15,23 @@ interface NoteAttributes {
   id?: number;
   createdAt?: Date;
   updatedAt?: Date;
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
   author: string;
   pinned: boolean;
   archived: boolean;
-  color?: [
-    "red",
-    "orange",
-    "yellow",
-    "green",
-    "teal",
-    "blue",
-    "darkblue",
-    "purple",
-    "pink",
-    "brown",
-    "gray"
-  ];
+  color?:
+    | "red"
+    | "orange"
+    | "yellow"
+    | "green"
+    | "teal"
+    | "blue"
+    | "darkblue"
+    | "purple"
+    | "pink"
+    | "brown"
+    | "gray";
   labels?: Label[];
 }
 
@@ -71,19 +70,18 @@ export default class Note extends Model<
       "gray"
     )
   })
-  color: [
-    "red",
-    "orange",
-    "yellow",
-    "green",
-    "teal",
-    "blue",
-    "darkblue",
-    "purple",
-    "pink ",
-    "brown",
-    "gray"
-  ];
+  color:
+    | "red"
+    | "orange"
+    | "yellow"
+    | "green"
+    | "teal"
+    | "blue"
+    | "darkblue"
+    | "purple"
+    | "pink "
+    | "brown"
+    | "gray";
 
   @ForeignKey(() => User)
   @Column
@@ -91,8 +89,5 @@ export default class Note extends Model<
 
   @BelongsToMany(() => Label, () => NoteLabel)
   labels: Array<Label & { NoteLabel: NoteLabel }>;
-
-  @Column({ type: DataType.DATE, allowNull: true })
-  reminder: Date;
 }
 //TODO: Add Types (reminder, collaborated) as an enum? and infer from what it is and has?

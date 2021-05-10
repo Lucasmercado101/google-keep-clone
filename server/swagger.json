@@ -287,6 +287,53 @@
         }
       }
     },
+    "/notes/search": {
+      "post": {
+        "tags": ["Notes"],
+        "summary": "Brings you back all your notes filtered by what you searched",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "query": { "type": "string", "example": "chore" },
+                  "labels": { "type": "array", "example": ["chore"] },
+                  "pinned": { "type": "boolean", "example": false },
+                  "archived": { "type": "boolean", "example": false },
+                  "color": {
+                    "type": "string",
+                    "enum": [
+                      "red",
+                      "orange",
+                      "yellow",
+                      "green",
+                      "teal",
+                      "blue",
+                      "darkblue",
+                      "purple",
+                      "pink ",
+                      "brown",
+                      "gray",
+                      null
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Note created successfully"
+          },
+          "400": {
+            "description": "Invalid data sent"
+          }
+        }
+      }
+    },
     "/notes/{noteId}": {
       "get": {
         "summary": "Gets a note",

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Op, ValidationError, literal } from "sequelize";
-import isAuthenticated from "../middleware/isAuthenticated";
-import Label from "../../db/models/Label";
+import isAuthenticated from "../../middleware/isAuthenticated";
+import Label from "../../../db/models/Label";
 import {
   searchNoteSchema,
   searchNoteAttributes
@@ -73,39 +73,5 @@ export default Router({ mergeParams: true }).post(
         ]
       })
       .then((notes) => res.json(notes));
-
-    // if (labels) {
-    //   const iLikes =
-
-    //   await req
-    //     .user!.$get("notes", {
-    //       order: [["id", "ASC"]],
-    //       include: [
-    //         {
-    //           model: Label,
-    //           through: { attributes: [] },
-    //           where: {
-    //             name: {
-    //               [Op.or]: iLikes
-    //             }
-    //           }
-    //         }
-    //       ]
-    //     })
-    //     .then((notes) => res.json(notes));
-    // } else {
-    //   req
-    //     .user!.$get("notes", {
-    //       order: [["id", "ASC"]],
-    //       where: {
-    //         [Op.or]: {
-    //           title: { [Op.iLike]: `%${query}%` },
-    //           content: { [Op.iLike]: `%${query}%` }
-    //         }
-    //       },
-    //       include: [{ model: Label, through: { attributes: [] } }]
-    //     })
-    //     .then((notes) => res.json(notes));
-    // }
   }
 );

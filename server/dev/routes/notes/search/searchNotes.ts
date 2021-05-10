@@ -47,10 +47,6 @@ export default Router({ mergeParams: true }).post(
     await req
       .user!.$get("notes", {
         where: {
-          // get all notes that have the labels, so that
-          // it includes ALL labels, not just the where ones
-          ...(notesIds && { id: { [Op.in]: notesIds } }),
-
           ...(query && {
             [Op.or]: {
               title: { [Op.iLike]: `%${query}%` },
@@ -59,6 +55,10 @@ export default Router({ mergeParams: true }).post(
           }),
 
           [Op.and]: {
+            // get all notes that have the labels, so that
+            // it includes ALL labels, not just the 'where' ones
+            ...(notesIds.length > 0 && { id: { [Op.in]: notesIds } }),
+
             ...(archived && { archived: true }),
             ...(pinned && { pinned: true }),
             ...(color && { color })

@@ -1,5 +1,4 @@
 import { Router } from "express";
-import Label from "../../../db/models/Label";
 import isAuthenticated from "../../middleware/isAuthenticated";
 import isParamANumber from "../../middleware/isParamANumber";
 

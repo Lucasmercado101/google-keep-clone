@@ -8,13 +8,16 @@ export default Router({ mergeParams: true }).post(
   ROUTE,
   isAuthenticated,
   async (req, res) => {
-    const labelExists = !!(await req.user!.$get("labels")).find(
-      (label) => label.name === req.body.name
-    );
-    if (labelExists) return res.sendStatus(409);
-    if (!req.body.name) return res.status(400).json("You must provide a name");
-    const newLabel = await Label.create({ name: req.body.name });
-    await req.user!.$add("label", newLabel);
-    res.sendStatus(200);
+    const { name } = req.body;
+    if (!name) return res.sendStatus(400);
+
+    const [label] = await req.user!.$get("labels", { where: { name } });
+    if (label) return res.sendStatus(409);
+
+    const newLabel = await Label.create({
+      name,
+      owner: req.user!.userName
+    });
+    res.json(newLabel);
   }
 );

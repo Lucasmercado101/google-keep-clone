@@ -197,6 +197,42 @@
             "description": "Unauthorized, Log in"
           }
         }
+      },
+      "post": {
+        "tags": ["Labels"],
+        "summary": "Add a new label",
+        "required": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "chore" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Label created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          },
+          "409": {
+            "description": "Label already exists"
+          }
+        }
       }
     },
     "/labels/{labelId}": {
@@ -220,6 +256,83 @@
           },
           "404": {
             "description": "Label does not exist"
+          }
+        }
+      },
+      "get": {
+        "tags": ["Labels"],
+        "summary": "Fetches a label",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Label successfully fetched",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Label"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Label does not exist"
+          }
+        }
+      },
+      "put": {
+        "tags": ["Labels"],
+        "summary": "Edit a label",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "schema": {
+              "type": "integer"
+            },
+            "required": true,
+            "description": "Numeric ID of the label to fetch"
+          }
+        ],
+        "required": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "example": "chore" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Label edited successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid data sent"
+          },
+          "409": {
+            "description": "A label with that name already exists"
           }
         }
       }
@@ -279,7 +392,14 @@
         },
         "responses": {
           "200": {
-            "description": "Note created successfully"
+            "description": "Note created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Note"
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid data sent"
@@ -326,7 +446,17 @@
         },
         "responses": {
           "200": {
-            "description": "Note created successfully"
+            "description": "Note created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Note"
+                  }
+                }
+              }
+            }
           },
           "400": {
             "description": "Invalid data sent"

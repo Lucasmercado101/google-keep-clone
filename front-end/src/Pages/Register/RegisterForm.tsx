@@ -64,13 +64,19 @@ const RegisterForm: React.FC = observer(() => {
     setIsRegistering(true);
     createAccount(data)
       .then(() => history.replace("/"))
-      .catch((e?: AxiosError) => {
-        setIsRegistering(false);
-        if (e?.response) {
-          if ([400, 409].includes(e.response.status))
-            setError(`Error: ${e.response.data}`);
-          else setError(`An unknown error ocurred`);
+      .catch((err) => {
+        if (err.response) {
+          // client received an error response (5xx, 4xx)
+          if ([400, 409].includes(err.response.status))
+            setError(`Error: ${err.response.data}`);
+          else setError(`Server error: ${err.response.status}`);
+        } else if (err.request) {
+          // client never received a response, or request never left
+          setError("Network error");
+        } else {
+          setError(`An unknown error ocurred`);
         }
+        setIsRegistering(false);
       });
   };
 

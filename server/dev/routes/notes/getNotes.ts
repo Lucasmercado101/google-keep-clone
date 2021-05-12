@@ -9,14 +9,13 @@ const ROUTE = "/notes";
 const paramsSchema = Joi.object({
   pinned: Joi.boolean().optional(),
   archived: Joi.boolean().optional()
-})
-  .xor("pinned", "archived")
-  .valid({});
+});
 
 export default Router({ mergeParams: true }).get(
   ROUTE,
   isAuthenticated,
   async (req, res) => {
+    console.log(req.query);
     try {
       Joi.attempt(req.query, paramsSchema);
     } catch (e) {

@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { GlobalStateContext } from "../../StateProvider";
+import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import {
@@ -13,7 +12,6 @@ import {
 import { createAccount } from "../../api";
 import { useHistory, Link } from "react-router-dom";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { AxiosError } from "axios";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -55,7 +53,6 @@ const RegisterForm: React.FC = observer(() => {
   const [error, setError] = useState("");
   const [isRegistering, setIsRegistering] = useState(false);
   const history = useHistory();
-  let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
 

@@ -1,5 +1,4 @@
-import { useContext, useState } from "react";
-import { GlobalStateContext } from "../../StateProvider";
+import { useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useForm } from "react-hook-form";
 import {
@@ -55,7 +54,6 @@ const LoginForm: React.FC = observer(() => {
   const [error, setError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const history = useHistory();
-  let ctx = useContext(GlobalStateContext);
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
 
@@ -64,13 +62,21 @@ const LoginForm: React.FC = observer(() => {
     setIsLoggingIn(true);
     logIn(data)
       .then(() => history.replace("/notes"))
-      .catch((e?: AxiosError) => {
-        setIsLoggingIn(false);
-        if (e?.response) {
-          if (e.response.status === 404)
-            setError(`Incorrect username or password (${e?.response?.status})`);
-          else setError(`An unknown error ocurred`);
+      .catch((err) => {
+        if (err.response) {
+          // client received an error response (5xx, 4xx)
+          if (err.response.status === 404)
+            setError(
+              `Incorrect username or password (${err?.response?.status})`
+            );
+          else setError(`Server error: ${err.response.status}`);
+        } else if (err.request) {
+          // client never received a response, or request never left
+          setError("Network error");
+        } else {
+          setError(`An unknown error ocurred`);
         }
+        setIsLoggingIn(false);
       });
   };
 

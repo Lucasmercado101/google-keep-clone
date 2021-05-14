@@ -15,7 +15,6 @@ export default Router({ mergeParams: true }).get(
   ROUTE,
   isAuthenticated,
   async (req, res) => {
-    console.log(req.query);
     try {
       Joi.attempt(req.query, paramsSchema);
     } catch (e) {

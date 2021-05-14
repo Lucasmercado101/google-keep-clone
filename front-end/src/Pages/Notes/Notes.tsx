@@ -1,6 +1,6 @@
 import { makeStyles } from "@material-ui/core";
 import NewNoteBar from "../../Components/NewNoteBar/NewNoteBar";
-import { useGetPinnedNotes } from "../../Hooks/queries";
+import { useGetPinnedNotes, useGetNormalNotes } from "../../Hooks/queries";
 import NotesGrid from "../../Components/NotesGrid/NotesGrid";
 
 const useStyles = makeStyles((theme) => ({
@@ -19,6 +19,7 @@ const Notes: React.FC = () => {
   const classes = useStyles();
 
   const { data: pinnedNotes = [] } = useGetPinnedNotes();
+  const { data: normalNotes } = useGetNormalNotes();
 
   return (
     <div>
@@ -27,17 +28,14 @@ const Notes: React.FC = () => {
           <NewNoteBar />
         </div>
       </div>
-      {pinnedNotes.length && <NotesGrid title="Pinned" notes={pinnedNotes} />}
-      {/* {notesData && notesData.pinned.length ? (
+      {pinnedNotes.length ? (
         <>
-          <NotesGrid title="Pinned" notes={notesData.pinned} />
-          {notesData.other && notesData.other.length > 0 && (
-            <NotesGrid title="Others" notes={notesData.other} />
-          )}
+          {pinnedNotes && <NotesGrid title="Pinned" notes={pinnedNotes} />}
+          {normalNotes && <NotesGrid title="Others" notes={normalNotes} />}
         </>
       ) : (
-        notesData && <NotesGrid notes={notesData.other} />
-      )} */}
+        normalNotes && <NotesGrid notes={normalNotes} />
+      )}
     </div>
   );
 };

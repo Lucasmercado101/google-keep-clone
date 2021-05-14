@@ -1,4 +1,10 @@
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { AxiosError } from "axios";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  QueryObserverOptions
+} from "react-query";
 import {
   getAllMyNotes,
   putNote,
@@ -10,12 +16,37 @@ import {
   removeLabelFromNote,
   getLabelById,
   deleteLabel,
-  putLabelById
+  putLabelById,
+  getPinnedNotes,
+  getNormalNotes,
+  pinnedNoteWithLabels,
+  normalNoteWithLabels
 } from "../api";
 
 export function useFetchAllMyNotes() {
-  const data = useQuery<getNotesResp, Error>("notes", getAllMyNotes);
+  const data = useQuery<getNotesResp, AxiosError>("notes", getAllMyNotes);
   return data;
+}
+
+export function useGetPinnedNotes(
+  options: QueryObserverOptions<pinnedNoteWithLabels[], AxiosError> = {}
+) {
+  return useQuery<pinnedNoteWithLabels[], AxiosError>(
+    "notes",
+    getPinnedNotes,
+    options
+  );
+}
+
+
+export function useGetNormalNotes(
+  options: QueryObserverOptions<normalNoteWithLabels[], AxiosError> = {}
+) {
+  return useQuery<normalNoteWithLabels[], AxiosError>(
+    "notes",
+    getNormalNotes,
+    options
+  );
 }
 
 export function usePutNote() {

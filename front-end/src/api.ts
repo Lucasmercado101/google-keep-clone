@@ -1,7 +1,7 @@
 import axios from "axios";
 
 axios.defaults.baseURL =
-  process.env.REACT_APP_API_URL || "http://localhost:5000";
+  process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 axios.defaults.withCredentials = true;
 
 type baseModelData = {
@@ -32,9 +32,9 @@ export type Note = {
   color: noteColors;
 } & baseModelData;
 
-type pinnedNote = Note & {
+interface pinnedNote extends Note {
   pinned: true;
-};
+}
 type archivedNote = Note & {
   archived: true;
 };
@@ -45,10 +45,23 @@ export type getNotesResp = {
   other: Note[];
 };
 
-export type label = {
+export interface label extends baseModelData {
   id: number;
   name: string;
-} & baseModelData;
+}
+
+export interface noteWithLabels extends Note {
+  labels: label[];
+}
+
+export interface pinnedNoteWithLabels extends noteWithLabels {
+  pinned: true;
+}
+
+export interface normalNoteWithLabels extends noteWithLabels {
+  pinned: false;
+  archived: false;
+}
 
 export const logIn = (data: { userName: string; password: string }) => {
   return axios
@@ -60,6 +73,18 @@ export const logOut = () => {
   return axios.get("/auth/logout");
 };
 
+export const getPinnedNotes = () => {
+  return axios
+    .get<pinnedNoteWithLabels[]>("/notes?pinned=true")
+    .then((resp) => resp.data);
+};
+
+export const getNormalNotes = () => {
+  return axios
+    .get<normalNoteWithLabels[]>("/notes?pinned=false&archived=false")
+    .then((resp) => resp.data);
+};
+
 export const createAccount = (data: { userName: string; password: string }) => {
   return axios
     .post<{ userName: string }>("/auth/register", data)
@@ -67,23 +92,25 @@ export const createAccount = (data: { userName: string; password: string }) => {
 };
 
 export const isLoggedIn = () => {
-  return axios.get<{ userName: string }>("/auth/me").then((resp) => resp.data);
+  return axios
+    .get<{ userName: string }>("/auth/is-logged-in")
+    .then((resp) => resp.data);
 };
 
 export const getAllMyNotes = () => {
-  return axios.get<getNotesResp>("/note/").then((resp) => resp.data);
+  return axios.get<getNotesResp>("/notes/").then((resp) => resp.data);
 };
 
 export const putNote = (id: string | number, data: any) => {
-  return axios.put<Note>(`/note/${id}`, data).then((resp) => resp.data);
+  return axios.put<Note>(`/notes/${id}`, data).then((resp) => resp.data);
 };
 
 export const createNewNote = (data: any) => {
-  return axios.post<Note>("/note/", data).then((resp) => resp.data);
+  return axios.post<Note>("/notes/", data).then((resp) => resp.data);
 };
 
 export const deleteNote = (id: number) => {
-  return axios.delete(`/note/${id}`).then((resp) => resp.data);
+  return axios.delete(`/notes/${id}`).then((resp) => resp.data);
 };
 
 export const deleteLabel = (id: number) => {
@@ -100,7 +127,7 @@ export const addNewLabel = (name: string) => {
 
 export const removeLabelFromNote = (noteId: number, labelId: number) => {
   return axios
-    .delete("/note/label/", { data: { noteId, labelId } })
+    .delete("/notes/label/", { data: { noteId, labelId } })
     .then((resp) => resp.data);
 };
 

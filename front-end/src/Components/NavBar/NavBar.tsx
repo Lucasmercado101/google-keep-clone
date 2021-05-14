@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
   right: {
     display: "flex",
-    marginLeft: 0,
+    marginLeft: "auto",
     [theme.breakpoints.up("md")]: {
       marginLeft: "auto"
     }
@@ -81,7 +81,7 @@ const NavBar: React.FC = observer(() => {
           <HamburgerIcon />
         </IconButton>
         <Logo />
-        <SearchBar />
+        {/* <SearchBar /> */}
         <div className={classes.right}>
           <IconButton
             onClick={() => queryClient.invalidateQueries("notes")}

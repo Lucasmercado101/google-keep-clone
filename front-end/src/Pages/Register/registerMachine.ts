@@ -1,5 +1,5 @@
 import { Machine, assign } from "xstate";
-import { logIn } from "../../api";
+import { createAccount } from "../../api";
 
 interface context {
   error: string;
@@ -27,7 +27,7 @@ type SUBMIT = {
 
 type events = SUBMIT;
 
-export const loginMachine = Machine<context, stateSchema, events>({
+export const registerMachine = Machine<context, stateSchema, events>({
   id: "router",
   initial: "idle",
   context: { error: "" },
@@ -40,7 +40,7 @@ export const loginMachine = Machine<context, stateSchema, events>({
     submitting: {
       invoke: {
         id: "login",
-        src: (ctx, event) => logIn(event as SUBMIT),
+        src: (ctx, event) => createAccount(event as SUBMIT),
         onDone: {
           target: "success"
         },

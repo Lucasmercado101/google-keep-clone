@@ -12,8 +12,6 @@ import {
 } from "@material-ui/core";
 import { Link, useRouter } from "react-router5";
 import { Alert, AlertTitle } from "@material-ui/lab";
-import { sendTypes as routerSendTypes } from "../../routerMachine";
-import { useRouterFSM } from "../../RouterContext";
 
 const useStyles = makeStyles((theme) => ({
   page: {
@@ -70,7 +68,6 @@ function Register() {
   const classes = useStyles();
   const [state, send] = useMachine(registerMachine);
   const { handleSubmit, register } = useForm();
-  const [_, routerSend] = useRouterFSM();
   const router = useRouter();
 
   const onSubmit = (data: { userName: string; password: string }) =>

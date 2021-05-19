@@ -10,9 +10,10 @@ import {
   CircularProgress
 } from "@material-ui/core";
 import { logIn } from "../../api";
-import { useHistory, Link } from "react-router-dom";
 import { Alert, AlertTitle } from "@material-ui/lab";
+import { loginMachine } from "./loginMachine";
 import { AxiosError } from "axios";
+import { useMachine } from "@xstate/react";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -51,42 +52,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const LoginForm: React.FC = observer(() => {
-  const [error, setError] = useState("");
-  const [isLoggingIn, setIsLoggingIn] = useState(false);
-  const history = useHistory();
   const classes = useStyles();
   const { handleSubmit, register } = useForm();
-
-  const onSubmit = (data: { userName: string; password: string }) => {
-    setError("");
-    setIsLoggingIn(true);
-    logIn(data)
-      .then(() => history.replace("/notes"))
-      .catch((err) => {
-        if (err.response) {
-          // client received an error response (5xx, 4xx)
-          if (err.response.status === 404)
-            setError(
-              `Incorrect username or password (${err?.response?.status})`
-            );
-          else setError(`Server error: ${err.response.status}`);
-        } else if (err.request) {
-          // client never received a response, or request never left
-          setError("Network error");
-        } else {
-          setError(`An unknown error ocurred`);
-        }
-        setIsLoggingIn(false);
-      });
-  };
+  const [state, send] = useMachine(loginMachine);
 
   return (
     <div className={classes.container}>
-      <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
-        <Collapse in={!!error}>
+      <form
+        className={classes.form}
+        onSubmit={handleSubmit((data) => send("SUBMIT", data))}
+      >
+        <Collapse in={!!state.context.error}>
           <Alert severity="error">
             <AlertTitle>Error</AlertTitle>
-            {error}
+            {state.context.error}
           </Alert>
         </Collapse>
         <div style={{ textAlign: "left" }}>
@@ -116,16 +95,16 @@ const LoginForm: React.FC = observer(() => {
             type="password"
           />
           <Button
-            disabled={isLoggingIn}
+            disabled={state.matches("submitting")}
             type="submit"
             color="primary"
             variant="contained"
           >
-            {isLoggingIn ? <CircularProgress /> : "Log In"}
+            {state.matches("submitting") ? <CircularProgress /> : "Log In"}
           </Button>
         </div>
         <Typography variant="body2" className={classes.bottomText}>
-          Don't have an account? <Link to="/register">Sign up</Link>
+          {/* Don't have an account? <Link to="/register">Sign up</Link> */}
         </Typography>
       </form>
     </div>

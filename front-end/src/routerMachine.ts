@@ -47,19 +47,15 @@ export const routerMachine = Machine<context, stateSchema, events>({
   states: {
     [statesTypes.LOGIN]: {
       on: {
-        [sendTypes.LOGGED_IN_SUCCESSFULLY]: statesTypes.NOTES_MAIN,
-        [sendTypes.GO_TO_REGISTER]: statesTypes.REGISTER
+        [sendTypes.LOGGED_IN_SUCCESSFULLY]: statesTypes.NOTES_MAIN
       }
     },
-    [statesTypes.REGISTER]: {
-      on: {
-        [sendTypes.GO_TO_LOGIN]: statesTypes.LOGIN
-      }
-    },
-    [statesTypes.NOTES_MAIN]: {
-      on: {
-        [sendTypes.LOG_OUT]: statesTypes.LOGIN
-      }
-    }
+    [statesTypes.REGISTER]: {},
+    [statesTypes.NOTES_MAIN]: {}
+  },
+  on: {
+    [sendTypes.GO_TO_LOGIN]: statesTypes.LOGIN,
+    [sendTypes.GO_TO_REGISTER]: statesTypes.REGISTER,
+    [sendTypes.LOG_OUT]: statesTypes.LOGIN
   }
 });

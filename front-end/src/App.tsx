@@ -23,6 +23,9 @@ const App = () => {
       case "notes":
         send(sendTypes.LOGGED_IN_SUCCESSFULLY);
         break;
+      default:
+        send(sendTypes.GO_TO_LOGIN);
+        break;
     }
   }, [route.name]);
 

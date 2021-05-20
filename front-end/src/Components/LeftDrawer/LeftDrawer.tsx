@@ -22,7 +22,9 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     background: theme.palette.background.default,
     position: "relative",
-    transition: "min-width 150ms"
+    transition: "min-width 150ms",
+    minWidth: theme.spacing(10),
+    maxWidth: theme.spacing(10)
   },
   innerDrawer: {
     position: "fixed",
@@ -42,11 +44,11 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column"
   },
-  wrapper: (isMenuExpandedToggle) => ({
-    minWidth: isMenuExpandedToggle ? theme.spacing(35) : theme.spacing(10),
-    maxWidth: isMenuExpandedToggle ? theme.spacing(35) : theme.spacing(10),
+  drawerHoverExpanded: {
+    minWidth: theme.spacing(10),
+    maxWidth: theme.spacing(10),
     overflow: "visible"
-  }),
+  },
   link: { textDecoration: "none" },
   labelsMenuModal: {
     display: "grid",
@@ -65,16 +67,15 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
   const [isSelected, setIsSelected] = useState(0);
   const router = useRouter();
 
-  const drawerIsOpen = [
-    {
-      drawer: {
-        [stateTypes.DRAWER_DEFAULT]: stateTypes.DRAWER_IS_HOVERED_OPEN
-      }
-    },
-    { drawer: stateTypes.DRAWER_TOGGLED_OPEN }
-  ].some(state.matches);
+  const drawerIsToggledOpen = state.matches({
+    drawer: stateTypes.DRAWER_TOGGLED_OPEN
+  });
 
-  const classes = useStyles(drawerIsOpen);
+  const drawerIsHoveredOpen = state.matches({
+    drawer: { [stateTypes.DRAWER_DEFAULT]: stateTypes.DRAWER_IS_HOVERED_OPEN }
+  });
+
+  const classes = useStyles();
 
   const [isEditLabelsModalOpen, setIsEditLabelsModalOpen] = useState(false);
 
@@ -85,10 +86,10 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
     <>
       <div
         className={clsx(
-          classes.wrapper,
           classes.drawer,
-          !drawerIsOpen && classes.drawerClosed,
-          drawerIsOpen && classes.drawerOpen
+          !drawerIsToggledOpen && !drawerIsHoveredOpen && classes.drawerClosed,
+          (drawerIsHoveredOpen || drawerIsToggledOpen) && classes.drawerOpen,
+          drawerIsHoveredOpen && classes.drawerHoverExpanded
         )}
       >
         <div
@@ -96,8 +97,10 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
           onMouseLeave={() => send(sendTypes.MOUSE_LEFT_AREA)}
           className={clsx(
             classes.drawer,
-            !drawerIsOpen && classes.drawerClosed,
-            drawerIsOpen && classes.drawerOpen,
+            !drawerIsToggledOpen &&
+              !drawerIsHoveredOpen &&
+              classes.drawerClosed,
+            (drawerIsHoveredOpen || drawerIsToggledOpen) && classes.drawerOpen,
             classes.innerDrawer
           )}
         >
@@ -107,7 +110,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
               icon={<Icon path={LightBulbIcon} size={1} />}
               primary="Notes"
               onClick={() => router.navigate("notes")}
-              isListOpen={drawerIsOpen}
+              isListOpen={drawerIsToggledOpen || drawerIsHoveredOpen}
             />
             {/* <Link
             onClick={() => setIsSelected(1)}
@@ -125,7 +128,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
               icon={<EditLabelsIcon />}
               primary="Edit labels"
               onClick={handleOpenEditLabelsMenu}
-              isListOpen={drawerIsOpen}
+              isListOpen={drawerIsToggledOpen || drawerIsHoveredOpen}
             />
             <ListItem
               isSelected={state.matches({
@@ -133,7 +136,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
               })}
               icon={<ArchivesIcon />}
               primary="Archive"
-              isListOpen={drawerIsOpen}
+              isListOpen={drawerIsToggledOpen || drawerIsHoveredOpen}
               onClick={() => router.navigate("notes.archived")}
             />
             {/* <ListItem icon={<TrashIcon />} primary="Trash" isListOpen={open} /> */}

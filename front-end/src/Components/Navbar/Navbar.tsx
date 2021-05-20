@@ -94,7 +94,7 @@ const NavBar: React.FC<any> = observer(({ machine }) => {
         <Logo />
         {/* <SearchBar /> */}
         <div className={classes.right}>
-          <IconButton
+          {/* <IconButton
             onClick={() => queryClient.invalidateQueries("notes")}
             color="inherit"
           >
@@ -103,7 +103,7 @@ const NavBar: React.FC<any> = observer(({ machine }) => {
             ) : (
               <RefreshIcon />
             )}
-          </IconButton>
+          </IconButton> */}
           {/* <IconButton
             color="inherit"
             onClick={() => (ctx.listView = !ctx.listView)}

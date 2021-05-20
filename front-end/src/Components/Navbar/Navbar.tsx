@@ -78,9 +78,7 @@ const NavBar: React.FC<any> = observer(({ machine }) => {
           onClick={() => {
             switch (true) {
               case state.matches({
-                drawer: {
-                  [stateTypes.DRAWER_DEFAULT]: stateTypes.DRAWER_IS_CLOSED
-                }
+                drawer: stateTypes.DRAWER_DEFAULT
               }):
                 send(sendTypes.TOGGLE_DRAWER_CLOSE);
                 break;

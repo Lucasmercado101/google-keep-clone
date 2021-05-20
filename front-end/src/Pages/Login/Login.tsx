@@ -70,7 +70,7 @@ function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    state.done && router.navigate("notes", {}, { replace: true });
+    state.done && router.navigate("notes.home", {}, { replace: true });
   }, [state.done, router]);
 
   return (

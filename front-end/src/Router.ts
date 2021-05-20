@@ -8,7 +8,12 @@ export default function configureRouter() {
     {
       name: "notes",
       path: "/notes",
+      forwardTo: "notes.home",
       children: [
+        {
+          name: "home",
+          path: "/home"
+        },
         {
           name: "archived",
           path: "/archived"

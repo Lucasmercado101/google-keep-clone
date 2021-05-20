@@ -2,6 +2,7 @@ import { useLayoutEffect } from "react";
 import { useRoute } from "react-router5";
 import { useHomeMachineFSM } from "./homeMachine/homeMachineContext";
 import { sendTypes, stateTypes } from "../../Pages/Home/homeMachine";
+import AllNotes from "./AllNotes";
 
 function Main() {
   const [state, send] = useHomeMachineFSM();
@@ -12,7 +13,7 @@ function Main() {
   useLayoutEffect(() => {
     switch (routeName) {
       // in notes main
-      case undefined:
+      case "home":
         send(sendTypes.NAVIGATE_TO_MAIN_NOTES);
         break;
       case "archived":
@@ -26,7 +27,7 @@ function Main() {
 
   switch (true) {
     case state.matches({ routes: stateTypes.MAIN_NOTES }):
-      return <div>on main notes</div>;
+      return <AllNotes />;
     case state.matches({ routes: stateTypes.ARCHIVED_NOTES }):
       return <div>on archived</div>;
     // case state.matches(statesTypes.NOTES_MAIN):

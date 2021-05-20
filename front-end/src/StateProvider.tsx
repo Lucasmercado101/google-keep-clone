@@ -4,14 +4,12 @@ import { createContext } from "react";
 type state = {
   userData: null | { [key: string]: any };
   darkMode: boolean;
-  listView: boolean;
 };
 
 export const GlobalStateContext = createContext<state>(
   observable({
     userData: null,
-    darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
-    listView: false
+    darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches
   })
 );
 
@@ -20,8 +18,7 @@ const StateProvider: React.FC = ({ children }) => {
     <GlobalStateContext.Provider
       value={observable({
         userData: null,
-        darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches,
-        listView: false
+        darkMode: window.matchMedia("(prefers-color-scheme: dark)").matches
       })}
     >
       {children}

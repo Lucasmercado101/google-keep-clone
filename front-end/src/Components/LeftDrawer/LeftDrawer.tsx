@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { List, makeStyles, Modal } from "@material-ui/core";
-import { GlobalStateContext } from "../../StateProvider";
 import {
   LabelOutlined as LabelsIcon,
   NotificationsNoneOutlined as RemindersIcon,
@@ -12,8 +11,6 @@ import Icon from "@mdi/react";
 import { mdiLightbulbOutline as LightBulbIcon } from "@mdi/js";
 import clsx from "clsx";
 import ListItem from "./ListItem";
-import { observer } from "mobx-react-lite";
-import { Link } from "react-router-dom";
 import { stateTypes, sendTypes } from "../../Pages/Home/homeMachine";
 // import EditLabelsMenu from "../EditLabelsMenu/EditLabelsMenu";
 
@@ -64,7 +61,6 @@ const useStyles = makeStyles((theme) => ({
 
 const LeftDrawer: React.FC<any> = ({ machine }) => {
   const [state, send] = machine;
-  const ctx = useContext(GlobalStateContext);
   const [isSelected, setIsSelected] = useState(0);
   const [open, setOpen] = useState(false);
 

@@ -12,6 +12,7 @@ import { mdiLightbulbOutline as LightBulbIcon } from "@mdi/js";
 import clsx from "clsx";
 import ListItem from "./ListItem";
 import { stateTypes, sendTypes } from "../../Pages/Home/homeMachine";
+import { useRouter } from "react-router5";
 // import EditLabelsMenu from "../EditLabelsMenu/EditLabelsMenu";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
 const LeftDrawer: React.FC<any> = ({ machine }) => {
   const [state, send] = machine;
   const [isSelected, setIsSelected] = useState(0);
+  const router = useRouter();
 
   const drawerIsOpen = [
     {
@@ -100,18 +102,13 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
           )}
         >
           <List className={classes.list}>
-            {/* <Link
-              onClick={() => setIsSelected(0)}
-              className={classes.link}
-              to="/notes"
-            > */}
             <ListItem
-              isSelected={isSelected === 0}
+              isSelected={state.matches({ routes: [stateTypes.MAIN_NOTES] })}
               icon={<Icon path={LightBulbIcon} size={1} />}
               primary="Notes"
+              onClick={() => router.navigate("notes")}
               isListOpen={drawerIsOpen}
             />
-            {/* </Link> */}
             {/* <Link
             onClick={() => setIsSelected(1)}
             className={classes.link}
@@ -130,19 +127,15 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
               onClick={handleOpenEditLabelsMenu}
               isListOpen={drawerIsOpen}
             />
-
-            {/* <Link
-              onClick={() => setIsSelected(2)}
-              className={classes.link}
-              to="/notes/archived"
-            > */}
             <ListItem
-              isSelected={isSelected === 2}
+              isSelected={state.matches({
+                routes: [stateTypes.ARCHIVED_NOTES]
+              })}
               icon={<ArchivesIcon />}
               primary="Archive"
               isListOpen={drawerIsOpen}
+              onClick={() => router.navigate("notes.archived")}
             />
-            {/* </Link> */}
             {/* <ListItem icon={<TrashIcon />} primary="Trash" isListOpen={open} /> */}
           </List>
         </div>

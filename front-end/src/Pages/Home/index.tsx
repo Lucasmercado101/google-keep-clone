@@ -12,6 +12,7 @@ import Drawer from "../../Components/LeftDrawer/LeftDrawer";
 // import Archived from "../Archived/Archived";
 import { useHomeMachineFSM } from "./homeMachine/homeMachineContext";
 import { sendTypes, stateTypes } from "./homeMachine";
+import Main from "./Main";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -64,6 +65,7 @@ const Index: React.FC = () => {
       <div className={classes.content}>
         <Drawer machine={homeMachine} />
         <div style={{ flexGrow: 1, zIndex: 1, position: "relative" }}>
+          <Main />
           {/* <Switch>
             <Route exact path={path}>
               <div className={classes.newNoteContainer}>
@@ -91,9 +93,3 @@ const Index: React.FC = () => {
 };
 
 export default Index;
-
-// function index() {
-//   return <div>asdasdas</div>;
-// }
-
-// export default index;

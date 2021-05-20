@@ -5,7 +5,16 @@ export default function configureRouter() {
   const routes = [
     { name: "login", path: "/" },
     { name: "register", path: "/register" },
-    { name: "notes", path: "/notes" }
+    {
+      name: "notes",
+      path: "/notes",
+      children: [
+        {
+          name: "archived",
+          path: "/archived"
+        }
+      ]
+    }
   ];
 
   const router = createRouter(routes, { defaultRoute: "login" });

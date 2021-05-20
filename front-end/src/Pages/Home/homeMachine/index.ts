@@ -5,7 +5,11 @@ export enum sendTypes {
   HOVER_ON_DRAWER = "HOVER_ON_DRAWER",
   TOGGLE_DRAWER_TO_DEFAULT = "TOGGLE_DRAWER_TO_DEFAULT",
   TOGGLE_DRAWER_CLOSE = "TOGGLE_DRAWER_CLOSE",
-  MOUSE_LEFT_AREA = "MOUSE_LEFT_AREA"
+  MOUSE_LEFT_AREA = "MOUSE_LEFT_AREA",
+
+  //routes
+  NAVIGATE_TO_MAIN_NOTES = "NAVIGATE_TO_MAIN_NOTES",
+  NAVIGATE_TO_ARCHIVED_NOTES = "NAVIGATE_TO_ARCHIVED_NOTES"
 }
 
 export enum stateTypes {
@@ -13,7 +17,11 @@ export enum stateTypes {
   DRAWER_TOGGLED_OPEN = "DRAWER_TOGGLED_OPEN",
 
   DRAWER_IS_CLOSED = "DRAWER_IS_CLOSED",
-  DRAWER_IS_HOVERED_OPEN = "DRAWER_IS_HOVERED_OPEN"
+  DRAWER_IS_HOVERED_OPEN = "DRAWER_IS_HOVERED_OPEN",
+
+  // routes
+  MAIN_NOTES = "MAIN_NOTES",
+  ARCHIVED_NOTES = "ARCHIVED_NOTES"
 }
 
 interface stateSchema {
@@ -27,6 +35,12 @@ interface stateSchema {
             [stateTypes.DRAWER_IS_HOVERED_OPEN]: {};
           };
         };
+      };
+    };
+    routes: {
+      states: {
+        [stateTypes.MAIN_NOTES]: {};
+        [stateTypes.ARCHIVED_NOTES]: {};
       };
     };
   };
@@ -63,7 +77,7 @@ const drawerDefaultStates = {
 };
 
 export const routerMachine = Machine<context, stateSchema>({
-  id: "router",
+  id: "main_notes",
   type: "parallel",
   states: {
     drawer: {
@@ -81,6 +95,17 @@ export const routerMachine = Machine<context, stateSchema>({
           },
           ...drawerDefaultStates
         }
+      }
+    },
+    routes: {
+      initial: stateTypes.MAIN_NOTES,
+      states: {
+        [stateTypes.MAIN_NOTES]: {},
+        [stateTypes.ARCHIVED_NOTES]: {}
+      },
+      on: {
+        [sendTypes.NAVIGATE_TO_MAIN_NOTES]: `.${stateTypes.MAIN_NOTES}`,
+        [sendTypes.NAVIGATE_TO_ARCHIVED_NOTES]: `.${stateTypes.ARCHIVED_NOTES}`
       }
     }
   }

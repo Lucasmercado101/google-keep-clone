@@ -62,7 +62,6 @@ const useStyles = makeStyles((theme) => ({
 const LeftDrawer: React.FC<any> = ({ machine }) => {
   const [state, send] = machine;
   const [isSelected, setIsSelected] = useState(0);
-  const [open, setOpen] = useState(false);
 
   const drawerIsOpen = [
     {
@@ -131,7 +130,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
               icon={<EditLabelsIcon />}
               primary="Edit labels"
               onClick={handleOpenEditLabelsMenu}
-              isListOpen={open}
+              isListOpen={drawerIsOpen}
             />
 
             {/* <Link
@@ -143,7 +142,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
               isSelected={isSelected === 2}
               icon={<ArchivesIcon />}
               primary="Archive"
-              isListOpen={open}
+              isListOpen={drawerIsOpen}
             />
             {/* </Link> */}
             {/* <ListItem icon={<TrashIcon />} primary="Trash" isListOpen={open} /> */}

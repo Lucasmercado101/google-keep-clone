@@ -71,13 +71,14 @@ function Login() {
 
   useEffect(() => {
     state.done && router.navigate("notes", {}, { replace: true });
-  }, [state.done]);
+  }, [state.done, router]);
 
   return (
     <div className={classes.page}>
       <img
         className={classes.img}
         src="https://source.unsplash.com/featured/?bird"
+        alt="A bird"
       />
 
       <div className={classes.container}>

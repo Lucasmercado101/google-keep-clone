@@ -11,9 +11,10 @@ import HomeMachineContext from "./Pages/Home/homeMachine/homeMachineContext";
 const App = () => {
   const [state, send] = useRouterFSM();
   const { route } = useRouteNode("");
+  const routeTopLevelName = route.name.split(".")[0];
 
   useLayoutEffect(() => {
-    switch (route.name) {
+    switch (routeTopLevelName) {
       case "register":
         send(sendTypes.GO_TO_REGISTER);
         break;
@@ -27,7 +28,7 @@ const App = () => {
         send(sendTypes.GO_TO_LOGIN);
         break;
     }
-  }, [route.name]);
+  }, [routeTopLevelName, send]);
 
   switch (true) {
     case state.matches(statesTypes.LOGIN):

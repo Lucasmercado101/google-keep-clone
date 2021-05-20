@@ -69,9 +69,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
         [stateTypes.DRAWER_DEFAULT]: stateTypes.DRAWER_IS_HOVERED_OPEN
       }
     },
-    {
-      drawer: stateTypes.DRAWER_TOGGLED_OPEN
-    }
+    { drawer: stateTypes.DRAWER_TOGGLED_OPEN }
   ].some(state.matches);
 
   const classes = useStyles(drawerIsOpen);
@@ -87,7 +85,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
         className={clsx(
           classes.wrapper,
           classes.drawer,
-          classes.drawerClosed,
+          !drawerIsOpen && classes.drawerClosed,
           drawerIsOpen && classes.drawerOpen
         )}
       >
@@ -96,7 +94,7 @@ const LeftDrawer: React.FC<any> = ({ machine }) => {
           onMouseLeave={() => send(sendTypes.MOUSE_LEFT_AREA)}
           className={clsx(
             classes.drawer,
-            classes.drawerClosed,
+            !drawerIsOpen && classes.drawerClosed,
             drawerIsOpen && classes.drawerOpen,
             classes.innerDrawer
           )}

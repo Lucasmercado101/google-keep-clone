@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { makeStyles, Typography, IconButton } from "@material-ui/core";
 import { Icon } from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";

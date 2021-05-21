@@ -107,7 +107,7 @@ const Note: React.FC<any> = ({
         <Typography
           className={clsx(
             classes.content,
-            content.length < 20 && classes.shortContent
+            content && content.length < 20 && classes.shortContent
           )}
         >
           {shorten(content, 235)}

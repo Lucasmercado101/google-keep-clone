@@ -12,7 +12,7 @@ export const noteMachine = Machine({
   states: {
     idle: {
       on: {
-        [stateTypes.MOUSE_HOVERED_ON]: sendTypes.MOUSE_HOVERED_ON_NOTE
+        [sendTypes.MOUSE_HOVERED_ON_NOTE]: stateTypes.MOUSE_HOVERED_ON
       }
     },
     [stateTypes.MOUSE_HOVERED_ON]: {}

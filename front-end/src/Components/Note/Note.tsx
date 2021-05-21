@@ -1,7 +1,9 @@
-import React from "react";
+import { useEffect } from "react";
 import { makeStyles, Typography, IconButton } from "@material-ui/core";
 import { Icon } from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
+import { useMachine } from "@xstate/react";
+import { noteMachine, sendTypes, stateTypes } from "./noteMachine";
 import clsx from "clsx";
 
 const useStyles = makeStyles((theme) => ({
@@ -53,6 +55,13 @@ const useStyles = makeStyles((theme) => ({
   shortContent: {
     fontWeight: 500,
     fontSize: "initial"
+  },
+  hidden: {
+    opacity: 0,
+    transition: "opacity 350ms"
+  },
+  visible: {
+    opacity: 1
   }
 }));
 
@@ -70,6 +79,7 @@ const Note: React.FC<any> = ({
   color,
   labels
 }) => {
+  const [state, send] = useMachine(noteMachine);
   const classes = useStyles({ color });
 
   return (
@@ -78,10 +88,19 @@ const Note: React.FC<any> = ({
         classes.noteContainer,
         color ? classes.coloredNote : classes.noteNoColorsContainer
       )}
+      onMouseEnter={() => send(sendTypes.MOUSE_HOVERED_ON_NOTE)}
+      onMouseLeave={() => send(sendTypes.MOUSE_LEFT_NOTE_AREA)}
     >
       <div className={classes.noteContentContainer}>
         <Typography className={classes.title}>
-          <IconButton size="small" className={classes.pinIcon}>
+          <IconButton
+            size="small"
+            className={clsx(
+              classes.pinIcon,
+              classes.hidden,
+              state.matches(stateTypes.MOUSE_HOVERED_ON) && classes.visible
+            )}
+          >
             <Icon path={PinIcon} size={1} />
           </IconButton>
           {shorten(title, 90)}

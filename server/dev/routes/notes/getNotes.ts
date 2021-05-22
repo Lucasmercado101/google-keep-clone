@@ -34,8 +34,8 @@ export default Router({ mergeParams: true }).get(
             through: { attributes: [] }
           }
         ],
-        ...(pinned && { where: { pinned: true } }),
-        ...(archived && { where: { archived: true } })
+        ...(pinned && { where: { pinned } }),
+        ...(archived && { where: { archived } })
       })
     );
   }

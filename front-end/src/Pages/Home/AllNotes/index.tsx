@@ -1,5 +1,6 @@
 import { useGetOtherNotes, useGetPinnedNotes } from "../../../Hooks/queries";
 import NotesGrid from "../../../Components/NotesGrid/NotesGrid";
+import NewNote from "../../../Components/NewNote/NewNote";
 
 function AllNotesIndex() {
   const { data: notesData = [] } = useGetOtherNotes();
@@ -7,6 +8,7 @@ function AllNotesIndex() {
 
   return (
     <div>
+      <NewNote />
       {pinnedNotesData.length > 0 ? (
         <>
           <NotesGrid title="pinned" notes={pinnedNotesData} />

@@ -64,7 +64,6 @@ const useStyles = makeStyles((theme) => ({
 
 const LeftDrawer: React.FC<any> = ({ machine }) => {
   const [state, send] = machine;
-  const [isSelected, setIsSelected] = useState(0);
   const router = useRouter();
 
   const drawerIsToggledOpen = state.matches({

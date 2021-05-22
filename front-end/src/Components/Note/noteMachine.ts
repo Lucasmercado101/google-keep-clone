@@ -47,7 +47,7 @@ export const createNoteMachine = (pinned: boolean = false) =>
           [stateTypes.PINNING]: {
             invoke: {
               id: "pinPromise",
-              src: (_, event) => putPinNote(event.id),
+              src: "pinNote",
               onDone: {
                 target: stateTypes.PINNED
               },
@@ -60,7 +60,7 @@ export const createNoteMachine = (pinned: boolean = false) =>
           [stateTypes.UNPINNING]: {
             invoke: {
               id: "unpinPromise",
-              src: (_, event) => putUnpinNote(event.id),
+              src: "unpinNote",
               onDone: {
                 target: stateTypes.UNPINNED
               },

@@ -8,7 +8,8 @@ import clsx from "clsx";
 import { useRouter } from "react-router5";
 import { sendTypes as homeSendTypes } from "../../Pages/Home/homeMachine";
 import { useHomeMachineFSM } from "../../Pages/Home/homeMachine/homeMachineContext";
-import { useQueryClient } from "react-query";
+import { useQueryClient, useMutation } from "react-query";
+import { putPinNote, putUnpinNote } from "../../api";
 
 const useStyles = makeStyles((theme) => ({
   noteContainer: {
@@ -83,22 +84,113 @@ const Note: React.FC<any> = ({
   color,
   labels
 }) => {
-  const [state, send, service] = useMachine(createNoteMachine(pinned));
+  const queryClient = useQueryClient();
+  const pinNoteMutation = useMutation(() => putPinNote(id), {
+    async onMutate() {
+      const pinnedNotesKey = ["notes", { pinned: true }];
+      await queryClient.cancelQueries(pinnedNotesKey);
+      const previousNotes = queryClient.getQueryData(pinnedNotesKey);
+      const normalNotesData = queryClient.getQueryData([
+        "notes",
+        { pinned: false, archived: false }
+      ]);
+
+      const pinnedNote = (normalNotesData as any).find(
+        (noteData: any) => noteData.id === id
+      );
+      pinnedNote.pinned = true;
+
+      // add new and sort by id ASC
+      queryClient.setQueryData(pinnedNotesKey, (old) =>
+        [...(old as {}[]), pinnedNote].sort(
+          (noteData: any, nextNoteData: any) => {
+            if (noteData.id > nextNoteData.id) return 1;
+            if (noteData.id < nextNoteData.id) return -1;
+            return 0;
+          }
+        )
+      );
+
+      queryClient.setQueryData(
+        ["notes", { pinned: false, archived: false }],
+        (old) => (old as {}[]).filter((noteData: any) => noteData.id !== id)
+      );
+
+      return { previousNotes };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(
+        ["notes", { pinned: true }],
+        (context as any).previousNotes
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("notes");
+    }
+  });
+
+  const unpinMutation = useMutation(() => putUnpinNote(id), {
+    async onMutate() {
+      const otherNotesKey = ["notes", { pinned: false, archived: false }];
+      await queryClient.cancelQueries(otherNotesKey);
+      const previousNotes = queryClient.getQueryData(otherNotesKey);
+      const normalNotesData = queryClient.getQueryData([
+        "notes",
+        { pinned: true }
+      ]);
+
+      const unpinnedNote = (normalNotesData as any).find(
+        (noteData: any) => noteData.id === id
+      );
+      unpinnedNote.pinned = false;
+
+      // add new and sort by id ASC
+      queryClient.setQueryData(otherNotesKey, (old) =>
+        [...(old as {}[]), unpinnedNote].sort(
+          (noteData: any, nextNoteData: any) => {
+            if (noteData.id > nextNoteData.id) return 1;
+            if (noteData.id < nextNoteData.id) return -1;
+            return 0;
+          }
+        )
+      );
+
+      queryClient.setQueryData(["notes", { pinned: true }], (old) =>
+        (old as {}[]).filter((noteData: any) => noteData.id !== id)
+      );
+
+      return { previousNotes };
+    },
+    onError: (_, __, context) => {
+      queryClient.setQueryData(
+        ["notes", { pinned: false, archived: false }],
+        (context as any).previousNotes
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("notes");
+    }
+  });
+
+  const [state, send] = useMachine(createNoteMachine(pinned), {
+    services: {
+      pinNote: () =>
+        pinNoteMutation.mutateAsync(id, {
+          onSuccess() {
+            queryClient.invalidateQueries("notes");
+          }
+        }),
+      unpinNote: () =>
+        unpinMutation.mutateAsync(id, {
+          onSuccess() {
+            queryClient.invalidateQueries("notes");
+          }
+        })
+    }
+  });
   const [_, homeSend] = useHomeMachineFSM();
   const classes = useStyles({ color });
   const router = useRouter();
-  const queryClient = useQueryClient();
-
-  useEffect(() => {
-    service.onEvent(({ type }) => {
-      if (
-        type === "done.invoke.pinPromise" ||
-        type === "done.invoke.unpinPromise"
-      ) {
-        queryClient.invalidateQueries("notes");
-      }
-    });
-  }, [service]);
 
   return (
     <div

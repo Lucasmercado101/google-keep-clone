@@ -8,7 +8,6 @@ import {
 import {
   getAllMyNotes,
   putNote,
-  getNotesResp,
   deleteNote,
   getLabels,
   label,
@@ -20,30 +19,30 @@ import {
   getPinnedNotes,
   getNormalNotes,
   pinnedNoteWithLabels,
-  normalNoteWithLabels
+  normalNoteWithLabels,
+  Note
 } from "../api";
 
-export function useFetchAllMyNotes() {
-  const data = useQuery<getNotesResp, AxiosError>("notes", getAllMyNotes);
-  return data;
+export function useGetAllNotes(
+  options: QueryObserverOptions<Note[], AxiosError> = {}
+) {
+  return useQuery<Note[], AxiosError>("notes", getAllMyNotes, options);
 }
-
 export function useGetPinnedNotes(
   options: QueryObserverOptions<pinnedNoteWithLabels[], AxiosError> = {}
 ) {
   return useQuery<pinnedNoteWithLabels[], AxiosError>(
-    "notes",
+    ["notes", { pinned: true }],
     getPinnedNotes,
     options
   );
 }
 
-
-export function useGetNormalNotes(
+export function useGetOtherNotes(
   options: QueryObserverOptions<normalNoteWithLabels[], AxiosError> = {}
 ) {
   return useQuery<normalNoteWithLabels[], AxiosError>(
-    "notes",
+    ["notes", { pinned: false, archived: false }],
     getNormalNotes,
     options
   );

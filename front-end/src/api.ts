@@ -39,12 +39,6 @@ type archivedNote = Note & {
   archived: true;
 };
 
-export type getNotesResp = {
-  pinned: pinnedNote[];
-  archived: archivedNote[];
-  other: Note[];
-};
-
 export interface label extends baseModelData {
   id: number;
   name: string;
@@ -98,7 +92,7 @@ export const isLoggedIn = () => {
 };
 
 export const getAllMyNotes = () => {
-  return axios.get<getNotesResp>("/notes/").then((resp) => resp.data);
+  return axios.get<Note[]>("/notes/").then((resp) => resp.data);
 };
 
 export const putNote = (id: string | number, data: any) => {

@@ -4,6 +4,9 @@ import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import { useMachine } from "@xstate/react";
 import { noteMachine, sendTypes, stateTypes } from "./noteMachine";
 import clsx from "clsx";
+import { useRouter } from "react-router5";
+import { sendTypes as homeSendTypes } from "../../Pages/Home/homeMachine";
+import { useHomeMachineFSM } from "../../Pages/Home/homeMachine/homeMachineContext";
 
 const useStyles = makeStyles((theme) => ({
   noteContainer: {
@@ -79,7 +82,9 @@ const Note: React.FC<any> = ({
   labels
 }) => {
   const [state, send] = useMachine(noteMachine);
+  const [_, homeSend] = useHomeMachineFSM();
   const classes = useStyles({ color });
+  const router = useRouter();
 
   return (
     <div
@@ -89,6 +94,18 @@ const Note: React.FC<any> = ({
       )}
       onMouseEnter={() => send(sendTypes.MOUSE_HOVERED_ON_NOTE)}
       onMouseLeave={() => send(sendTypes.MOUSE_LEFT_NOTE_AREA)}
+      onClick={() => {
+        router.navigate(`notes.edit`, { id });
+        homeSend(homeSendTypes.EDIT_NOTE, {
+          id,
+          archived,
+          content,
+          pinned,
+          title,
+          color,
+          labels
+        });
+      }}
     >
       <div className={classes.noteContentContainer}>
         <Typography className={classes.title}>

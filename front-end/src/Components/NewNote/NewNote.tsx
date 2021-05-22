@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
   },
   inputContainer: {
     minHeight: 46,
-    maxHeight: 46
+    maxHeight: 46,
+    padding: theme.spacing(0, 2)
   },
   outerContainer: {
     display: "grid",

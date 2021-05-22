@@ -1,4 +1,4 @@
-import { Machine } from "xstate";
+import { Machine, send } from "xstate";
 import { putPinNote, putUnpinNote } from "../../api";
 
 export enum stateTypes {
@@ -46,6 +46,7 @@ export const createNoteMachine = (pinned: boolean = false) =>
           [stateTypes.UNPINNED]: {},
           [stateTypes.PINNING]: {
             invoke: {
+              id: "pinPromise",
               src: (_, event) => putPinNote(event.id),
               onDone: {
                 target: stateTypes.PINNED
@@ -58,6 +59,7 @@ export const createNoteMachine = (pinned: boolean = false) =>
           [stateTypes.PINNED]: {},
           [stateTypes.UNPINNING]: {
             invoke: {
+              id: "unpinPromise",
               src: (_, event) => putUnpinNote(event.id),
               onDone: {
                 target: stateTypes.UNPINNED

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { makeStyles, Typography, IconButton } from "@material-ui/core";
 import { Icon } from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
@@ -7,6 +8,7 @@ import clsx from "clsx";
 import { useRouter } from "react-router5";
 import { sendTypes as homeSendTypes } from "../../Pages/Home/homeMachine";
 import { useHomeMachineFSM } from "../../Pages/Home/homeMachine/homeMachineContext";
+import { useQueryClient } from "react-query";
 
 const useStyles = makeStyles((theme) => ({
   noteContainer: {
@@ -81,10 +83,22 @@ const Note: React.FC<any> = ({
   color,
   labels
 }) => {
-  const [state, send] = useMachine(createNoteMachine(pinned));
+  const [state, send, service] = useMachine(createNoteMachine(pinned));
   const [_, homeSend] = useHomeMachineFSM();
   const classes = useStyles({ color });
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    service.onEvent(({ type }) => {
+      if (
+        type === "done.invoke.pinPromise" ||
+        type === "done.invoke.unpinPromise"
+      ) {
+        queryClient.invalidateQueries("notes");
+      }
+    });
+  }, [service]);
 
   return (
     <div

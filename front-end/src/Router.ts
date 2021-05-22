@@ -17,6 +17,10 @@ export default function configureRouter() {
         {
           name: "archived",
           path: "/archived"
+        },
+        {
+          name: "edit",
+          path: "/edit/:id"
         }
       ]
     }

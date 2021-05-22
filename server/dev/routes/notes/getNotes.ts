@@ -2,6 +2,7 @@ import { Router } from "express";
 import Label from "../../db/models/Label";
 import isAuthenticated from "../middleware/isAuthenticated";
 import Joi from "joi";
+import { Op } from "sequelize";
 import { ValidationError } from "sequelize/types";
 
 const ROUTE = "/notes";
@@ -33,8 +34,12 @@ export default Router({ mergeParams: true }).get(
             through: { attributes: [] }
           }
         ],
-        ...(pinned && { where: { pinned } }),
-        ...(archived && { where: { archived } })
+        where: {
+          [Op.and]: {
+            ...(pinned && { pinned }),
+            ...(archived && { archived })
+          }
+        }
       })
     );
   }

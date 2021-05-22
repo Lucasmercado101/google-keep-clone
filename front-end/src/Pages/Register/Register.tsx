@@ -75,13 +75,14 @@ function Register() {
 
   useEffect(() => {
     state.done && router.navigate("login");
-  }, [state.done]);
+  }, [state.done, router]);
 
   return (
     <div className={classes.page}>
       <img
         className={classes.img}
         src="https://source.unsplash.com/featured/?animal"
+        alt="An animal"
       />
 
       <div className={classes.container}>

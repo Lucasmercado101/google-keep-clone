@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from "react";
 import { GlobalStateContext } from "../../StateProvider";
 import { isLoggedIn } from "../../api";
 import Navbar from "../../Components/Navbar/Navbar";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, Modal } from "@material-ui/core";
 // import NotesGrid from "../../Components/NotesGrid/NotesGrid";
 // import NewNoteBar from "../../Components/NewNoteBar/NewNoteBar";
 // import { useFetchAllMyNotes } from "../../Hooks/queries";
@@ -13,6 +13,7 @@ import Drawer from "../../Components/LeftDrawer/LeftDrawer";
 import { useHomeMachineFSM } from "./homeMachine/homeMachineContext";
 import { sendTypes, stateTypes } from "./homeMachine";
 import Main from "./Main";
+import EditNote from "../../Components/EditNote/EditNote";
 
 const useStyles = makeStyles((theme) => ({
   pageContainer: {
@@ -65,6 +66,14 @@ const Index: React.FC = () => {
       <div className={classes.content}>
         <Drawer machine={homeMachine} />
         <div style={{ flexGrow: 1, zIndex: 1, position: "relative" }}>
+          <Modal
+            open={state.matches({ isEditingNote: [stateTypes.EDITING_NOTE] })}
+            onClose={() => send(sendTypes.STOP_EDITING_NOTE)}
+            style={{ display: "grid", placeItems: "center", overflow: "auto" }}
+          >
+            <EditNote />
+          </Modal>
+
           <Main />
           {/* <Switch>
             <Route exact path={path}>

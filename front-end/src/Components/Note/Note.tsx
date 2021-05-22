@@ -2,7 +2,7 @@ import { makeStyles, Typography, IconButton } from "@material-ui/core";
 import { Icon } from "@mdi/react";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import { useMachine } from "@xstate/react";
-import { noteMachine, sendTypes, stateTypes } from "./noteMachine";
+import { createNoteMachine, sendTypes, stateTypes } from "./noteMachine";
 import clsx from "clsx";
 import { useRouter } from "react-router5";
 import { sendTypes as homeSendTypes } from "../../Pages/Home/homeMachine";
@@ -76,12 +76,12 @@ const Note: React.FC<any> = ({
   id,
   archived,
   content,
-  pinned,
+  pinned = false,
   title,
   color,
   labels
 }) => {
-  const [state, send] = useMachine(noteMachine);
+  const [state, send] = useMachine(createNoteMachine(pinned));
   const [_, homeSend] = useHomeMachineFSM();
   const classes = useStyles({ color });
   const router = useRouter();

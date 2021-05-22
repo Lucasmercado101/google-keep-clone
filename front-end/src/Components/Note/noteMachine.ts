@@ -21,57 +21,57 @@ export enum sendTypes {
   UNPIN = "UNPIN"
 }
 
-export const noteMachine = Machine({
-  initial: stateTypes.IDLE,
-  type: "parallel",
-  states: {
-    noteDefault: {
-      initial: stateTypes.IDLE,
-      states: {
-        [stateTypes.IDLE]: {
-          on: {
-            [sendTypes.MOUSE_HOVERED_ON_NOTE]: stateTypes.MOUSE_HOVERED_ON
-          }
-        },
-        [stateTypes.MOUSE_HOVERED_ON]: {
-          on: {
-            [sendTypes.MOUSE_LEFT_NOTE_AREA]: stateTypes.IDLE
-          }
-        }
-      }
-    },
-    pin: {
-      initial: stateTypes.UNPINNED,
-      states: {
-        [stateTypes.UNPINNED]: {},
-        [stateTypes.PINNING]: {
-          invoke: {
-            src: (_, event) => putPinNote(event.id),
-            onDone: {
-              target: stateTypes.PINNED
-            },
-            onError: {
-              target: stateTypes.UNPINNED
+export const createNoteMachine = (pinned: boolean = false) =>
+  Machine({
+    type: "parallel",
+    states: {
+      noteDefault: {
+        initial: stateTypes.IDLE,
+        states: {
+          [stateTypes.IDLE]: {
+            on: {
+              [sendTypes.MOUSE_HOVERED_ON_NOTE]: stateTypes.MOUSE_HOVERED_ON
             }
-          }
-        },
-        [stateTypes.PINNED]: {},
-        [stateTypes.UNPINNING]: {
-          invoke: {
-            src: (_, event) => putUnpinNote(event.id),
-            onDone: {
-              target: stateTypes.UNPINNED
-            },
-            onError: {
-              target: stateTypes.PINNED
+          },
+          [stateTypes.MOUSE_HOVERED_ON]: {
+            on: {
+              [sendTypes.MOUSE_LEFT_NOTE_AREA]: stateTypes.IDLE
             }
           }
         }
       },
-      on: {
-        [sendTypes.PIN]: `.${stateTypes.PINNING}`,
-        [sendTypes.UNPIN]: `.${stateTypes.UNPINNING}`
+      pin: {
+        initial: pinned ? stateTypes.PINNED : stateTypes.UNPINNED,
+        states: {
+          [stateTypes.UNPINNED]: {},
+          [stateTypes.PINNING]: {
+            invoke: {
+              src: (_, event) => putPinNote(event.id),
+              onDone: {
+                target: stateTypes.PINNED
+              },
+              onError: {
+                target: stateTypes.UNPINNED
+              }
+            }
+          },
+          [stateTypes.PINNED]: {},
+          [stateTypes.UNPINNING]: {
+            invoke: {
+              src: (_, event) => putUnpinNote(event.id),
+              onDone: {
+                target: stateTypes.UNPINNED
+              },
+              onError: {
+                target: stateTypes.PINNED
+              }
+            }
+          }
+        },
+        on: {
+          [sendTypes.PIN]: `.${stateTypes.PINNING}`,
+          [sendTypes.UNPIN]: `.${stateTypes.UNPINNING}`
+        }
       }
     }
-  }
-});
+  });

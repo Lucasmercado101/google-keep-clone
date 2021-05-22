@@ -92,7 +92,7 @@ const Note: React.FC<any> = ({
         classes.noteContainer,
         color ? classes.coloredNote : classes.noteNoColorsContainer
       )}
-      onMouseEnter={() => send(sendTypes.MOUSE_HOVERED_ON_NOTE)}
+      onMouseOver={() => send(sendTypes.MOUSE_HOVERED_ON_NOTE)}
       onMouseLeave={() => send(sendTypes.MOUSE_LEFT_NOTE_AREA)}
       onClick={() => {
         router.navigate(`notes.edit`, { id });
@@ -114,10 +114,33 @@ const Note: React.FC<any> = ({
             className={clsx(
               classes.pinIcon,
               classes.hidden,
-              state.matches(stateTypes.MOUSE_HOVERED_ON) && classes.visible
+              state.matches({ noteDefault: stateTypes.MOUSE_HOVERED_ON }) &&
+                classes.visible
             )}
+            onClick={(e) => {
+              e.stopPropagation();
+              switch (true) {
+                case state.matches({ pin: stateTypes.PINNED }):
+                case state.matches({ pin: stateTypes.PINNING }):
+                  send(sendTypes.UNPIN, { id });
+                  break;
+                case state.matches({ pin: stateTypes.UNPINNED }):
+                case state.matches({ pin: stateTypes.UNPINNING }):
+                  send(sendTypes.PIN, { id });
+                  break;
+              }
+            }}
           >
-            <Icon path={PinIcon} size={1} />
+            <Icon
+              path={
+                [{ pin: stateTypes.PINNED }, { pin: stateTypes.PINNING }].some(
+                  state.matches
+                )
+                  ? UnpinIcon
+                  : PinIcon
+              }
+              size={1}
+            />
           </IconButton>
           {shorten(title, 90)}
         </Typography>

@@ -132,3 +132,15 @@ export const getLabelById = (labelId: number) => {
 export const putLabelById = (labelId: number, name: string) => {
   return axios.put("/label/" + labelId, { name }).then((resp) => resp.data);
 };
+
+export const putPinNote = (noteId: number) => {
+  return axios
+    .put(`/notes/${noteId}`, { pinned: true })
+    .then((resp) => resp.data);
+};
+
+export const putUnpinNote = (noteId: number) => {
+  return axios
+    .put(`/notes/${noteId}`, { pinned: false })
+    .then((resp) => resp.data);
+};

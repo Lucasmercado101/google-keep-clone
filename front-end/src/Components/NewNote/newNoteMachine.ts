@@ -112,7 +112,8 @@ export const newNoteMachine = Machine<context>(
         },
         on: {
           [sendTypes.CLICKED_OUTSIDE_OF_NOTE]: {
-            target: stateTypes.IDLE
+            target: stateTypes.IDLE,
+            actions: ["emptyContent", "emptyTitle"]
           }
         }
       }
@@ -129,6 +130,12 @@ export const newNoteMachine = Machine<context>(
       }),
       assignContent: assign({
         content: (ctx, e) => (ctx.content = e.content.substr(0, 750))
+      }),
+      emptyContent: assign({
+        content: (ctx) => (ctx.content = "")
+      }),
+      emptyTitle: assign({
+        title: (ctx) => (ctx.title = "")
       })
     }
   }

@@ -1,8 +1,9 @@
+import { useRef, useEffect } from "react";
 import {
   makeStyles,
   InputBase,
   IconButton,
-  Typography
+  ClickAwayListener
 } from "@material-ui/core";
 import { mdiPinOutline as PinIcon, mdiPin as UnpinIcon } from "@mdi/js";
 import { Icon } from "@mdi/react";
@@ -44,9 +45,40 @@ const useStyles = makeStyles((theme) => ({
     padding: 0,
     marginBottom: "auto"
   },
+  titleRoot: {
+    padding: 0,
+    position: "relative",
+    paddingBottom: 15,
+    "&::after": {
+      opacity: 0,
+      content: "attr(data-limit)",
+      position: "absolute",
+      bottom: 0,
+      right: 0,
+      transition: "opacity 300ms, color 300ms"
+    }
+  },
+  afterRootCurrentLength: {
+    "&::after": {
+      opacity: 0.6
+    }
+  },
+  afterTextDangerColor: {
+    "&::after": {
+      opacity: 0.85,
+      color: theme.palette.error.main
+    }
+  },
+  afterTextWarningColor: {
+    "&::after": {
+      opacity: 0.65,
+      color: theme.palette.warning.main
+    }
+  },
   noteTitle: {
     width: "100%",
-    minHeight: 44
+    minHeight: 44,
+    marginBottom: 3
   },
   noteWrapper: {
     display: "flex",
@@ -59,11 +91,15 @@ const useStyles = makeStyles((theme) => ({
 
 function NewNote() {
   const machine = useMachine(newNoteMachine);
+  const contentRef = useRef<null | HTMLLabelElement>(null);
   const [state, send] = machine;
   const classes = useStyles();
+  const { title, content } = state.context;
 
-  // title max 150 chars
-  // content max 750 chars
+  useEffect(() => {
+    contentRef.current?.focus();
+  });
+
   return (
     <div>
       <div className={classes.outerContainer}>
@@ -77,33 +113,82 @@ function NewNote() {
               />
             </div>
           ) : (
-            <div className={clsx(classes.container, classes.noteWrapper)}>
-              <div className={classes.noteContentContainer}>
-                <div className={classes.noteTitleArea}>
-                  <InputBase
-                    multiline
-                    className={classes.noteTitle}
-                    classes={{ input: classes.titleBase }}
-                    placeholder="Title"
-                  />
-                  <IconButton className={classes.pinIcon} size="small">
-                    <Icon
-                      path={
-                        PinIcon
-                        // [
-                        //   { pin: stateTypes.PINNED },
-                        //   { pin: stateTypes.PINNING }
-                        // ].some(state.matches)
-                        //   ? UnpinIcon
-                        //   : PinIcon
+            <ClickAwayListener
+              onClickAway={() => send(sendTypes.CLICKED_OUTSIDE_OF_NOTE)}
+            >
+              <div className={clsx(classes.container, classes.noteWrapper)}>
+                <div className={classes.noteContentContainer}>
+                  <div className={classes.noteTitleArea}>
+                    <InputBase
+                      value={title}
+                      data-limit={`${title.length}/150`}
+                      multiline
+                      onChange={(e) =>
+                        send(sendTypes.TITLE_TEXT_WAS_SENT, {
+                          title: e.target.value
+                        })
                       }
-                      size={1}
+                      className={classes.noteTitle}
+                      classes={{
+                        input: classes.titleBase,
+                        root: clsx(
+                          classes.titleRoot,
+                          title.length > 75 && classes.afterRootCurrentLength,
+                          title.length > 110 &&
+                            title.length < 135 &&
+                            classes.afterTextWarningColor,
+                          title.length >= 135 && classes.afterTextDangerColor
+                        )
+                      }}
+                      placeholder="Title"
                     />
-                  </IconButton>
+                    <IconButton
+                      onClick={() => send(sendTypes.TOGGLE_PIN)}
+                      className={classes.pinIcon}
+                      size="small"
+                    >
+                      <Icon
+                        path={
+                          state.matches({
+                            [stateTypes.CREATING_NEW_NOTE]: {
+                              pinned: stateTypes.PINNED
+                            }
+                          })
+                            ? UnpinIcon
+                            : PinIcon
+                        }
+                        size={1}
+                      />
+                    </IconButton>
+                  </div>
+                  <InputBase
+                    onChange={(e) =>
+                      send(sendTypes.CONTENT_TEXT_WAS_SENT, {
+                        content: e.target.value
+                      })
+                    }
+                    inputProps={{
+                      ref: contentRef
+                    }}
+                    data-limit={`${content.length}/750`}
+                    value={content}
+                    multiline
+                    style={{ width: "100%" }}
+                    classes={{
+                      root: clsx(
+                        classes.titleRoot,
+                        content.length > 400 && classes.afterRootCurrentLength,
+                        content.length > 500 &&
+                          content.length < 600 &&
+                          classes.afterTextWarningColor,
+                        content.length >= 600 && classes.afterTextDangerColor
+                      )
+                    }}
+                    placeholder="Take a note..."
+                  />
                 </div>
-                <InputBase placeholder="Take a note..." />
               </div>
-            </div>
+            </ClickAwayListener>
           )}
         </div>
       </div>
